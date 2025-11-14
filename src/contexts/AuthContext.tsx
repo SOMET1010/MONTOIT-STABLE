@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session, AuthError, Provider } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
-import { testDatabaseConnection } from '../utils/supabaseHealthCheck';
+import { testDatabaseConnection } from '../lib/helpers/supabaseHealthCheck';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 

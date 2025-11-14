@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FileText, Download, Eye, X } from 'lucide-react';
-import { generateLeasePDF } from '../utils/pdfGenerator';
+import { generateLeasePDF } from '../lib/helpers/pdfGenerator';
 
 interface ContractPreviewProps {
   contractData: {

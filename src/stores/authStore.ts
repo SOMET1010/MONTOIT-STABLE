@@ -3,7 +3,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { User, Session, AuthError } from '@supabase/supabase-js';
 import { supabase } from '../lib/supabase';
 import type { Database } from '../lib/database.types';
-import { testDatabaseConnection } from '../utils/supabaseHealthCheck';
+import { testDatabaseConnection } from '../lib/helpers/supabaseHealthCheck';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 

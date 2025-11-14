@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Search, MapPin, Home as HomeIcon, Coins, Plus, CheckCircle, Shield, Navigation, Building2 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
-import { CITIES, ABIDJAN_COMMUNES, RESIDENTIAL_PROPERTY_TYPES, COMMERCIAL_PROPERTY_TYPES, GEOLOCATION_SETTINGS } from '../constants';
+import { CITIES, ABIDJAN_COMMUNES, RESIDENTIAL_PROPERTY_TYPES, COMMERCIAL_PROPERTY_TYPES, GEOLOCATION_SETTINGS } from '../lib/constants/app.constants';
 
 interface QuickSearchProps {
   onSearch?: (filters: SearchFilters) => void;

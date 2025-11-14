@@ -1,6 +1,6 @@
 import { supabase } from '../../lib/supabase';
 import { AzureAIService } from './azureAIService';
-import { getPropertyImages, getNeighborhoodImage } from '../../constants/ivoirianImages';
+import { getPropertyImages, getNeighborhoodImage } from '../../lib/constants/ivoirianImages';
 
 interface IvoirianName {
   first_name: string;

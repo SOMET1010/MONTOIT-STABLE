@@ -3,7 +3,7 @@ import { Home, Users, FileText, MessageSquare, Coins, Loader2, Check, Image } fr
 import { TestDataGeneratorService } from '../services/ai/testDataGeneratorService';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { getPropertyImages, getRandomIvoirianPropertyImage } from '../constants/ivoirianImages';
+import { getPropertyImages, getRandomIvoirianPropertyImage } from '../lib/constants/ivoirianImages';
 
 export default function AdminQuickDemo() {
   const { user } = useAuth();

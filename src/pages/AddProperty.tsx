@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, Home, Save, Upload, X, Image as ImageIcon, Building2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { useAuth } from '../contexts/AuthContext';
-import { RESIDENTIAL_PROPERTY_TYPES, COMMERCIAL_PROPERTY_TYPES } from '../constants';
+import { RESIDENTIAL_PROPERTY_TYPES, COMMERCIAL_PROPERTY_TYPES } from '../lib/constants/app.constants';
 import type { Database } from '../lib/database.types';
 
 type PropertyType = Database['public']['Tables']['properties']['Row']['property_type'];
