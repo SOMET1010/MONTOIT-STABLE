@@ -21,3 +21,8 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# Production environment variables (NEVER commit)
+.env.production
+.env.local
+.env.*.local
