@@ -66,7 +66,7 @@ Le **Certificat Électronique Validé (CEV)** de l'ONECI transforme un bail éle
 - ✅ Confiance utilisateurs maximale
 
 **User Stories (8):**
-1. US-063: Demande Certificat CEV (21 pts)
+1. US-063: Demande Certificat Électronique de Vérification (CEV) ONECI (21 pts)
 2. US-064: API ONECI Soumission (21 pts)
 3. US-065: Webhook ONECI Statut (13 pts)
 4. US-066: Affichage Vérification CEV (13 pts)

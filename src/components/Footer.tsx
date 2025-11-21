@@ -20,7 +20,7 @@ export default function Footer() {
               <span className="text-3xl font-bold text-white">MON TOIT</span>
             </div>
             <p className="text-sm text-gray-300 leading-relaxed mb-4">
-              Plateforme immobilière pour un accès universel au logement en Côte d'Ivoire. Soutenue par l'ANSUT.
+              Plateforme immobilière pour un accès universel au logement en Côte d'Ivoire. Signature électronique certifiée et sécurisée.
             </p>
           </div>
 

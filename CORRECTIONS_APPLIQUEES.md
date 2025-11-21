@@ -23,7 +23,7 @@
 1. Remplacement de "Certifié par ANSUT" par "Vérifié Mon Toit"
 2. Mise à jour du tooltip: "Identité confirmée via ONECI (CNI) et vérification biométrique. Badge de confiance Mon Toit."
 3. Correction de la mention ANSUT dans le chatbot: "Comment fonctionne la vérification d'identité?"
-4. Suppression de "Certification ANSUT" dans ProfileQuickActions
+4. Suppression de "Cachet électronique visible" dans ProfileQuickActions
 
 **Impact:**
 - Identité de marque cohérente
@@ -179,7 +179,7 @@ import VerifiedBadge from '../components/VerifiedBadge';
 
 Les erreurs suivantes n'ont PAS été trouvées dans le code actuel:
 
-- **Erreur 4**: "Certifié ANSUT" dans QuickSearch - Non trouvé
+- **Erreur 4**: "Avec cachet électronique" dans QuickSearch - Non trouvé
 - **Erreur 22**: Bouton "Demander un autree" - Non trouvé
 - **Erreur 16**: Chatbot impossible à fermer - Bouton X présent et fonctionnel
 - **Erreur 5**: Publier annonce → 404 - Routes existent

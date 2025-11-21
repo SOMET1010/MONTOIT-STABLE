@@ -13,7 +13,7 @@ interface VerificationData {
   oneci_number: string | null;
   cnam_number: string | null;
   rejection_reason: string | null;
-  ansut_certified: boolean;
+  identity_verified: boolean;
   created_at: string;
   updated_at: string;
 }

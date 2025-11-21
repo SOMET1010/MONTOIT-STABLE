@@ -202,7 +202,7 @@ export default function Profile() {
               </h2>
               <p className="text-gray-600 mb-3">{user?.email}</p>
 
-              {verificationData?.ansut_certified && (
+              {verificationData?.identity_verified && (
                 <div className="mb-3">
                   <AnsutBadge certified={true} size="large" />
                 </div>

@@ -49,7 +49,7 @@ Après une analyse approfondie du code source, de la documentation et des Edge F
 - ❌ **Fallback en cas d'indisponibilité** - Pas de plan B si ONECI est down
 
 #### Impact
-🔴 **BLOQUANT** - La vérification NNI est **obligatoire** pour la certification ANSUT. Sans cela, la plateforme ne peut pas être certifiée.
+🔴 **BLOQUANT** - La vérification NNI est **obligatoire** pour la cachet électronique visible. Sans cela, la plateforme ne peut pas être certifiée.
 
 #### Actions requises
 1. **Obtenir les credentials ONECI** auprès de l'ANSUT
@@ -246,7 +246,7 @@ Après une analyse approfondie du code source, de la documentation et des Edge F
 - ❌ **Mentions légales** - Toutes les mentions obligatoires sont-elles présentes ?
 - ❌ **QR Code de vérification** - Pas de QR code pour vérifier l'authenticité
 - ❌ **Numéro unique de contrat** - Format du numéro de contrat non défini
-- ❌ **Watermark** - Pas de watermark "Mon Toit - Certifié ANSUT"
+- ❌ **Watermark** - Pas de watermark "Mon Toit - Avec cachet électronique"
 - ❌ **Annexes** - Comment gérer les annexes (état des lieux, inventaire) ?
 
 #### Impact
@@ -606,7 +606,7 @@ Après une analyse approfondie du code source, de la documentation et des Edge F
 
 | Phase | Durée | Dates (estimation) | Livrables |
 |-------|-------|-------------------|-----------|
-| **Phase 1 : Critique** | 18-26 jours | Semaines 1-4 | Certification ANSUT possible |
+| **Phase 1 : Critique** | 18-26 jours | Semaines 1-4 | Cachet électronique visible possible |
 | **Phase 2 : Important** | 10-14 jours | Semaines 5-6 | Sécurité & UX améliorées |
 | **Phase 3 : Optionnel** | 17-25 jours | Semaines 7-10 | Engagement & conversion |
 | **Phase 4 : Bonus** | 9-13 jours | Semaines 11-12 | Différenciation |
@@ -650,11 +650,11 @@ Après une analyse approfondie du code source, de la documentation et des Edge F
 
 ## 💡 RECOMMANDATIONS STRATÉGIQUES
 
-### 1. Focus sur la Certification ANSUT
+### 1. Focus sur la Cachet électronique visible
 
 **Recommandation :** Prioriser **absolument** les fonctionnalités critiques (Phase 1) avant tout le reste.
 
-**Justification :** La certification ANSUT est le **différenciateur majeur** de Mon Toit. Sans elle, la plateforme perd sa valeur ajoutée principale.
+**Justification :** La cachet électronique visible est le **différenciateur majeur** de Mon Toit. Sans elle, la plateforme perd sa valeur ajoutée principale.
 
 **Actions :**
 - Obtenir les credentials ONECI et CryptoNeo **immédiatement**

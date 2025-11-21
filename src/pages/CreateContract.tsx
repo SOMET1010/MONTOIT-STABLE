@@ -33,7 +33,7 @@ interface Tenant {
   phone: string;
   address?: string;
   profession?: string;
-  ansut_verified?: boolean;
+  identity_verified?: boolean;
 }
 
 interface ValidationError {
@@ -125,20 +125,20 @@ export default function CreateContract() {
       if (data) {
         const { data: verification } = await supabase
           .from('user_verifications')
-          .select('ansut_verified')
+          .select('identity_verified')
           .eq('user_id', data.id)
           .maybeSingle();
 
         const tenantData = {
           ...data,
-          ansut_verified: verification?.ansut_verified || false
+          identity_verified: verification?.identity_verified || false
         };
 
         setTenants([tenantData]);
         setFormData(prev => ({ ...prev, tenant_id: data.id }));
 
-        if (!tenantData.ansut_verified) {
-          alert('⚠️ Attention: Ce locataire n\'est pas vérifié Mon Toit. Il devra compléter sa certification avant de pouvoir signer le contrat.');
+        if (!tenantData.identity_verified) {
+          alert('⚠️ Attention: Ce locataire n\'a pas vérifié son identité. Il devra compléter la vérification avant de pouvoir signer le contrat.');
         }
       } else {
         alert('Aucun locataire trouvé avec cet email');
@@ -345,25 +345,25 @@ export default function CreateContract() {
                 </button>
               </div>
               {tenants.length > 0 && (
-                <div className={`mt-3 p-3 rounded-lg border ${tenants[0].ansut_verified ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
-                  <p className={`text-sm font-semibold ${tenants[0].ansut_verified ? 'text-green-800' : 'text-yellow-800'}`}>
+                <div className={`mt-3 p-3 rounded-lg border ${tenants[0].identity_verified ? 'bg-green-50 border-green-200' : 'bg-yellow-50 border-yellow-200'}`}>
+                  <p className={`text-sm font-semibold ${tenants[0].identity_verified ? 'text-green-800' : 'text-yellow-800'}`}>
                     Locataire trouvé :
-                    {tenants[0].ansut_verified ? ' ✓ Vérifié Mon Toit' : ' ⚠️ Non vérifié Mon Toit'}
+                    {tenants[0].identity_verified ? ' ✓ Identité vérifiée' : ' ⚠️ Identité non vérifiée'}
                   </p>
-                  <p className={`text-sm ${tenants[0].ansut_verified ? 'text-green-700' : 'text-yellow-700'}`}>
+                  <p className={`text-sm ${tenants[0].identity_verified ? 'text-green-700' : 'text-yellow-700'}`}>
                     {tenants[0].full_name} - {tenants[0].email}
                   </p>
-                  <p className={`text-sm ${tenants[0].ansut_verified ? 'text-green-600' : 'text-yellow-600'}`}>
+                  <p className={`text-sm ${tenants[0].identity_verified ? 'text-green-600' : 'text-yellow-600'}`}>
                     {tenants[0].phone}
                   </p>
                   {tenants[0].address && (
-                    <p className={`text-sm ${tenants[0].ansut_verified ? 'text-green-600' : 'text-yellow-600'}`}>
+                    <p className={`text-sm ${tenants[0].identity_verified ? 'text-green-600' : 'text-yellow-600'}`}>
                       {tenants[0].address}
                     </p>
                   )}
-                  {!tenants[0].ansut_verified && (
+                  {!tenants[0].identity_verified && (
                     <p className="text-xs text-yellow-700 mt-2">
-                      Le locataire devra compléter sa vérification Mon Toit avant de pouvoir signer le contrat.
+                      Le locataire devra compléter la vérification de son identité avant de pouvoir signer le contrat.
                     </p>
                   )}
                 </div>

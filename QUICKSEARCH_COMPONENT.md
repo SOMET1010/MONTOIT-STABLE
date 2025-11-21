@@ -36,7 +36,7 @@ Le composant **QuickSearch** a été créé pour améliorer l'UX de la page d'ac
 ├─────────────────────────────────────────────────────┤
 │  [📍 Ville ▼] [🏠 Type ▼] [💰 Budget] [🔍 Rechercher] │
 ├─────────────────────────────────────────────────────┤
-│  ✅ 100% gratuit • Sécurisé • Certifié ANSUT 🛡️    │
+│  ✅ 100% gratuit • Sécurisé • Avec cachet électronique 🛡️    │
 └─────────────────────────────────────────────────────┘
 ```
 
@@ -124,7 +124,7 @@ Le composant **QuickSearch** a été créé pour améliorer l'UX de la page d'ac
 
 ### Footer Badge ✅
 
-**Text**: "100% gratuit • Sécurisé • Certifié ANSUT"
+**Text**: "100% gratuit • Sécurisé • Avec cachet électronique"
 
 **Icons**:
 - CheckCircle (vert)
@@ -320,7 +320,7 @@ const [maxBudget, setMaxBudget] = useState('');
 4. **Badge confiance**
    - 100% gratuit
    - Sécurisé
-   - Certifié ANSUT
+   - Avec cachet électronique
 
 5. **Responsive**
    - Desktop: grid 4 cols

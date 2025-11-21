@@ -226,7 +226,7 @@ Page pour demander la validation
 - Nom, email
 - Temps écoulé depuis demande
 - Score ANSUT
-- Badge "Certifié ANSUT"
+- Badge "Avec cachet électronique"
 - Badge "Urgent" si > 48h
 - Bouton "Examiner"
 ```
@@ -236,7 +236,7 @@ Page pour demander la validation
 Section 1: Informations Personnelles
   - Nom, email, téléphone, date naissance, CNI, ville
 
-Section 2: Certification ANSUT
+Section 2: Cachet électronique visible
   - Status ONECI (✅/❌)
   - Score ANSUT (XX/850)
 
@@ -270,11 +270,11 @@ Boutons:
 
 ### Workflow User (Locataire/Propriétaire)
 
-1. **Passer certification ANSUT** (Epic 1 - déjà fait)
+1. **Passer cachet électronique visible** (Epic 1 - déjà fait)
    - ONECI ✅
    - CNAM ✅
    - Smile ID ✅
-   - Obtient badge "Certifié ANSUT"
+   - Obtient badge "Avec cachet électronique"
 
 2. **Demander validation Tiers de Confiance** (US-085 ✅)
    - Va sur `/request-trust-validation`
@@ -304,7 +304,7 @@ Boutons:
    - Clique sur demande dans liste
    - Consulte:
      - Infos personnelles
-     - Certification ANSUT
+     - Cachet électronique visible
      - Photos CNI + selfie
    - Fait vérifications manuelles (checklist)
    - Écrit notes
@@ -394,7 +394,7 @@ Boutons:
 - Error: Rouge (#ef4444)
 
 **Badges:**
-- "Certifié ANSUT" ✅ (vert, Epic 1)
+- "Avec cachet électronique" ✅ (vert, Epic 1)
 - "Vérifié Tiers de Confiance" 🔒 (bleu gradient)
 
 **États visuels:**

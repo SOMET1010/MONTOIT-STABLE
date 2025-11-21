@@ -123,7 +123,7 @@ N'importe qui pouvait postuler sans KYC.
 └── Erreur 69: Suggestion chatbot
 
 ❌ Non reproduites (6):
-├── Erreur 4: "Certifié ANSUT" QuickSearch (pas trouvé)
+├── Erreur 4: "Avec cachet électronique" QuickSearch (pas trouvé)
 ├── Erreur 5: Publier → 404 (routes OK)
 ├── Erreur 16: Chatbot pas fermable (bouton X OK)
 ├── Erreur 22: "autree" faute (pas trouvé)

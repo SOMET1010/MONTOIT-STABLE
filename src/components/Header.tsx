@@ -12,7 +12,7 @@ export default function Header() {
   const [verificationStatus, setVerificationStatus] = useState({
     oneciVerified: false,
     faceVerified: false,
-    ansutCertified: false
+    identityVerified: false
   });
   const [showMaintenanceMenu, setShowMaintenanceMenu] = useState(false);
   const [showAgencyMenu, setShowAgencyMenu] = useState(false);
@@ -31,7 +31,7 @@ export default function Header() {
     try {
       const { data } = await supabase
         .from('user_verifications')
-        .select('oneci_status, face_verification_status, ansut_certified')
+        .select('oneci_status, face_verification_status, identity_verified')
         .eq('user_id', user?.id)
         .maybeSingle();
 
@@ -39,7 +39,7 @@ export default function Header() {
         setVerificationStatus({
           oneciVerified: data.oneci_status === 'verifie',
           faceVerified: data.face_verification_status === 'verifie',
-          ansutCertified: data.ansut_certified || false
+          identityVerified: data.identity_verified || false
         });
       }
     } catch (error) {
@@ -225,7 +225,7 @@ export default function Header() {
                   <span>Profil</span>
                 </a>
 
-                {(profile?.user_type === 'admin_ansut' || (Array.isArray(profile?.available_roles) && profile.available_roles.includes('admin')) || profile?.active_role === 'admin') && (
+                {(profile?.user_type === 'admin' || (Array.isArray(profile?.available_roles) && profile.available_roles.includes('admin')) || profile?.active_role === 'admin') && (
                   <div className="relative" onMouseLeave={() => setShowAdminMenu(false)}>
                     <button
                       onMouseEnter={() => setShowAdminMenu(true)}
@@ -474,7 +474,7 @@ export default function Header() {
                 </>
               )}
 
-              {(profile?.user_type === 'admin_ansut' || (Array.isArray(profile?.available_roles) && profile.available_roles.includes('admin')) || profile?.active_role === 'admin') && (
+              {(profile?.user_type === 'admin' || (Array.isArray(profile?.available_roles) && profile.available_roles.includes('admin')) || profile?.active_role === 'admin') && (
                 <>
                   <div className="py-2 px-4 border-b border-gray-200">
                     <p className="text-xs font-bold text-blue-600 uppercase">Administration</p>

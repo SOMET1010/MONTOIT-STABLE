@@ -26,7 +26,7 @@
 
 ### 🔴 PRIORITÉ CRITIQUE (Phase 1 - 8 semaines)
 
-#### **EPIC 1: Vérification d'Identité et Certification ANSUT**
+#### **EPIC 1: Vérification d'Identité et Cachet électronique visible**
 **Sprints 1-3 | 6 semaines | 6 User Stories**
 
 ##### Sprint 1-2: Intégration ONECI (4 semaines)
@@ -52,7 +52,7 @@
   - Score de correspondance min 80%
 
 - **US-005:** Badge et Affichage Certification (5 pts)
-  - Badge "Certifié ANSUT" sur profil
+  - Badge "Avec cachet électronique" sur profil
   - Certificat téléchargeable PDF
   - Page `/certification` explicative
 
@@ -86,7 +86,7 @@
 - **US-010:** Workflow de Signature (8 pts)
   - Page `/leases/sign/:id`
   - Affichage PDF dans navigateur
-  - Vérification certification ANSUT
+  - Vérification cachet électronique visible
 
 - **US-011:** Intégration API CryptoNeo (21 pts)
   - Edge function `cryptoneo-signature`
@@ -440,7 +440,7 @@
 
 **Livrables Phase 1:**
 - Plateforme complète locataires/propriétaires
-- Certification ANSUT opérationnelle
+- Cachet électronique visible opérationnelle
 - Signature électronique fonctionnelle
 - Paiements Mobile Money (déjà fait ✅)
 - Notifications multi-canaux
@@ -558,7 +558,7 @@
 4. Tests utilisateurs sur processus certification
 
 ### À Faire Ce Trimestre (Q1)
-1. Finaliser EPIC 1 (Certification ANSUT)
+1. Finaliser EPIC 1 (Cachet électronique visible)
 2. Finaliser EPIC 2 (Signature Électronique)
 3. Lancer EPIC 4 (Notifications)
 4. Préparer campagne marketing MVP

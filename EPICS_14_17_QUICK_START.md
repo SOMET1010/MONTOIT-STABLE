@@ -436,7 +436,7 @@ test('landlord can request CEV certificate', async ({ page }) => {
   await page.goto('/contracts/123');
 
   // Click CEV button
-  await page.click('button:has-text("Obtenir Certificat CEV")');
+  await page.click('button:has-text("Obtenir Certificat Électronique de Vérification (CEV) ONECI")');
 
   // Fill form
   await page.fill('#landlord-cni', 'CI0123456789');
@@ -560,7 +560,7 @@ npx supabase db push
 "Implémenter workflow demande CEV complet avec intégration API ONECI."
 
 ### User Stories
-1. **US-063:** Demande Certificat CEV (21 pts)
+1. **US-063:** Demande Certificat Électronique de Vérification (CEV) ONECI (21 pts)
 2. **US-064:** API ONECI Soumission (21 pts)
 3. **US-065:** Webhook ONECI Statut (13 pts)
 4. **US-066:** Affichage Vérification CEV (13 pts)

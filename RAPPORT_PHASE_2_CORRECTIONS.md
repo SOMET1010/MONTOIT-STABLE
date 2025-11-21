@@ -78,7 +78,7 @@ Mise à jour de toutes les réponses fallback
 | Avant | Après |
 |-------|-------|
 | "badge ANSUT du propriétaire" | "badge de vérification du propriétaire" |
-| "Certification ANSUT" | "Vérification d'Identité" |
+| "Cachet électronique visible" | "Vérification d'Identité" |
 | "Pour obtenir ANSUT" | "Pour obtenir la vérification" |
 | "Badge ANSUT = Confiance" | "Badge Vérifié = Confiance" |
 | "sans badge ANSUT vérifié" | "sans badge de vérification" |

@@ -15,7 +15,7 @@ interface User {
   full_name: string;
   phone: string | null;
   role: string;
-  ansut_certified: boolean;
+  identity_verified: boolean;
   is_verified: boolean;
   created_at: string;
 }
@@ -193,10 +193,10 @@ export default function AdminUsers() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        {u.ansut_certified && (
+                        {u.identity_verified && (
                           <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                             <CheckCircle className="w-3 h-3 mr-1" />
-                            ANSUT
+                            Vérifié
                           </span>
                         )}
                         {u.is_verified ? (

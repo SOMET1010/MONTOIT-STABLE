@@ -90,8 +90,8 @@ export default function RoleSwitcher() {
         return 'Propriétaire';
       case 'agence':
         return 'Agence';
-      case 'admin_ansut':
-        return 'Admin ANSUT';
+      case 'admin':
+        return 'Administrateur';
       default:
         return role;
     }

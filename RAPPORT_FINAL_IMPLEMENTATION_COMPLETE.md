@@ -109,7 +109,7 @@ if (needsReload) {
 
 ## ⚠️ ERREURS PARTIELLEMENT CORRIGÉES (4 erreurs)
 
-### 19. ⚠️ Champ ansut_certified en base de données
+### 19. ⚠️ Champ identity_verified en base de données
 
 **État**: Code applicatif corrigé, base de données à mettre à jour
 
@@ -117,7 +117,7 @@ if (needsReload) {
 ```sql
 -- Migration à créer
 ALTER TABLE user_verifications
-RENAME COLUMN ansut_certified TO mon_toit_verified;
+RENAME COLUMN identity_verified TO mon_toit_verified;
 
 -- Mettre à jour les vues/fonctions qui utilisent ce champ
 ```
@@ -297,7 +297,7 @@ new mapboxgl.Marker({
 ### Phase 2: Finitions Base de Données (30min)
 **Optionnel mais recommandé**:
 
-4. Créer migration renommer `ansut_certified`
+4. Créer migration renommer `identity_verified`
 5. Créer migration contrainte `check_bedrooms`
 6. Renommer fichier `AnsutVerification.tsx`
 

@@ -47,7 +47,7 @@ SET
   trust_verified_at = NOW(),
   trust_score = 100,
   is_verified = true,
-  ansut_certified = true,
+  identity_verified = true,
   face_verified = true,
   face_verified_at = NOW(),
   oneci_verified = true,
