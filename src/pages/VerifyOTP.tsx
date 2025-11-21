@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { Shield, Mail, Phone, AlertCircle, CheckCircle, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Shield, Mail, Phone, AlertCircle, CheckCircle, ArrowLeft, RefreshCw, MessageCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
 export default function VerifyOTP() {
@@ -177,13 +177,15 @@ export default function VerifyOTP() {
             <div className="mx-auto w-20 h-20 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg animate-bounce-subtle">
               {type === 'email' ? (
                 <Mail className="h-10 w-10 text-white" />
+              ) : type === 'whatsapp' ? (
+                <MessageCircle className="h-10 w-10 text-white" />
               ) : (
                 <Phone className="h-10 w-10 text-white" />
               )}
             </div>
 
             <h2 className="text-3xl font-bold text-gray-900 mb-2">
-              Vérification {type === 'email' ? 'Email' : 'SMS'}
+              Vérification {type === 'email' ? 'Email' : type === 'whatsapp' ? 'WhatsApp' : 'SMS'}
             </h2>
             <p className="text-gray-600">
               Un code à 6 chiffres a été envoyé à

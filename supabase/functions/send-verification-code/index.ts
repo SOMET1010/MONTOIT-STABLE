@@ -10,7 +10,7 @@ const corsHeaders = {
 interface VerificationRequest {
   email?: string;
   phone?: string;
-  type: 'email' | 'sms';
+  type: 'email' | 'sms' | 'whatsapp';
   name?: string;
   userId?: string;
 }
@@ -31,7 +31,7 @@ Deno.serve(async (req: Request) => {
 
     const { email, phone, type, name, userId } = await req.json() as VerificationRequest;
 
-    if (!type || (type === 'email' && !email) || (type === 'sms' && !phone)) {
+    if (!type || (type === 'email' && !email) || ((type === 'sms' || type === 'whatsapp') && !phone)) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -54,7 +54,7 @@ Deno.serve(async (req: Request) => {
       .insert({
         user_id: userId || null,
         email: type === 'email' ? email : null,
-        phone: type === 'sms' ? phone : null,
+        phone: (type === 'sms' || type === 'whatsapp') ? phone : null,
         code: otp,
         type: type,
         expires_at: expiresAt.toISOString()
@@ -138,6 +138,38 @@ Deno.serve(async (req: Request) => {
         JSON.stringify({
           success: true,
           message: 'Code de vérification envoyé par SMS',
+          expiresAt: expiresAt.toISOString()
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+
+    } else if (type === 'whatsapp') {
+      // Call send-whatsapp-otp function
+      const whatsappResponse = await fetch(
+        `${Deno.env.get('SUPABASE_URL')}/functions/v1/send-whatsapp-otp`,
+        {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            phone: phone,
+            otp: otp,
+            name: name || 'utilisateur'
+          })
+        }
+      );
+
+      if (!whatsappResponse.ok) {
+        const errorData = await whatsappResponse.json();
+        throw new Error('Failed to send WhatsApp: ' + (errorData.error || 'Unknown error'));
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Code de vérification envoyé via WhatsApp',
           expiresAt: expiresAt.toISOString()
         }),
         { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
