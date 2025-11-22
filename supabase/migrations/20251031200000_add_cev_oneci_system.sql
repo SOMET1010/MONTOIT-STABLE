@@ -142,6 +142,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_cev_requests_updated_at ON cev_requests;
 CREATE TRIGGER trigger_cev_requests_updated_at
   BEFORE UPDATE ON cev_requests
   FOR EACH ROW
@@ -162,6 +163,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_update_lease_on_cev_issued ON cev_requests;
 CREATE TRIGGER trigger_update_lease_on_cev_issued
   AFTER UPDATE ON cev_requests
   FOR EACH ROW
@@ -218,18 +220,21 @@ ALTER TABLE cev_analytics_snapshots ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- Propriétaire peut voir ses demandes
+DROP POLICY IF EXISTS "Landlords can view own CEV requests" ON cev_requests;
 CREATE POLICY "Landlords can view own CEV requests"
   ON cev_requests FOR SELECT
   TO authenticated
   USING (landlord_id = auth.uid());
 
 -- Locataire peut voir demandes de ses baux
+DROP POLICY IF EXISTS "Tenants can view CEV requests for their leases" ON cev_requests;
 CREATE POLICY "Tenants can view CEV requests for their leases"
   ON cev_requests FOR SELECT
   TO authenticated
   USING (tenant_id = auth.uid());
 
 -- Admins peuvent tout voir
+DROP POLICY IF EXISTS "Admins can view all CEV requests" ON cev_requests;
 CREATE POLICY "Admins can view all CEV requests"
   ON cev_requests FOR SELECT
   TO authenticated
@@ -237,17 +242,19 @@ CREATE POLICY "Admins can view all CEV requests"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- Propriétaire peut créer demande pour ses baux
+DROP POLICY IF EXISTS "Landlords can create CEV requests" ON cev_requests;
 CREATE POLICY "Landlords can create CEV requests"
   ON cev_requests FOR INSERT
   TO authenticated
   WITH CHECK (landlord_id = auth.uid());
 
 -- Admins peuvent modifier les demandes
+DROP POLICY IF EXISTS "Admins can update CEV requests" ON cev_requests;
 CREATE POLICY "Admins can update CEV requests"
   ON cev_requests FOR UPDATE
   TO authenticated
@@ -255,11 +262,12 @@ CREATE POLICY "Admins can update CEV requests"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- Système peut mettre à jour (webhooks ONECI)
+DROP POLICY IF EXISTS "System can update CEV requests" ON cev_requests;
 CREATE POLICY "System can update CEV requests"
   ON cev_requests FOR UPDATE
   TO authenticated
@@ -270,6 +278,7 @@ CREATE POLICY "System can update CEV requests"
 -- ============================================================================
 
 -- Seuls les admins peuvent voir les analytics
+DROP POLICY IF EXISTS "Admins can view CEV analytics" ON cev_analytics_snapshots;
 CREATE POLICY "Admins can view CEV analytics"
   ON cev_analytics_snapshots FOR SELECT
   TO authenticated
@@ -277,11 +286,12 @@ CREATE POLICY "Admins can view CEV analytics"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- Seul le système peut insérer des snapshots
+DROP POLICY IF EXISTS "System can create CEV analytics snapshots" ON cev_analytics_snapshots;
 CREATE POLICY "System can create CEV analytics snapshots"
   ON cev_analytics_snapshots FOR INSERT
   TO authenticated
@@ -289,7 +299,7 @@ CREATE POLICY "System can create CEV analytics snapshots"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 

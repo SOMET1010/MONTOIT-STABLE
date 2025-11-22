@@ -142,6 +142,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_cev_requests_updated_at ON cev_requests;
 CREATE TRIGGER trigger_cev_requests_updated_at
   BEFORE UPDATE ON cev_requests
   FOR EACH ROW
@@ -162,6 +163,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_update_lease_on_cev_issued ON cev_requests;
 CREATE TRIGGER trigger_update_lease_on_cev_issued
   AFTER UPDATE ON cev_requests
   FOR EACH ROW
@@ -237,7 +239,7 @@ CREATE POLICY "Admins can view all CEV requests"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -255,7 +257,7 @@ CREATE POLICY "Admins can update CEV requests"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -277,7 +279,7 @@ CREATE POLICY "Admins can view CEV analytics"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -289,7 +291,7 @@ CREATE POLICY "System can create CEV analytics snapshots"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 

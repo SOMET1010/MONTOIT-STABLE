@@ -113,6 +113,52 @@ CREATE TABLE IF NOT EXISTS property_alerts (
   UNIQUE(saved_search_id, property_id)
 );
 
+-- Add missing columns if table already exists
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'property_alerts' AND column_name = 'notified'
+  ) THEN
+    ALTER TABLE property_alerts ADD COLUMN notified boolean DEFAULT false;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'property_alerts' AND column_name = 'notification_sent_at'
+  ) THEN
+    ALTER TABLE property_alerts ADD COLUMN notification_sent_at timestamptz;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'property_alerts' AND column_name = 'viewed'
+  ) THEN
+    ALTER TABLE property_alerts ADD COLUMN viewed boolean DEFAULT false;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'property_alerts' AND column_name = 'viewed_at'
+  ) THEN
+    ALTER TABLE property_alerts ADD COLUMN viewed_at timestamptz;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'property_alerts' AND column_name = 'dismissed'
+  ) THEN
+    ALTER TABLE property_alerts ADD COLUMN dismissed boolean DEFAULT false;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'property_alerts' AND column_name = 'dismissed_at'
+  ) THEN
+    ALTER TABLE property_alerts ADD COLUMN dismissed_at timestamptz;
+  END IF;
+END $$;
+
 CREATE INDEX IF NOT EXISTS idx_property_alerts_saved_search_id ON property_alerts(saved_search_id);
 CREATE INDEX IF NOT EXISTS idx_property_alerts_property_id ON property_alerts(property_id);
 CREATE INDEX IF NOT EXISTS idx_property_alerts_user_id ON property_alerts(user_id);
@@ -265,11 +311,13 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS properties_after_insert_match_searches ON properties;
 CREATE TRIGGER properties_after_insert_match_searches
   AFTER INSERT ON properties
   FOR EACH ROW
   EXECUTE FUNCTION trigger_match_property_to_searches();
 
+DROP TRIGGER IF EXISTS properties_after_update_match_searches ON properties;
 CREATE TRIGGER properties_after_update_match_searches
   AFTER UPDATE ON properties
   FOR EACH ROW
@@ -307,6 +355,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS trigger_update_saved_searches_updated_at ON saved_searches;
 CREATE TRIGGER trigger_update_saved_searches_updated_at
   BEFORE UPDATE ON saved_searches
   FOR EACH ROW

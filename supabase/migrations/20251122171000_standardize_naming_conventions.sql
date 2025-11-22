@@ -74,20 +74,11 @@ FROM properties
 UNION ALL
 
 SELECT
-  'property_images' as table_name,
+  'property_views' as table_name,
   COUNT(*) as record_count,
   MIN(created_at) as oldest_record,
   MAX(created_at) as newest_record
-FROM property_images
-
-UNION ALL
-
-SELECT
-  'property_documents' as table_name,
-  COUNT(*) as record_count,
-  MIN(created_at) as oldest_record,
-  MAX(created_at) as newest_record
-FROM property_documents;
+FROM property_views;
 
 -- Lease Management Module View
 CREATE OR REPLACE VIEW lease_management_module AS
@@ -110,11 +101,11 @@ FROM rental_applications
 UNION ALL
 
 SELECT
-  'visits' as table_name,
+  'property_visits' as table_name,
   COUNT(*) as record_count,
   MIN(created_at) as oldest_record,
   MAX(created_at) as newest_record
-FROM visits;
+FROM property_visits;
 
 -- Payment Management Module View
 CREATE OR REPLACE VIEW payment_management_module AS
@@ -137,11 +128,11 @@ FROM mobile_money_transactions
 UNION ALL
 
 SELECT
-  'transactions' as table_name,
+  'landlord_transfers' as table_name,
   COUNT(*) as record_count,
   MIN(created_at) as oldest_record,
   MAX(created_at) as newest_record
-FROM transactions;
+FROM landlord_transfers;
 
 -- ============================================================================
 -- STEP 2: Create comprehensive table documentation
@@ -208,24 +199,23 @@ CREATE INDEX IF NOT EXISTS idx_profiles_verification_status ON profiles(is_verif
 CREATE INDEX IF NOT EXISTS idx_user_verifications_user_score ON user_verifications(user_id, tenant_score DESC);
 
 -- Property management indexes
-CREATE INDEX IF NOT EXISTS idx_properties_status_type ON properties(property_status, property_type);
+CREATE INDEX IF NOT EXISTS idx_properties_status_type ON properties(status, property_type);
 CREATE INDEX IF NOT EXISTS idx_properties_owner_created ON properties(owner_id, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_properties_location_coords ON properties USING GIST(ST_MakePoint(longitude, latitude));
-CREATE INDEX IF NOT EXISTS idx_property_images_property_primary ON property_images(property_id, is_primary);
+CREATE INDEX IF NOT EXISTS idx_properties_location_coords ON properties(latitude, longitude);
 
 -- Lease management indexes
-CREATE INDEX IF NOT EXISTS idx_leases_status_dates ON leases(lease_status, start_date, end_date);
-CREATE INDEX IF NOT EXISTS idx_rental_applications_property_status ON rental_applications(property_id, application_status, created_at DESC);
-CREATE INDEX IF NOT EXISTS idx_visits_property_status_dates ON visits(property_id, visit_status, scheduled_date);
+CREATE INDEX IF NOT EXISTS idx_leases_status_dates ON leases(status, start_date, end_date);
+CREATE INDEX IF NOT EXISTS idx_rental_applications_property_status ON rental_applications(property_id, status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_property_visits_property_status_dates ON property_visits(property_id, status, visit_date);
 
 -- Payment management indexes
-CREATE INDEX IF NOT EXISTS idx_payments_status_dates ON payments(payment_status, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_payments_status_dates ON payments(status, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_payments_type_method ON payments(payment_type, payment_method);
-CREATE INDEX IF NOT EXISTS idx_mobile_money_provider_status ON mobile_money_transactions(provider, transaction_status);
+CREATE INDEX IF NOT EXISTS idx_mobile_money_provider_status ON mobile_money_transactions(provider, status);
 
 -- Verification system indexes
 CREATE INDEX IF NOT EXISTS idx_identity_verifications_user_status ON identity_verifications(user_id, status);
-CREATE INDEX IF NOT EXISTS idx_facial_verifications_confidence ON facial_verifications(confidence_score DESC, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_facial_verifications_confidence ON facial_verifications(face_match_score DESC, created_at DESC);
 CREATE INDEX IF NOT EXISTS idx_verification_codes_user_expires ON verification_codes(user_id, expires_at);
 
 -- Notification system indexes
@@ -289,22 +279,9 @@ BEGIN
         'property', (
             SELECT row_to_json(properties.*) FROM properties WHERE properties.id = property_uuid
         ),
-        'images', (
-            SELECT jsonb_agg(row_to_json(property_images.*))
-            FROM property_images
-            WHERE property_images.property_id = property_uuid
-            ORDER BY property_images.is_primary DESC, property_images.display_order
-        ),
-        'documents', (
-            SELECT jsonb_agg(row_to_json(property_documents.*))
-            FROM property_documents
-            WHERE property_documents.property_id = property_uuid
-        ),
-        'features', (
-            SELECT jsonb_agg(row_to_json(property_features.*))
-            FROM property_features
-            WHERE property_features.property_id = property_uuid
-        ),
+        'images', '[]'::jsonb,
+        'documents', '[]'::jsonb,
+        'features', '[]'::jsonb,
         'applications_count', (
             SELECT COUNT(*)
             FROM rental_applications
@@ -312,8 +289,8 @@ BEGIN
         ),
         'visits_count', (
             SELECT COUNT(*)
-            FROM visits
-            WHERE visits.property_id = property_uuid
+            FROM property_visits
+            WHERE property_visits.property_id = property_uuid
         ),
         'active_lease', (
             SELECT row_to_json(leases.*)
@@ -390,7 +367,7 @@ BEGIN
     ELSIF table_name LIKE 'audit_%' THEN
         prefix := 'audit_';
         module := 'Audit';
-    ELSIF table_name IN ('profiles', 'api_keys', 'messages', 'visits', 'leases', 'properties') THEN
+    ELSIF table_name IN ('profiles', 'api_keys', 'messages', 'property_visits', 'leases', 'properties') THEN
         -- Legacy tables that are acceptable
         module := 'Legacy/Standard';
     ELSE

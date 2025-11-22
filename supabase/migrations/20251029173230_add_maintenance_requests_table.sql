@@ -110,6 +110,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Trigger to automatically update updated_at
+DROP TRIGGER IF EXISTS maintenance_request_updated_at ON maintenance_requests;
 CREATE TRIGGER maintenance_request_updated_at
   BEFORE UPDATE ON maintenance_requests
   FOR EACH ROW

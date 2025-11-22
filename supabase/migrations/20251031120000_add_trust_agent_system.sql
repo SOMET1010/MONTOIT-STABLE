@@ -161,6 +161,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_trust_agents_updated_at ON trust_agents;
 CREATE TRIGGER trigger_trust_agents_updated_at
   BEFORE UPDATE ON trust_agents
   FOR EACH ROW
@@ -229,6 +230,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_trust_validation_requests_updated_at ON trust_validation_requests;
 CREATE TRIGGER trigger_trust_validation_requests_updated_at
   BEFORE UPDATE ON trust_validation_requests
   FOR EACH ROW
@@ -251,6 +253,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_update_profile_on_trust_validation ON trust_validation_requests;
 CREATE TRIGGER trigger_update_profile_on_trust_validation
   AFTER UPDATE ON trust_validation_requests
   FOR EACH ROW
@@ -353,6 +356,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_generate_dispute_number ON disputes;
 CREATE TRIGGER trigger_generate_dispute_number
   BEFORE INSERT ON disputes
   FOR EACH ROW
@@ -368,6 +372,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_disputes_updated_at ON disputes;
 CREATE TRIGGER trigger_disputes_updated_at
   BEFORE UPDATE ON disputes
   FOR EACH ROW
@@ -443,6 +448,7 @@ ALTER TABLE moderation_queue ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 
 -- Admins peuvent tout voir
+DROP POLICY IF EXISTS "Admins can view all trust agents" ON trust_agents;
 CREATE POLICY "Admins can view all trust agents"
   ON trust_agents FOR SELECT
   TO authenticated
@@ -450,11 +456,12 @@ CREATE POLICY "Admins can view all trust agents"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- Agents actifs peuvent voir leur profil + autres agents actifs
+DROP POLICY IF EXISTS "Trust agents can view own profile and active agents" ON trust_agents;
 CREATE POLICY "Trust agents can view own profile and active agents"
   ON trust_agents FOR SELECT
   TO authenticated
@@ -472,6 +479,7 @@ CREATE POLICY "Trust agents can view own profile and active agents"
   );
 
 -- Admins peuvent créer des agents
+DROP POLICY IF EXISTS "Admins can create trust agents" ON trust_agents;
 CREATE POLICY "Admins can create trust agents"
   ON trust_agents FOR INSERT
   TO authenticated
@@ -479,11 +487,12 @@ CREATE POLICY "Admins can create trust agents"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- Admins peuvent modifier les agents
+DROP POLICY IF EXISTS "Admins can update trust agents" ON trust_agents;
 CREATE POLICY "Admins can update trust agents"
   ON trust_agents FOR UPDATE
   TO authenticated
@@ -491,7 +500,7 @@ CREATE POLICY "Admins can update trust agents"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -500,12 +509,14 @@ CREATE POLICY "Admins can update trust agents"
 -- ============================================================================
 
 -- User peut voir sa propre demande
+DROP POLICY IF EXISTS "Users can view own validation request" ON trust_validation_requests;
 CREATE POLICY "Users can view own validation request"
   ON trust_validation_requests FOR SELECT
   TO authenticated
   USING (user_id = auth.uid());
 
 -- Agents peuvent voir les demandes assignées ou toutes si actifs
+DROP POLICY IF EXISTS "Trust agents can view validation requests" ON trust_validation_requests;
 CREATE POLICY "Trust agents can view validation requests"
   ON trust_validation_requests FOR SELECT
   TO authenticated
@@ -519,12 +530,14 @@ CREATE POLICY "Trust agents can view validation requests"
   );
 
 -- Users peuvent créer une demande
+DROP POLICY IF EXISTS "Users can create validation request" ON trust_validation_requests;
 CREATE POLICY "Users can create validation request"
   ON trust_validation_requests FOR INSERT
   TO authenticated
   WITH CHECK (user_id = auth.uid());
 
 -- Agents peuvent modifier les demandes
+DROP POLICY IF EXISTS "Trust agents can update validation requests" ON trust_validation_requests;
 CREATE POLICY "Trust agents can update validation requests"
   ON trust_validation_requests FOR UPDATE
   TO authenticated
@@ -542,6 +555,7 @@ CREATE POLICY "Trust agents can update validation requests"
 -- ============================================================================
 
 -- Parties concernées peuvent voir le litige
+DROP POLICY IF EXISTS "Parties can view their disputes" ON disputes;
 CREATE POLICY "Parties can view their disputes"
   ON disputes FOR SELECT
   TO authenticated
@@ -551,6 +565,7 @@ CREATE POLICY "Parties can view their disputes"
   );
 
 -- Médiateurs peuvent voir les litiges assignés
+DROP POLICY IF EXISTS "Trust agents can view assigned disputes" ON disputes;
 CREATE POLICY "Trust agents can view assigned disputes"
   ON disputes FOR SELECT
   TO authenticated
@@ -564,12 +579,14 @@ CREATE POLICY "Trust agents can view assigned disputes"
   );
 
 -- Parties peuvent créer un litige
+DROP POLICY IF EXISTS "Users can create disputes" ON disputes;
 CREATE POLICY "Users can create disputes"
   ON disputes FOR INSERT
   TO authenticated
   WITH CHECK (opened_by = auth.uid());
 
 -- Médiateurs peuvent modifier les litiges
+DROP POLICY IF EXISTS "Trust agents can update disputes" ON disputes;
 CREATE POLICY "Trust agents can update disputes"
   ON disputes FOR UPDATE
   TO authenticated
@@ -587,6 +604,7 @@ CREATE POLICY "Trust agents can update disputes"
 -- ============================================================================
 
 -- Lire les messages du litige si partie concernée ou médiateur
+DROP POLICY IF EXISTS "Parties and mediator can view dispute messages" ON dispute_messages;
 CREATE POLICY "Parties and mediator can view dispute messages"
   ON dispute_messages FOR SELECT
   TO authenticated
@@ -607,6 +625,7 @@ CREATE POLICY "Parties and mediator can view dispute messages"
   );
 
 -- Envoyer des messages si partie concernée ou médiateur
+DROP POLICY IF EXISTS "Parties and mediator can send messages" ON dispute_messages;
 CREATE POLICY "Parties and mediator can send messages"
   ON dispute_messages FOR INSERT
   TO authenticated
@@ -632,6 +651,7 @@ CREATE POLICY "Parties and mediator can send messages"
 -- ============================================================================
 
 -- Modérateurs peuvent voir la file de modération
+DROP POLICY IF EXISTS "Trust agents can view moderation queue" ON moderation_queue;
 CREATE POLICY "Trust agents can view moderation queue"
   ON moderation_queue FOR SELECT
   TO authenticated
@@ -645,12 +665,14 @@ CREATE POLICY "Trust agents can view moderation queue"
   );
 
 -- Système peut créer des entrées de modération
+DROP POLICY IF EXISTS "System can create moderation entries" ON moderation_queue;
 CREATE POLICY "System can create moderation entries"
   ON moderation_queue FOR INSERT
   TO authenticated
   WITH CHECK (true);
 
 -- Modérateurs peuvent modifier les entrées
+DROP POLICY IF EXISTS "Trust agents can update moderation queue" ON moderation_queue;
 CREATE POLICY "Trust agents can update moderation queue"
   ON moderation_queue FOR UPDATE
   TO authenticated
@@ -696,6 +718,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_auto_assign_validation_request ON trust_validation_requests;
 CREATE TRIGGER trigger_auto_assign_validation_request
   BEFORE INSERT ON trust_validation_requests
   FOR EACH ROW
@@ -731,6 +754,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_auto_assign_dispute_mediator ON disputes;
 CREATE TRIGGER trigger_auto_assign_dispute_mediator
   BEFORE INSERT ON disputes
   FOR EACH ROW

@@ -368,11 +368,13 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS property_reviews_after_insert ON property_reviews;
 CREATE TRIGGER property_reviews_after_insert
   AFTER INSERT ON property_reviews
   FOR EACH ROW
   EXECUTE FUNCTION trigger_update_property_rating();
 
+DROP TRIGGER IF EXISTS property_reviews_after_update ON property_reviews;
 CREATE TRIGGER property_reviews_after_update
   AFTER UPDATE ON property_reviews
   FOR EACH ROW
@@ -393,16 +395,19 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS property_reviews_update_timestamp ON property_reviews;
 CREATE TRIGGER property_reviews_update_timestamp
   BEFORE UPDATE ON property_reviews
   FOR EACH ROW
   EXECUTE FUNCTION update_review_updated_at();
 
+DROP TRIGGER IF EXISTS landlord_reviews_update_timestamp ON landlord_reviews;
 CREATE TRIGGER landlord_reviews_update_timestamp
   BEFORE UPDATE ON landlord_reviews
   FOR EACH ROW
   EXECUTE FUNCTION update_review_updated_at();
 
+DROP TRIGGER IF EXISTS tenant_reviews_update_timestamp ON tenant_reviews;
 CREATE TRIGGER tenant_reviews_update_timestamp
   BEFORE UPDATE ON tenant_reviews
   FOR EACH ROW

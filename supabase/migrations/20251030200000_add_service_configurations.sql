@@ -107,6 +107,7 @@ CREATE INDEX IF NOT EXISTS idx_service_usage_logs_status ON service_usage_logs(s
 CREATE INDEX IF NOT EXISTS idx_service_usage_logs_timestamp ON service_usage_logs(timestamp DESC);
 
 -- Trigger for updated_at
+DROP TRIGGER IF EXISTS "trigger_update_service_configurations_timestamp" ON service_configurations;
 CREATE TRIGGER trigger_update_service_configurations_timestamp
   BEFORE UPDATE ON service_configurations
   FOR EACH ROW

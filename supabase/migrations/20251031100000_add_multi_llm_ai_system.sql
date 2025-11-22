@@ -167,11 +167,13 @@ ALTER TABLE ai_usage_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE ai_cache ENABLE ROW LEVEL SECURITY;
 
 -- RLS Policies for LLM Routing Logs
+DROP POLICY IF EXISTS "Users can view their own LLM routing logs" ON llm_routing_logs;
 CREATE POLICY "Users can view their own LLM routing logs"
   ON llm_routing_logs FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Admins can view all LLM routing logs" ON llm_routing_logs;
 CREATE POLICY "Admins can view all LLM routing logs"
   ON llm_routing_logs FOR SELECT
   TO authenticated
@@ -179,21 +181,24 @@ CREATE POLICY "Admins can view all LLM routing logs"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
+DROP POLICY IF EXISTS "System can insert LLM routing logs" ON llm_routing_logs;
 CREATE POLICY "System can insert LLM routing logs"
   ON llm_routing_logs FOR INSERT
   TO authenticated
   WITH CHECK (true);
 
 -- RLS Policies for Legal Consultation Logs
+DROP POLICY IF EXISTS "Users can view their own legal consultation logs" ON legal_consultation_logs;
 CREATE POLICY "Users can view their own legal consultation logs"
   ON legal_consultation_logs FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Admins can view all legal consultation logs" ON legal_consultation_logs;
 CREATE POLICY "Admins can view all legal consultation logs"
   ON legal_consultation_logs FOR SELECT
   TO authenticated
@@ -201,21 +206,24 @@ CREATE POLICY "Admins can view all legal consultation logs"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
+DROP POLICY IF EXISTS "System can insert legal consultation logs" ON legal_consultation_logs;
 CREATE POLICY "System can insert legal consultation logs"
   ON legal_consultation_logs FOR INSERT
   TO authenticated
   WITH CHECK (true);
 
 -- RLS Policies for Legal Articles (Public Read)
+DROP POLICY IF EXISTS "Anyone can view legal articles" ON legal_articles;
 CREATE POLICY "Anyone can view legal articles"
   ON legal_articles FOR SELECT
   TO authenticated
   USING (true);
 
+DROP POLICY IF EXISTS "Admins can manage legal articles" ON legal_articles;
 CREATE POLICY "Admins can manage legal articles"
   ON legal_articles FOR ALL
   TO authenticated
@@ -223,23 +231,25 @@ CREATE POLICY "Admins can manage legal articles"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   )
   WITH CHECK (
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- RLS Policies for AI Usage Logs
+DROP POLICY IF EXISTS "Users can view their own AI usage logs" ON ai_usage_logs;
 CREATE POLICY "Users can view their own AI usage logs"
   ON ai_usage_logs FOR SELECT
   TO authenticated
   USING (auth.uid() = user_id);
 
+DROP POLICY IF EXISTS "Admins can view all AI usage logs" ON ai_usage_logs;
 CREATE POLICY "Admins can view all AI usage logs"
   ON ai_usage_logs FOR SELECT
   TO authenticated
@@ -247,16 +257,18 @@ CREATE POLICY "Admins can view all AI usage logs"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
+DROP POLICY IF EXISTS "System can insert AI usage logs" ON ai_usage_logs;
 CREATE POLICY "System can insert AI usage logs"
   ON ai_usage_logs FOR INSERT
   TO authenticated
   WITH CHECK (true);
 
 -- RLS Policies for AI Cache (System Only)
+DROP POLICY IF EXISTS "System can manage AI cache" ON ai_cache;
 CREATE POLICY "System can manage AI cache"
   ON ai_cache FOR ALL
   TO authenticated
@@ -395,6 +407,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS "trigger_legal_articles_updated_at" ON legal_articles;
 CREATE TRIGGER trigger_legal_articles_updated_at
   BEFORE UPDATE ON legal_articles
   FOR EACH ROW

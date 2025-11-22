@@ -172,6 +172,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "trigger_contractors_updated_at" ON contractors;
 CREATE TRIGGER trigger_contractors_updated_at
   BEFORE UPDATE ON contractors
   FOR EACH ROW
@@ -263,6 +264,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "trigger_maintenance_assignments_updated_at" ON maintenance_assignments;
 CREATE TRIGGER trigger_maintenance_assignments_updated_at
   BEFORE UPDATE ON maintenance_assignments
   FOR EACH ROW
@@ -304,6 +306,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "trigger_update_contractor_stats_on_assignment" ON maintenance_assignments;
 CREATE TRIGGER trigger_update_contractor_stats_on_assignment
   AFTER UPDATE ON maintenance_assignments
   FOR EACH ROW
@@ -394,6 +397,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "trigger_update_contractor_avg_rating" ON contractors;
 CREATE TRIGGER trigger_update_contractor_avg_rating
   AFTER INSERT OR UPDATE ON contractor_reviews
   FOR EACH ROW
@@ -443,7 +447,7 @@ CREATE POLICY "Admins can manage all contractors"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 

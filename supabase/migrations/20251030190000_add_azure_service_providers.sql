@@ -364,6 +364,7 @@ END;
 $$;
 
 -- Trigger for service_providers updated_at
+DROP TRIGGER IF EXISTS trigger_update_service_providers_timestamp ON service_providers;
 CREATE TRIGGER trigger_update_service_providers_timestamp
   BEFORE UPDATE ON service_providers
   FOR EACH ROW

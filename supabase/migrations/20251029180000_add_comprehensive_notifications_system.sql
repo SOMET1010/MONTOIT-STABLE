@@ -208,6 +208,18 @@ CREATE POLICY "Service role can manage WhatsApp logs"
 -- FUNCTION: Create notification
 -- ============================================================================
 
+DROP FUNCTION IF EXISTS create_notification(
+  p_user_id uuid,
+  p_type text,
+  p_title text,
+  p_message text,
+  p_channels jsonb,
+  p_action_url text,
+  p_action_label text,
+  p_metadata jsonb,
+  p_priority text
+);
+
 CREATE OR REPLACE FUNCTION create_notification(
   p_user_id uuid,
   p_type text,
@@ -271,6 +283,8 @@ $$;
 -- FUNCTION: Mark notification as read
 -- ============================================================================
 
+DROP FUNCTION IF EXISTS mark_notification_read(p_notification_id uuid);
+
 CREATE OR REPLACE FUNCTION mark_notification_read(p_notification_id uuid)
 RETURNS boolean
 LANGUAGE plpgsql
@@ -289,6 +303,8 @@ $$;
 -- ============================================================================
 -- FUNCTION: Mark all notifications as read
 -- ============================================================================
+
+DROP FUNCTION IF EXISTS mark_all_notifications_read();
 
 CREATE OR REPLACE FUNCTION mark_all_notifications_read()
 RETURNS integer
@@ -312,6 +328,8 @@ $$;
 -- ============================================================================
 -- FUNCTION: Get unread notification count
 -- ============================================================================
+
+DROP FUNCTION IF EXISTS get_unread_notification_count();
 
 CREATE OR REPLACE FUNCTION get_unread_notification_count()
 RETURNS integer
@@ -345,6 +363,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS trigger_update_notification_preferences_updated_at ON notification_preferences;
 CREATE TRIGGER trigger_update_notification_preferences_updated_at
   BEFORE UPDATE ON notification_preferences
   FOR EACH ROW
@@ -364,6 +383,7 @@ BEGIN
 END;
 $$;
 
+DROP TRIGGER IF EXISTS trigger_update_whatsapp_logs_updated_at ON whatsapp_logs;
 CREATE TRIGGER trigger_update_whatsapp_logs_updated_at
   BEFORE UPDATE ON whatsapp_logs
   FOR EACH ROW

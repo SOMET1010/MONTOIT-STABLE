@@ -224,10 +224,12 @@ CREATE INDEX IF NOT EXISTS idx_monartisan_quotes_status
 -- monartisan_contractors
 ALTER TABLE monartisan_contractors ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can view active contractors" ON monartisan_contractors;
 CREATE POLICY "Anyone can view active contractors"
   ON monartisan_contractors FOR SELECT
   USING (sync_status = 'active');
 
+DROP POLICY IF EXISTS "Admins can manage contractors" ON monartisan_contractors;
 CREATE POLICY "Admins can manage contractors"
   ON monartisan_contractors FOR ALL
   TO authenticated
@@ -235,13 +237,14 @@ CREATE POLICY "Admins can manage contractors"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- monartisan_job_requests
 ALTER TABLE monartisan_job_requests ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view their job requests" ON monartisan_job_requests;
 CREATE POLICY "Users can view their job requests"
   ON monartisan_job_requests FOR SELECT
   TO authenticated
@@ -255,11 +258,13 @@ CREATE POLICY "Users can view their job requests"
     )
   );
 
+DROP POLICY IF EXISTS "Users can create job requests" ON monartisan_job_requests;
 CREATE POLICY "Users can create job requests"
   ON monartisan_job_requests FOR INSERT
   TO authenticated
   WITH CHECK (requester_id = auth.uid());
 
+DROP POLICY IF EXISTS "Users can update their job requests" ON monartisan_job_requests;
 CREATE POLICY "Users can update their job requests"
   ON monartisan_job_requests FOR UPDATE
   TO authenticated
@@ -273,6 +278,7 @@ CREATE POLICY "Users can update their job requests"
     )
   );
 
+DROP POLICY IF EXISTS "Admins have full access to job requests" ON monartisan_job_requests;
 CREATE POLICY "Admins have full access to job requests"
   ON monartisan_job_requests FOR ALL
   TO authenticated
@@ -280,13 +286,14 @@ CREATE POLICY "Admins have full access to job requests"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
 -- monartisan_quotes
 ALTER TABLE monartisan_quotes ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view quotes for their requests" ON monartisan_quotes;
 CREATE POLICY "Users can view quotes for their requests"
   ON monartisan_quotes FOR SELECT
   TO authenticated
@@ -306,6 +313,7 @@ CREATE POLICY "Users can view quotes for their requests"
     )
   );
 
+DROP POLICY IF EXISTS "Property owners can accept/reject quotes" ON monartisan_quotes;
 CREATE POLICY "Property owners can accept/reject quotes"
   ON monartisan_quotes FOR UPDATE
   TO authenticated
@@ -319,6 +327,7 @@ CREATE POLICY "Property owners can accept/reject quotes"
     )
   );
 
+DROP POLICY IF EXISTS "Admins have full access to quotes" ON monartisan_quotes;
 CREATE POLICY "Admins have full access to quotes"
   ON monartisan_quotes FOR ALL
   TO authenticated
@@ -326,7 +335,7 @@ CREATE POLICY "Admins have full access to quotes"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.user_type = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -343,16 +352,19 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "update_monartisan_contractors_updated_at" ON monartisan_contractors;
 CREATE TRIGGER update_monartisan_contractors_updated_at
   BEFORE UPDATE ON monartisan_contractors
   FOR EACH ROW
   EXECUTE FUNCTION update_monartisan_updated_at();
 
+DROP TRIGGER IF EXISTS "update_monartisan_job_requests_updated_at" ON monartisan_job_requests;
 CREATE TRIGGER update_monartisan_job_requests_updated_at
   BEFORE UPDATE ON monartisan_job_requests
   FOR EACH ROW
   EXECUTE FUNCTION update_monartisan_updated_at();
 
+DROP TRIGGER IF EXISTS "update_monartisan_quotes_updated_at" ON monartisan_quotes;
 CREATE TRIGGER update_monartisan_quotes_updated_at
   BEFORE UPDATE ON monartisan_quotes
   FOR EACH ROW

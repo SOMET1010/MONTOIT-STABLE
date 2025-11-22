@@ -41,6 +41,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "trigger_update_feature_flags_updated_at" ON feature_flags;
 CREATE TRIGGER trigger_update_feature_flags_updated_at
   BEFORE UPDATE ON feature_flags
   FOR EACH ROW
@@ -181,6 +182,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "trigger_log_feature_flag_change" ON feature_flags;
 CREATE TRIGGER trigger_log_feature_flag_change
   AFTER INSERT OR UPDATE ON feature_flags
   FOR EACH ROW
@@ -202,24 +204,12 @@ CREATE POLICY "Anyone can view feature flags"
 
 CREATE POLICY "Only admins can manage feature flags"
   ON feature_flags FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_role_assignments ura
-      JOIN user_roles ur ON ura.role_id = ur.id
-      WHERE ura.user_id = auth.uid() AND ur.name = 'admin'
-    )
-  );
+  USING (has_role('admin'));
 
 -- Politique feature_flag_history: Admins uniquement
 CREATE POLICY "Only admins can view feature flag history"
   ON feature_flag_history FOR SELECT
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_role_assignments ura
-      JOIN user_roles ur ON ura.role_id = ur.id
-      WHERE ura.user_id = auth.uid() AND ur.name = 'admin'
-    )
-  );
+  USING (has_role('admin'));
 
 -- Politique feature_flag_overrides: Utilisateur voit ses overrides, admins voient tout
 CREATE POLICY "Users can view own overrides"
@@ -228,13 +218,7 @@ CREATE POLICY "Users can view own overrides"
 
 CREATE POLICY "Admins can manage all overrides"
   ON feature_flag_overrides FOR ALL
-  USING (
-    EXISTS (
-      SELECT 1 FROM user_role_assignments ura
-      JOIN user_roles ur ON ura.role_id = ur.id
-      WHERE ura.user_id = auth.uid() AND ur.name = 'admin'
-    )
-  );
+  USING (has_role('admin'));
 
 -- ============================================================================
 -- SECTION 7: INSERTION DES FEATURE FLAGS PAR DÉFAUT
@@ -350,4 +334,3 @@ INSERT INTO feature_flags (key, name, description, category, is_enabled, require
 -- ============================================================================
 -- FIN DE LA MIGRATION
 -- ============================================================================
-

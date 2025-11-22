@@ -91,6 +91,7 @@ END;
 $$;
 
 -- Create trigger
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW
@@ -128,32 +129,8 @@ CREATE POLICY "Public profiles are viewable by all"
   USING (true);
 
 -- ============================================================================
--- Add columns for social auth if missing
+-- Add columns for social auth if missing (already handled above)
 -- ============================================================================
-
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'profiles' AND column_name = 'provider'
-  ) THEN
-    ALTER TABLE profiles ADD COLUMN provider text;
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'profiles' AND column_name = 'provider_id'
-  ) THEN
-    ALTER TABLE profiles ADD COLUMN provider_id text;
-  END IF;
-
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'profiles' AND column_name = 'last_sign_in_at'
-  ) THEN
-    ALTER TABLE profiles ADD COLUMN last_sign_in_at timestamptz;
-  END IF;
-END $$;
 
 -- ============================================================================
 -- Create function to sync profile from auth metadata
@@ -239,6 +216,41 @@ CREATE TRIGGER on_user_login
   FOR EACH ROW
   WHEN (NEW.last_sign_in_at IS DISTINCT FROM OLD.last_sign_in_at)
   EXECUTE FUNCTION public.handle_user_login();
+
+-- ============================================================================
+-- Add columns for social auth if missing
+-- ============================================================================
+
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'profiles' AND column_name = 'email'
+  ) THEN
+    ALTER TABLE profiles ADD COLUMN email text;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'profiles' AND column_name = 'provider'
+  ) THEN
+    ALTER TABLE profiles ADD COLUMN provider text;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'profiles' AND column_name = 'provider_id'
+  ) THEN
+    ALTER TABLE profiles ADD COLUMN provider_id text;
+  END IF;
+
+  IF NOT EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'profiles' AND column_name = 'last_sign_in_at'
+  ) THEN
+    ALTER TABLE profiles ADD COLUMN last_sign_in_at timestamptz;
+  END IF;
+END $$;
 
 -- ============================================================================
 -- Add indexes for performance

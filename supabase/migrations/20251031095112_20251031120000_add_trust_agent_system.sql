@@ -161,6 +161,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_trust_agents_updated_at ON trust_agents;
 CREATE TRIGGER trigger_trust_agents_updated_at
   BEFORE UPDATE ON trust_agents
   FOR EACH ROW
@@ -229,6 +230,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_trust_validation_requests_updated_at ON trust_validation_requests;
 CREATE TRIGGER trigger_trust_validation_requests_updated_at
   BEFORE UPDATE ON trust_validation_requests
   FOR EACH ROW
@@ -251,6 +253,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_update_profile_on_trust_validation ON trust_validation_requests;
 CREATE TRIGGER trigger_update_profile_on_trust_validation
   AFTER UPDATE ON trust_validation_requests
   FOR EACH ROW
@@ -353,6 +356,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_generate_dispute_number ON disputes;
 CREATE TRIGGER trigger_generate_dispute_number
   BEFORE INSERT ON disputes
   FOR EACH ROW
@@ -368,6 +372,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_disputes_updated_at ON disputes;
 CREATE TRIGGER trigger_disputes_updated_at
   BEFORE UPDATE ON disputes
   FOR EACH ROW
@@ -450,7 +455,7 @@ CREATE POLICY "Admins can view all trust agents"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -479,7 +484,7 @@ CREATE POLICY "Admins can create trust agents"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -491,7 +496,7 @@ CREATE POLICY "Admins can update trust agents"
     EXISTS (
       SELECT 1 FROM profiles
       WHERE profiles.id = auth.uid()
-      AND profiles.role = 'admin'
+      AND profiles.user_type = 'admin_ansut'
     )
   );
 
@@ -696,6 +701,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_auto_assign_validation_request ON trust_validation_requests;
 CREATE TRIGGER trigger_auto_assign_validation_request
   BEFORE INSERT ON trust_validation_requests
   FOR EACH ROW
@@ -731,6 +737,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_auto_assign_dispute_mediator ON disputes;
 CREATE TRIGGER trigger_auto_assign_dispute_mediator
   BEFORE INSERT ON disputes
   FOR EACH ROW

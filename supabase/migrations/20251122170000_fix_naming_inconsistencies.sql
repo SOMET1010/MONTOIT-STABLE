@@ -114,11 +114,16 @@ BEGIN
   ) THEN
 
     -- Merge data from user_notification_preferences into notification_preferences
-    INSERT INTO notification_preferences (user_id, preferences, updated_at)
-    SELECT user_id, preferences, updated_at
+    INSERT INTO notification_preferences (user_id, email_enabled, push_enabled, updated_at)
+    SELECT 
+      user_id,
+      COALESCE(email_notifications, true),
+      COALESCE(push_notifications, false),
+      updated_at
     FROM user_notification_preferences
     ON CONFLICT (user_id) DO UPDATE SET
-      preferences = EXCLUDED.preferences,
+      email_enabled = EXCLUDED.email_enabled,
+      push_enabled = EXCLUDED.push_enabled,
       updated_at = EXCLUDED.updated_at;
 
     -- Drop the redundant table
@@ -136,22 +141,22 @@ END $$;
 CREATE OR REPLACE VIEW user_verification_summary AS
 SELECT
   u.id as user_id,
-  uv.is_verified,
-  uv.oneci_verified,
-  uv.cnam_verified,
+  (COALESCE(uv.oneci_status = 'verifie', false) OR COALESCE(uv.cnam_status = 'verifie', false)) AS is_verified,
+  COALESCE(uv.oneci_status = 'verifie', false) AS oneci_verified,
+  COALESCE(uv.cnam_status = 'verifie', false) AS cnam_verified,
   uv.tenant_score,
-  uv.identity_verified,
+  COALESCE(iv.status = 'verified', false) AS identity_verified,
   iv.status as identity_status,
   iv.cni_number,
-  iv.cni_front_url,
-  iv.cni_back_url,
+  iv.cni_front_image as cni_front_url,
+  iv.cni_back_image as cni_back_url,
   cv.status as cnam_status,
-  cv.policy_number,
-  cv.employer_name,
+  cv.cnam_number as policy_number,
+  cv.insured_name as employer_name,
   fv.status as facial_status,
-  fv.confidence_score,
-  fv.match_score,
-  uv.last_score_update,
+  fv.liveness_score as confidence_score,
+  fv.face_match_score as match_score,
+  uv.updated_at as last_score_update,
   uv.created_at as verification_created_at
 FROM profiles u
 LEFT JOIN user_verifications uv ON u.id = uv.user_id
@@ -181,7 +186,7 @@ SELECT
   COUNT(alk.id) as log_count,
   MAX(alk.created_at) as last_used
 FROM api_keys ak
-LEFT JOIN api_key_logs alk ON ak.id = alk.api_key_id
+LEFT JOIN api_key_logs alk ON ak.service_name = alk.service_name
 GROUP BY ak.id, ak.service_name, ak.display_name, ak.environment, ak.is_active;
 
 -- Create communication system view

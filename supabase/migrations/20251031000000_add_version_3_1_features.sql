@@ -302,6 +302,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS "update_user_role_assignments_updated_at" ON user_role_assignments;
 CREATE TRIGGER update_user_role_assignments_updated_at
   BEFORE UPDATE ON user_role_assignments
   FOR EACH ROW

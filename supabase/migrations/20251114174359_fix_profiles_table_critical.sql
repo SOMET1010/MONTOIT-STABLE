@@ -139,11 +139,11 @@ GRANT ALL ON public.profiles TO service_role;
 -- =====================================================
 
 -- Function to check if profile exists
-CREATE OR REPLACE FUNCTION public.profile_exists(user_id UUID)
+CREATE OR REPLACE FUNCTION public.profile_exists(p_user_id UUID)
 RETURNS BOOLEAN AS $$
 BEGIN
   RETURN EXISTS (
-    SELECT 1 FROM public.profiles WHERE id = user_id
+    SELECT 1 FROM public.profiles WHERE id = p_user_id
   );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

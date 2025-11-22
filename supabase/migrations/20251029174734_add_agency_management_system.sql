@@ -438,6 +438,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_auto_assign_lead ON crm_leads;
 CREATE TRIGGER trigger_auto_assign_lead
   BEFORE INSERT ON crm_leads
   FOR EACH ROW
@@ -503,21 +504,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_agencies_updated_at ON agencies;
 CREATE TRIGGER trigger_agencies_updated_at
   BEFORE UPDATE ON agencies
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
 
+DROP TRIGGER IF EXISTS "trigger_team_members_updated_at" ON agency_team_members;
 CREATE TRIGGER trigger_team_members_updated_at
   BEFORE UPDATE ON agency_team_members
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
 
+DROP TRIGGER IF EXISTS "trigger_leads_updated_at" ON crm_leads;
 CREATE TRIGGER trigger_leads_updated_at
   BEFORE UPDATE ON crm_leads
   FOR EACH ROW
   EXECUTE FUNCTION update_updated_at();
 
+DROP TRIGGER IF EXISTS "trigger_commissions_updated_at" ON agency_commissions;
 CREATE TRIGGER trigger_commissions_updated_at
   BEFORE UPDATE ON agency_commissions
   FOR EACH ROW

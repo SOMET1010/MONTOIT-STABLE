@@ -193,4 +193,5 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS trigger_identity_cert ON identity_verifications;
 CREATE TRIGGER trigger_identity_cert AFTER INSERT OR UPDATE ON identity_verifications FOR EACH ROW EXECUTE FUNCTION update_certification_status();

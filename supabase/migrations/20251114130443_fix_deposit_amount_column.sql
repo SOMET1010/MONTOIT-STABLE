@@ -23,9 +23,17 @@ BEGIN
 END $$;
 
 -- Copy existing security_deposit values to deposit_amount
-UPDATE properties 
-SET deposit_amount = security_deposit 
-WHERE deposit_amount IS NULL AND security_deposit IS NOT NULL;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM information_schema.columns
+    WHERE table_name = 'properties' AND column_name = 'security_deposit'
+  ) THEN
+    UPDATE properties
+    SET deposit_amount = security_deposit
+    WHERE deposit_amount IS NULL AND security_deposit IS NOT NULL;
+  END IF;
+END $$;
 
 -- Set default value for future inserts
 ALTER TABLE properties ALTER COLUMN deposit_amount SET DEFAULT 0;

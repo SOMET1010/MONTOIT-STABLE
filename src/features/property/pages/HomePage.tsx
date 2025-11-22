@@ -173,7 +173,7 @@ export default function Home() {
           <div className="flex flex-col items-center mt-8 space-y-4 animate-slide-up" style={{ animationDelay: '0.5s' }}>
             <div className="text-center">
               <p className="text-sm sm:text-base text-white/90 font-medium px-4">
-                {slides[currentSlide].title}
+                {slides[currentSlide]?.title}
               </p>
             </div>
             <div className="flex justify-center space-x-3">
@@ -502,11 +502,11 @@ export default function Home() {
                     monthly_rent: p.monthly_rent,
                     longitude: p.longitude!,
                     latitude: p.latitude!,
-                  status: p.status,
-                  images: p.images as string[],
-                  city: p.city,
-                  neighborhood: p.neighborhood,
-                }))}
+                    status: p.status,
+                    images: p.images as string[],
+                    city: p.city,
+                    neighborhood: p.neighborhood || undefined,
+                  }))}
                 zoom={12}
                 height="500px"
                 fitBounds={properties.length > 0}
@@ -528,7 +528,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-24 bg-gradient-to-br from-terracotta-500 via-coral-500 to-amber-500 relative overflow-hidden">
+      <section className="py-16 sm:py-20 lg:py-24 bg-gradient-to-br from-terracotta-500 via-coral-500 to-amber-500 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-full h-full" style={{
             backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
@@ -537,31 +537,31 @@ export default function Home() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16 animate-slide-down">
-            <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
-              <span className="text-white font-bold text-sm">SIMPLE ET RAPIDE</span>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16 animate-slide-down">
+            <div className="inline-block mb-4 px-3 py-1.5 sm:px-4 sm:py-2 bg-white/20 backdrop-blur-sm rounded-full">
+              <span className="text-white font-bold text-xs sm:text-sm">SIMPLE ET RAPIDE</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6">
               Comment ça marche ?
             </h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-white/90 max-w-3xl mx-auto px-4">
               En 4 étapes simples, trouvez votre logement et signez votre contrat
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
             <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-terracotta-400 to-coral-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
+              <div className="absolute -inset-1 bg-white/30 rounded-2xl sm:rounded-3xl blur"></div>
+              <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300">
+                <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-terracotta-400 to-coral-400 rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-bold text-lg sm:text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
                   1
                 </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-olive-100 to-olive-200 rounded-2xl flex items-center justify-center mb-6">
-                    <Search className="h-8 w-8 text-olive-600" />
+                <div className="mt-4 sm:mt-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-olive-100 to-olive-200 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
+                    <Search className="h-6 w-6 sm:h-8 sm:w-8 text-olive-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Recherchez</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Recherchez</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Parcourez nos milliers d'annonces vérifiées et trouvez le logement qui vous correspond
                   </p>
                 </div>
@@ -569,17 +569,17 @@ export default function Home() {
             </div>
 
             <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
+              <div className="absolute -inset-1 bg-white/30 rounded-2xl sm:rounded-3xl blur"></div>
+              <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300">
+                <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-bold text-lg sm:text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
                   2
                 </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-2xl flex items-center justify-center mb-6">
-                    <Shield className="h-8 w-8 text-cyan-600" />
+                <div className="mt-4 sm:mt-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
+                    <Shield className="h-6 w-6 sm:h-8 sm:w-8 text-cyan-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Vérifiez votre identité</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Vérifiez votre identité</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Vérification d'identité officielle via ONECI + biométrie pour établir la confiance
                   </p>
                 </div>
@@ -587,17 +587,17 @@ export default function Home() {
             </div>
 
             <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
+              <div className="absolute -inset-1 bg-white/30 rounded-2xl sm:rounded-3xl blur"></div>
+              <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300">
+                <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-400 to-orange-400 rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-bold text-lg sm:text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
                   3
                 </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center mb-6">
-                    <FileSignature className="h-8 w-8 text-amber-600" />
+                <div className="mt-4 sm:mt-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
+                    <FileSignature className="h-6 w-6 sm:h-8 sm:w-8 text-amber-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Signez</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Signez</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Signature électronique légale avec CryptoNeo. Tout se fait en ligne, sans déplacement
                   </p>
                 </div>
@@ -605,17 +605,17 @@ export default function Home() {
             </div>
 
             <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
+              <div className="absolute -inset-1 bg-white/30 rounded-2xl sm:rounded-3xl blur"></div>
+              <div className="relative bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-2xl transform hover:-translate-y-1 sm:hover:-translate-y-2 transition-all duration-300">
+                <div className="absolute -top-4 -left-4 sm:-top-6 sm:-left-6 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-400 to-emerald-400 rounded-xl sm:rounded-2xl flex items-center justify-center text-white font-bold text-lg sm:text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
                   4
                 </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6">
-                    <HomeIcon className="h-8 w-8 text-green-600" />
+                <div className="mt-4 sm:mt-6">
+                  <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
+                    <HomeIcon className="h-6 w-6 sm:h-8 sm:w-8 text-green-600" />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Emménagez</h3>
-                  <p className="text-gray-600 leading-relaxed">
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Emménagez</h3>
+                  <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
                     Payez via Mobile Money et emménagez dans votre nouveau logement en toute sérénité
                   </p>
                 </div>
@@ -623,19 +623,19 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-16 text-center animate-slide-up">
-            <div className="inline-block bg-white rounded-3xl p-10 shadow-2xl max-w-2xl">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">
+          <div className="mt-8 sm:mt-12 lg:mt-16 text-center animate-slide-up">
+            <div className="inline-block bg-white rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl max-w-2xl mx-4">
+              <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
                 Prêt à trouver votre logement idéal ?
               </h3>
-              <p className="text-gray-600 mb-6 text-lg">
+              <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base lg:text-lg">
                 Rejoignez des milliers d'Ivoiriens qui ont déjà trouvé leur bonheur
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/inscription" className="btn-primary px-8 py-4 text-lg">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <a href="/inscription" className="btn-primary px-6 py-3 sm:px-8 sm:py-4 text-sm sm:text-base lg:text-lg w-full sm:w-auto">
                   Créer mon compte gratuitement
                 </a>
-                <a href="/recherche" className="bg-white border-3 border-terracotta-500 text-terracotta-600 font-bold px-8 py-4 rounded-2xl hover:bg-terracotta-50 transition-all text-lg">
+                <a href="/recherche" className="bg-white border-3 border-terracotta-500 text-terracotta-600 font-bold px-6 py-3 sm:px-8 sm:py-4 rounded-xl sm:rounded-2xl hover:bg-terracotta-50 transition-all text-sm sm:text-base lg:text-lg w-full sm:w-auto">
                   Parcourir les annonces
                 </a>
               </div>
