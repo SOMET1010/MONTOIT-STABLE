@@ -9,6 +9,7 @@ import './index.css';
 import './shared/styles/mobile-optimization.css';
 import './shared/styles/breadcrumb.css';
 import './shared/styles/premium-effects.css';
+import './shared/styles/hero-spectacular.css';
 
 const queryClient = createQueryClient();
 

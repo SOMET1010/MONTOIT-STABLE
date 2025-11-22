@@ -7,6 +7,7 @@ import ProfileCard from '@/shared/components/ProfileCard';
 import FeatureCard from '@/shared/components/FeatureCard';
 import Carousel from '@/shared/components/Carousel';
 import CityCard from '@/shared/components/CityCard';
+import HeroSpectacular from '../components/HeroSpectacular';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -81,106 +82,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative h-[500px] sm:h-[600px] bg-gray-900 overflow-hidden">
-        {/* Diaporama */}
-        {heroImages.map((image, index) => (
-          <div
-            key={image}
-            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
-            }`}
-            style={{ backgroundImage: `url(${image})` }}
-          >
-            <div className="absolute inset-0 bg-black/40"></div>
-          </div>
-        ))}
-
-        {/* Indicateurs */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
-          {heroImages.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentSlide(index)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentSlide
-                  ? 'bg-white w-8'
-                  : 'bg-white/50 hover:bg-white/75'
-              }`}
-              aria-label={`Aller à la diapositive ${index + 1}`}
-            />
-          ))}
-        </div>
-        
-        <div className="relative h-full flex items-center justify-center px-4">
-          <div className="w-full max-w-4xl">
-            <div className="text-center mb-6 sm:mb-8 px-4 animate-fade-in">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
-                Trouvez votre logement en toute confiance
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl text-white/90 font-medium">
-                Identité certifiée • Paiement sécurisé • Pour tous les Ivoiriens
-              </p>
-            </div>
-            
-            {/* Search Bar - Mobile First */}
-            <form onSubmit={handleSearch} className="glass rounded-2xl sm:rounded-full shadow-premium p-3 sm:p-2 animate-slide-up">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
-                {/* Where */}
-                <div className="flex-1 px-4 sm:px-6 py-3">
-                  <label className="block text-xs font-semibold text-gray-900 mb-1">Où ?</label>
-                  <input
-                    type="text"
-                    placeholder="Abidjan, Cocody..."
-                    className="w-full bg-transparent text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none"
-                    value={searchCity}
-                    onChange={(e) => setSearchCity(e.target.value)}
-                  />
-                </div>
-
-                {/* Type */}
-                <div className="flex-1 px-4 sm:px-6 py-3">
-                  <label className="block text-xs font-semibold text-gray-900 mb-1">Type</label>
-                  <select
-                    className="w-full bg-transparent text-sm sm:text-base text-gray-900 focus:outline-none"
-                    value={propertyType}
-                    onChange={(e) => setPropertyType(e.target.value)}
-                  >
-                    <option value="">Tous</option>
-                    <option value="appartement">Appartement</option>
-                    <option value="villa">Villa</option>
-                    <option value="studio">Studio</option>
-                    <option value="maison">Maison</option>
-                  </select>
-                </div>
-
-                {/* Price */}
-                <div className="flex-1 px-4 sm:px-6 py-3">
-                  <label className="block text-xs font-semibold text-gray-900 mb-1">Prix max</label>
-                  <input
-                    type="text"
-                    placeholder="500 000 FCFA"
-                    className="w-full bg-transparent text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none"
-                    value={maxPrice}
-                    onChange={(e) => setMaxPrice(e.target.value)}
-                  />
-                </div>
-
-                {/* Search Button */}
-                <div className="px-2 py-2">
-                  <button
-                    type="submit"
-                    className="w-full sm:w-auto px-6 sm:px-8 py-3 gradient-orange hover:shadow-orange-hover text-white font-semibold rounded-xl sm:rounded-full transition-all duration-300 flex items-center justify-center gap-2 btn-premium"
-                  >
-                    <Search className="h-5 w-5" />
-                    <span>Rechercher</span>
-                  </button>
-                </div>
-              </div>
-            </form>
-          </div>
-        </div>
-      </section>
+      {/* Hero Section Spectaculaire */}
+      <HeroSpectacular onSearch={handleSearch} />
 
       {/* Profils Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-white">
