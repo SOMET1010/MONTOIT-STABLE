@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Shield, MessageSquare, Clock, CheckCircle, AlertTriangle, Send, ArrowUpCircle } from 'lucide-react';
 import { disputeService } from '../services/trustValidationService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 export default function TrustAgentMediation() {
   const { profile } = useAuth();

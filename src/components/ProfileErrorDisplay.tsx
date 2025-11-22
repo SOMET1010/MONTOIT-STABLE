@@ -1,5 +1,5 @@
 import { AlertCircle, RefreshCw, LogOut, Mail } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 export default function ProfileErrorDisplay() {
   const { profileError, refreshProfile, signOut, clearProfileError } = useAuth();

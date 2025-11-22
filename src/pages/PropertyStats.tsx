@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { supabase } from '@/services/supabase/client';
 import { ArrowLeft, TrendingUp, Eye, Heart, Calendar, Users, Clock, MapPin, Star, TrendingDown, AlertCircle } from 'lucide-react';
-import type { Database } from '../lib/database.types';
+import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 

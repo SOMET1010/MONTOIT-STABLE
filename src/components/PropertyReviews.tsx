@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Star, ThumbsUp, MessageSquare } from 'lucide-react';
-import { supabase } from '../lib/supabase';
-import { useAuth } from '../contexts/AuthContext';
+import { supabase } from '@/services/supabase/client';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 interface Review {
   id: string;

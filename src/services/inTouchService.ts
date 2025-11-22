@@ -9,7 +9,7 @@ import type {
   PaymentStatus,
   INTOUCH_STATUS_MAPPING,
   INTOUCH_SERVICE_IDS,
-} from '../types/payment.types';
+} from '@/shared/types/payment.types';
 
 interface InTouchConfig {
   baseUrl: string;

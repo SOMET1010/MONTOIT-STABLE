@@ -8,7 +8,7 @@ import type {
   MobileMoneyProvider,
   PaymentCalculation,
   PaymentError,
-} from '../types/payment.types';
+} from '@/shared/types/payment.types';
 
 interface PaymentState {
   // Current payment flow

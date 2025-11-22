@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { User, Session, AuthError } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
-import type { Database } from '../lib/database.types';
-import { testDatabaseConnection } from '../lib/helpers/supabaseHealthCheck';
+import { supabase } from '@/services/supabase/client';
+import type { Database } from '@/shared/lib/database.types';
+import { testDatabaseConnection } from '@/shared/lib/helpers/supabaseHealthCheck';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
 

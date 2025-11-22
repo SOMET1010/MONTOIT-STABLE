@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 import { notificationService, NotificationPreferences as NotificationPreferencesType } from '../services/notificationService';
 import {
   Bell, Mail, MessageSquare, Smartphone, Clock,

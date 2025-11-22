@@ -9,8 +9,8 @@ import type {
   PaymentCalculation,
   PaymentErrorCode,
   PaymentError,
-} from '../types/payment.types';
-import { PROVIDER_PREFIXES, PROVIDER_FEES, PLATFORM_FEE_PERCENTAGE } from '../types/payment.types';
+} from '@/shared/types/payment.types';
+import { PROVIDER_PREFIXES, PROVIDER_FEES, PLATFORM_FEE_PERCENTAGE } from '@/shared/types/payment.types';
 
 export class PaymentService {
   /**

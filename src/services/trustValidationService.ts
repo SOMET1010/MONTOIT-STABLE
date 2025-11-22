@@ -1,5 +1,5 @@
-import { supabase } from '../lib/supabase';
-import type { Database } from '../lib/database.types';
+import { supabase } from '@/services/supabase/client';
+import type { Database } from '@/shared/lib/database.types';
 
 type TrustValidationRequest = Database['public']['Tables']['trust_validation_requests']['Row'];
 type TrustAgent = Database['public']['Tables']['trust_agents']['Row'];

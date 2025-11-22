@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { supabase } from '@/services/supabase/client';
 import { Wrench, Plus, Clock, CheckCircle, XCircle, Calendar, AlertCircle } from 'lucide-react';
 
 interface MaintenanceRequest {

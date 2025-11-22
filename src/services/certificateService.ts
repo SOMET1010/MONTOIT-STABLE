@@ -1,5 +1,5 @@
 import jsPDF from 'jspdf';
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 
 interface CertificateData {
   userId: string;

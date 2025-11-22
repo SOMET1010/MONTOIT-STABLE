@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 import { Smartphone, Loader2, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 interface MobileMoneyPaymentProps {

@@ -1,4 +1,4 @@
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 import { Home, Building2, Briefcase, TrendingUp, Shield, Clock, CheckCircle } from 'lucide-react';
 
 export default function ProfileWelcome() {

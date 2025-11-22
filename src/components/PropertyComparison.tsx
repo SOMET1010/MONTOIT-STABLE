@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Check, Minus, TrendingUp, MapPin, Home, Bed, Bath, Maximize } from 'lucide-react';
-import type { Database } from '../lib/database.types';
+import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 

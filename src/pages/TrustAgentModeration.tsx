@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Shield, AlertTriangle, CheckCircle, XCircle, Eye, MapPin } from 'lucide-react';
 import { moderationService } from '../services/trustValidationService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 export default function TrustAgentModeration() {
   const { profile } = useAuth();

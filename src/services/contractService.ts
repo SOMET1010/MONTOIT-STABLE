@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 import { ContractPdfGenerator, ContractData } from './contracts/contractPdfGenerator';
 
 export const contractService = {

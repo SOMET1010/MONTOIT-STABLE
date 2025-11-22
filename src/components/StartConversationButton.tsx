@@ -1,6 +1,6 @@
 import { MessageCircle } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
-import { supabase } from '../lib/supabase';
+import { useAuth } from '@/app/providers/AuthProvider';
+import { supabase } from '@/services/supabase/client';
 import { useState } from 'react';
 
 interface StartConversationButtonProps {

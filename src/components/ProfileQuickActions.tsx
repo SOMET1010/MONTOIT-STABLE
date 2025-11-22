@@ -2,7 +2,7 @@ import {
   Search, MessageSquare, CreditCard, Home, PlusCircle, Users,
   BarChart3, Wrench, Star, Bell, HelpCircle, Building2
 } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 interface QuickAction {
   icon: any;

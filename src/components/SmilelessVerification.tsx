@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 import { Camera, CheckCircle, XCircle, Loader, ExternalLink, RefreshCw } from 'lucide-react';
 
 interface SmilelessVerificationProps {

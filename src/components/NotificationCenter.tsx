@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bell, Check, CheckCheck, X, ExternalLink } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 import { notificationService, Notification } from '../services/notificationService';
 
 export default function NotificationCenter() {

@@ -3,7 +3,7 @@
  * Centralized Supabase client configuration and helper functions
  */
 
-import { supabase } from '../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 import type { PostgrestError } from '@supabase/supabase-js';
 
 export interface ApiResponse<T> {

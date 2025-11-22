@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AlertTriangle, Clock, CheckCircle, XCircle, MessageSquare, ArrowUpCircle, FileText } from 'lucide-react';
 import { disputeService } from '../services/trustValidationService';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 import { Link } from 'react-router-dom';
 
 export default function MyDisputes() {

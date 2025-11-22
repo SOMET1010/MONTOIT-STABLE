@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { MessageSquare, Send, FileText, Clock, MapPin, Calendar } from 'lucide-react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '@/app/providers/AuthProvider';
 
 interface MessageTemplate {
   id: string;
