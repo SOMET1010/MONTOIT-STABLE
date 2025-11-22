@@ -45,3 +45,21 @@ export {
   type Toast,
   type ToastVariant,
 } from './molecules/ToastPremium';
+
+export {
+  SearchBarPremium,
+  type SearchBarPremiumProps,
+  type SearchSuggestion,
+} from './molecules/SearchBarPremium';
+
+export {
+  FiltersPremium,
+  type FiltersPremiumProps,
+  type FilterOption,
+} from './molecules/FiltersPremium';
+
+// === ORGANISMS ===
+export {
+  ImageGalleryPremium,
+  type ImageGalleryPremiumProps,
+} from './organisms/ImageGalleryPremium';
