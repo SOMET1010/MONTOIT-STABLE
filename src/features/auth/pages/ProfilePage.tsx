@@ -4,6 +4,7 @@ import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 import AnsutBadge from '@/features/verification/components/AnsutBadge';
 import AchievementBadges from '@/shared/ui/AchievementBadges';
+import { FEATURES } from '@/shared/config/features.config';
 import RoleSwitcher from '@/app/layout/RoleSwitcher';
 
 export default function Profile() {
@@ -353,7 +354,7 @@ export default function Profile() {
             {verificationData && (
               <AchievementBadges
                 oneciVerified={verificationData.oneci_status === 'verifie'}
-                cnamVerified={verificationData.cnam_status === 'verifie'}
+                cnamVerified={FEATURES.CNAM_VERIFICATION && verificationData.cnam_status === 'verifie'}
                 faceVerified={verificationData.face_verification_status === 'verifie'}
                 tenantScore={verificationData.tenant_score || 0}
                 paymentCount={0}

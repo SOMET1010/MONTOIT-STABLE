@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Search, MapPin, Home as HomeIcon, Coins, Plus, CheckCircle, Shield, Navigation, Building2 } from 'lucide-react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { CITIES, ABIDJAN_COMMUNES, RESIDENTIAL_PROPERTY_TYPES, COMMERCIAL_PROPERTY_TYPES, GEOLOCATION_SETTINGS } from '@/shared/lib/constants/app.constants';
+import { FEATURES } from '@/shared/config/features.config';
 
 interface QuickSearchProps {
   onSearch?: (filters: SearchFilters) => void;
@@ -135,6 +136,13 @@ export default function QuickSearch({ onSearch }: QuickSearchProps) {
   };
 
   const handleSearch = () => {
+    // Validation : ville obligatoire
+    const searchLocation = commune || city;
+    if (!useGeolocation && (!searchLocation || searchLocation === 'Toutes les villes')) {
+      alert('Veuillez sélectionner une ville ou utiliser votre position actuelle');
+      return;
+    }
+
     if (onSearch) {
       onSearch({
         city: commune || city,
@@ -310,18 +318,20 @@ export default function QuickSearch({ onSearch }: QuickSearchProps) {
                 <HomeIcon className="w-4 h-4 inline mr-1" />
                 Résidentiel
               </button>
-              <button
-                type="button"
-                onClick={() => setPropertyCategory('commercial')}
-                className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
-                  propertyCategory === 'commercial'
-                    ? 'bg-olive-600 text-white shadow-md'
-                    : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                }`}
-              >
-                <Building2 className="w-4 h-4 inline mr-1" />
-                Commercial
-              </button>
+              {FEATURES.COMMERCIAL_PROPERTIES && (
+                <button
+                  type="button"
+                  onClick={() => setPropertyCategory('commercial')}
+                  className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                    propertyCategory === 'commercial'
+                      ? 'bg-olive-600 text-white shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  <Building2 className="w-4 h-4 inline mr-1" />
+                  Commercial
+                </button>
+              )}
             </div>
             {propertyCategory === 'commercial' && (
               <p className="mt-2 text-xs text-amber-700 bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">

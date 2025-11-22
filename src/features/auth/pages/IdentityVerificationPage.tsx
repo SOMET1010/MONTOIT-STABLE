@@ -7,6 +7,7 @@ import Footer from '@/app/layout/Footer';
 import VerificationBadge from '@/shared/ui/VerificationBadge';
 import AnsutBadge from '@/features/verification/components/AnsutBadge';
 import SmilelessVerification from '@/shared/ui/SmilelessVerification';
+import { FEATURES } from '@/shared/config/features.config';
 
 interface VerificationData {
   id: string;
@@ -596,7 +597,7 @@ export default function IdentityVerification() {
                 </div>
 
                 {/* CNAM Verification */}
-                {verification?.oneci_status === 'verifie' && (
+                {FEATURES.CNAM_VERIFICATION && verification?.oneci_status === 'verifie' && (
                   <div className="bg-white rounded-2xl shadow-lg p-8">
                     <div className="flex items-center justify-between mb-6">
                       <h2 className="text-2xl font-bold text-gray-900 flex items-center space-x-2">
