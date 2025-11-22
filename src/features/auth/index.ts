@@ -19,3 +19,30 @@ export { default as VerifyOTPPage } from './pages/VerifyOTPPage';
 
 // Components
 export { default as AuthModal } from './components/AuthModal';
+
+// Services
+export { authApi } from './services/auth.api';
+
+// Types
+export type {
+  Profile,
+  ProfileInsert,
+  ProfileUpdate,
+  SignUpData,
+  SignInData,
+  OTPVerificationData,
+  OTPMethod,
+  UserRole,
+  AuthUser,
+  AuthState,
+  AuthContextValue,
+  PasswordResetData,
+  ProfileFormData,
+  UserRoles,
+  RoleSwitchData,
+  AuthError,
+  EmailVerificationStatus,
+  PhoneVerificationStatus,
+  IdentityVerificationStatus,
+  UserPreferences
+} from './types';
