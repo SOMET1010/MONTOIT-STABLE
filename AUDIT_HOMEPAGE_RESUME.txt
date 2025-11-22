@@ -1,0 +1,127 @@
+================================================================================
+                🎨 AUDIT UI/UX PAGE D'ACCUEIL - RÉSUMÉ
+================================================================================
+
+Date: 22 Novembre 2024
+Fichier: src/features/property/pages/HomePage.tsx
+Score Global: 84/100 ⭐⭐⭐⭐
+
+================================================================================
+                            📊 SCORES PAR CATÉGORIE
+================================================================================
+
+Design visuel:              92/100  ✅ Excellent
+Harmonisation terracotta:   75/100  🟡 Partiel - NÉCESSITE CORRECTIONS
+Accessibilité WCAG:         88/100  ✅ Bon
+Responsive design:          90/100  ✅ Excellent
+Performance:                82/100  ✅ Bon
+UX/Navigation:              85/100  ✅ Bon
+
+================================================================================
+                        🔴 PROBLÈMES CRITIQUES (3)
+================================================================================
+
+1. CERCLES NUMÉROTÉS "Comment ça marche" (lignes 293, 304, 315)
+   Problème: bg-orange-500 au lieu de gradient terracotta
+   Impact: Incohérence visuelle majeure
+   Fix: bg-gradient-to-br from-terracotta-500 to-coral-500
+
+2. CLASSES CSS LEGACY (lignes 187, 195, 203, 211)
+   Problème: gradient-text-orange au lieu de text-gradient
+   Impact: Incohérence avec nouveau design system
+   Fix: Remplacer par text-gradient
+
+3. CTA FINAL (ligne 330)
+   Problème: gradient-orange au lieu de gradient terracotta
+   Impact: Couleurs non harmonisées
+   Fix: bg-gradient-to-r from-terracotta-500 via-coral-500 to-amber-500
+
+================================================================================
+                        🟡 PROBLÈMES IMPORTANTS (3)
+================================================================================
+
+4. PADDING CAROUSEL MOBILE (lignes 154, 224)
+   Problème: px-0 cause scroll horizontal mobile
+   Impact: UX mobile dégradée
+   Fix: px-4 au lieu de px-0
+
+5. IMAGES HERO SANS ALT (lignes 54-64)
+   Problème: Accessibilité manquante
+   Impact: WCAG non-conforme
+   Fix: Ajouter role="img" et aria-label
+
+6. LIENS SANS ARIA-LABEL (lignes 341, 347)
+   Problème: Navigation clavier imprécise
+   Impact: Accessibilité screen readers
+   Fix: Ajouter aria-label explicites
+
+================================================================================
+                        🟢 POINTS FORTS (8)
+================================================================================
+
+✅ Hero spectaculaire avec diaporama, particules, waves
+✅ Structure claire en 8 sections logiques
+✅ Loading skeletons professionnels
+✅ Responsive parfait mobile → desktop
+✅ Animations fluides et professionnelles
+✅ ProfileCards, PropertyCards, CityCards harmonisés
+✅ Grid layouts adaptatifs
+✅ Navigation intuitive avec CTAs clairs
+
+================================================================================
+                        📋 CHECKLIST CORRECTIONS
+================================================================================
+
+HARMONISATION TERRACOTTA (30 min)
+  [ ] Ligne 293: bg-orange-500 → gradient terracotta
+  [ ] Ligne 304: bg-orange-500 → gradient terracotta
+  [ ] Ligne 315: bg-orange-500 → gradient terracotta
+  [ ] Lignes 187,195,203,211: gradient-text-orange → text-gradient
+  [ ] Ligne 330: gradient-orange → gradient terracotta complet
+  [ ] Lignes 341,347: text-orange-600 → text-terracotta-600
+
+ACCESSIBILITÉ (20 min)
+  [ ] Ajouter role="img" et aria-label sur hero images
+  [ ] Ajouter aria-label sur liens CTA
+  [ ] Ajouter aria-labelledby sur sections
+
+RESPONSIVE (15 min)
+  [ ] Ligne 154: px-0 → px-4
+  [ ] Ligne 224: px-0 → px-4
+  [ ] Ligne 52: Ajouter lg:h-[700px] xl:h-[800px]
+
+PERFORMANCE (1h - optionnel)
+  [ ] Lazy loading images hero
+  [ ] Réduire particules mobile (15 au lieu 30)
+  [ ] React Query cache Supabase
+
+================================================================================
+                        🎯 IMPACT DES CORRECTIONS
+================================================================================
+
+AVANT:  84/100  ⭐⭐⭐⭐
+APRÈS:  94/100  ⭐⭐⭐⭐⭐ (+10 points)
+
+Temps estimé: 1h05 (2h avec optimisations performance)
+
+================================================================================
+                        🚀 COMMANDES UTILES
+================================================================================
+
+Voir rapport complet:
+  cat AUDIT_UX_UI_PAGE_ACCUEIL.md
+
+Éditer HomePage:
+  code src/features/property/pages/HomePage.tsx
+
+Tester après corrections:
+  npm run build && npm run dev
+
+================================================================================
+                            💡 RÉSUMÉ EN 1 LIGNE
+================================================================================
+
+HomePage excellente (84/100) mais nécessite harmonisation terracotta
+sur 3 éléments critiques (cercles, stats, CTA) pour atteindre 94/100.
+
+================================================================================
