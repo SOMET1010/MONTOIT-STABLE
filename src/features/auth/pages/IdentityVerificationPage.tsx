@@ -4,9 +4,9 @@ import { supabase } from '@/services/supabase/client';
 import { Shield, Upload, CheckCircle, AlertCircle, FileText, Camera, Loader, X } from 'lucide-react';
 import Header from '@/app/layout/Header';
 import Footer from '@/app/layout/Footer';
-import VerificationBadge from '../components/VerificationBadge';
-import AnsutBadge from '../components/AnsutBadge';
-import SmilelessVerification from '../components/SmilelessVerification';
+import VerificationBadge from '@/shared/ui/VerificationBadge';
+import AnsutBadge from '@/features/verification/components/AnsutBadge';
+import SmilelessVerification from '@/shared/ui/SmilelessVerification';
 
 interface VerificationData {
   id: string;

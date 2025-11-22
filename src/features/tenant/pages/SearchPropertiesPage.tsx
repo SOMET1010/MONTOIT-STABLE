@@ -2,10 +2,10 @@ import { useState, useEffect, lazy, Suspense } from 'react';
 import { Search, MapPin, SlidersHorizontal, Building2, Home, Bed, Bath, X, Sparkles, Map as MapIcon, List, Star } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
-import { recommendationService } from '../services/ai/recommendationService';
+import { recommendationService } from '@/services/ai/recommendationService';
 import { useAuth } from '@/app/providers/AuthProvider';
 
-const MapboxMap = lazy(() => import('../components/MapboxMap'));
+const MapboxMap = lazy(() => import('@/shared/ui/MapboxMap'));
 
 type Property = Database['public']['Tables']['properties']['Row'];
 type PropertyType = Database['public']['Tables']['properties']['Row']['property_type'];

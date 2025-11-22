@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { AlertTriangle, Upload, X } from 'lucide-react';
-import { disputeService } from '../services/trustValidationService';
+import { disputeService } from '@/services/trustValidationService';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 

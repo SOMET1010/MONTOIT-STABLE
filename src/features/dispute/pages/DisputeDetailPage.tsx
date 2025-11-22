@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Send, Paperclip, CheckCircle, XCircle, AlertTriangle, MessageSquare, FileText } from 'lucide-react';
-import { disputeService } from '../services/trustValidationService';
+import { disputeService } from '@/services/trustValidationService';
 import { useAuth } from '@/app/providers/AuthProvider';
 
 export default function DisputeDetail() {

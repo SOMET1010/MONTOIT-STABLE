@@ -4,7 +4,7 @@ import { supabase } from '@/services/supabase/client';
 import { CreditCard, Smartphone, Building, Coins, AlertCircle, CheckCircle, ArrowLeft, Loader } from 'lucide-react';
 import Header from '@/app/layout/Header';
 import Footer from '@/app/layout/Footer';
-import { apiKeyService } from '../services/apiKeyService';
+import { apiKeyService } from '@/services/apiKeyService';
 
 interface PaymentFormData {
   property_id: string;

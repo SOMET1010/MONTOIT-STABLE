@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Shield, CheckCircle, XCircle, AlertCircle, Clock, FileText } from 'lucide-react';
-import { trustValidationService } from '../services/trustValidationService';
+import { trustValidationService } from '@/services/trustValidationService';
 import { useAuth } from '@/app/providers/AuthProvider';
-import TrustVerifiedBadge from '../components/TrustVerifiedBadge';
-import AnsutBadge from '../components/AnsutBadge';
+import TrustVerifiedBadge from '@/shared/ui/TrustVerifiedBadge';
+import AnsutBadge from '@/features/verification/components/AnsutBadge';
 
 export default function RequestTrustValidation() {
   const { profile } = useAuth();

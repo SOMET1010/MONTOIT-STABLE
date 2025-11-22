@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
 import { Coins, TrendingUp, Calendar, User, CheckCircle, Clock } from 'lucide-react';
-import SimpleBarChart from '../components/charts/SimpleBarChart';
-import { dashboardExportService } from '../services/dashboardExportService';
+import SimpleBarChart from '@/shared/ui/charts/SimpleBarChart';
+import { dashboardExportService } from '@/services/dashboardExportService';
 
 interface Commission {
   id: string;

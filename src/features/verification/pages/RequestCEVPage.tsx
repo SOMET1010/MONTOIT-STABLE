@@ -10,7 +10,7 @@ import {
   Send,
   Info,
 } from 'lucide-react';
-import { cevService, type CEVPrerequisites } from '../services/cevService';
+import { cevService, type CEVPrerequisites } from '@/services/cevService';
 import { supabase } from '@/services/supabase/client';
 
 export default function RequestCEV() {

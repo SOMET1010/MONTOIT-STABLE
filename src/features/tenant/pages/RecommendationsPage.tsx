@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { recommendationEngine } from '../services/ai/recommendationEngine';
+import { recommendationEngine } from '@/services/ai/recommendationEngine';
 import { Sparkles, TrendingUp, Clock, Heart, MessageCircle, Eye, ChevronRight } from 'lucide-react';
 import type { Database } from '@/shared/lib/database.types';
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { ArrowLeft, FileText, CheckCircle, User, Mail, Phone, MapPin, Shield, Award } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { ScoringService } from '../services/scoringService';
+import { ScoringService } from '@/services/scoringService';
 import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];

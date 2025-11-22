@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { Search, MapPin, Shield, FileSignature, Smartphone, TrendingUp, Building2, Sparkles, Home as HomeIcon, Users, Map } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
-import QuickSearch from '../components/QuickSearch';
-import { FormatService } from '../services/format/formatService';
+import QuickSearch from '@/features/property/components/QuickSearch';
+import { FormatService } from '@/services/format/formatService';
 import MapWrapper from '@/shared/ui/MapWrapper';
 
 type Property = Database['public']['Tables']['properties']['Row'];

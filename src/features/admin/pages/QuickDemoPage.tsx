@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Home, Users, FileText, MessageSquare, Coins, Loader2, Check, Image } from 'lucide-react';
-import { TestDataGeneratorService } from '../services/ai/testDataGeneratorService';
+import { TestDataGeneratorService } from '@/services/ai/testDataGeneratorService';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { getPropertyImages, getRandomIvoirianPropertyImage } from '@/shared/lib/constants/ivoirianImages';

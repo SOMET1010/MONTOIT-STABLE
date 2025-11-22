@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Plus, Home, Eye, Calendar, TrendingUp, Edit, ExternalLink, Award, Filter, Coins, MessageSquare, Users, Clock, BarChart3, TrendingDown, Wrench, FileText } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
-import { ScoringService } from '../services/scoringService';
+import { ScoringService } from '@/services/scoringService';
 import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];

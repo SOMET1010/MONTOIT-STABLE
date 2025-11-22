@@ -13,7 +13,7 @@ import {
   Coins,
   Users,
 } from 'lucide-react';
-import { cevService, type CEVRequest } from '../services/cevService';
+import { cevService, type CEVRequest } from '@/services/cevService';
 
 export default function AdminCEVManagement() {
 

@@ -15,7 +15,7 @@ import {
   ChevronDown,
   Clock,
 } from 'lucide-react';
-import { chatbotService, ChatMessage as ChatMessageType, ChatConversation } from '../services/chatbotService';
+import { chatbotService, ChatMessage as ChatMessageType, ChatConversation } from '@/services/chatbotService';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import ChatMessage from './ChatMessage';

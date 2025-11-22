@@ -12,7 +12,7 @@ import {
   CreditCard,
   Upload,
 } from 'lucide-react';
-import { cevService, type CEVRequest } from '../services/cevService';
+import { cevService, type CEVRequest } from '@/services/cevService';
 
 export default function CEVRequestDetail() {
   const pathParts = window.location.pathname.split('/');

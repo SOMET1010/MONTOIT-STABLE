@@ -4,7 +4,7 @@ import { supabase } from '@/services/supabase/client';
 import { FileText, Shield, CheckCircle, AlertCircle, Lock, Loader, Download } from 'lucide-react';
 import Header from '@/app/layout/Header';
 import Footer from '@/app/layout/Footer';
-import AnsutBadge from '../components/AnsutBadge';
+import AnsutBadge from '@/features/verification/components/AnsutBadge';
 
 interface Lease {
   id: string;

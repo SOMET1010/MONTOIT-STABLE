@@ -1,7 +1,7 @@
 import { Home, Search, User, LogOut, Building2, Sparkles, MessageCircle, Calendar, FileText, Heart, Bell, Key, Award, Wrench, Users, BarChart, ChevronDown, Settings, Menu, X, Shield, Database, Activity, Cog, TestTube, Zap, UserCheck, CheckCircle, FileCheck } from 'lucide-react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useMessageNotifications } from '@/shared/hooks/useMessageNotifications';
-import LanguageSelector from './LanguageSelector';
+import LanguageSelector from '@/shared/ui/LanguageSelector';
 import RoleSwitcher from './RoleSwitcher';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/services/supabase/client';

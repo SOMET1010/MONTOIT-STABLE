@@ -2,9 +2,9 @@ import { useState, useEffect } from 'react';
 import { User, Mail, Phone, MapPin, Shield, Save, Camera, CheckCircle, AlertCircle } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
-import AnsutBadge from '../components/AnsutBadge';
-import AchievementBadges from '../components/AchievementBadges';
-import RoleSwitcher from '../components/RoleSwitcher';
+import AnsutBadge from '@/features/verification/components/AnsutBadge';
+import AchievementBadges from '@/shared/ui/AchievementBadges';
+import RoleSwitcher from '@/app/layout/RoleSwitcher';
 
 export default function Profile() {
   const { user, profile, refreshProfile } = useAuth();

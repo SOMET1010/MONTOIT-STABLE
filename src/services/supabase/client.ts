@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './database.types';
-import { apiKeysConfig } from '../config/api-keys.config';
+import { apiKeysConfig } from '@/shared/config/api-keys.config';
 
 const { url: supabaseUrl, anonKey: supabaseAnonKey } = apiKeysConfig.supabase;
 

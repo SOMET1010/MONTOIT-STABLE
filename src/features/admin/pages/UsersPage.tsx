@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import Header from '@/app/layout/Header';
 import Footer from '@/app/layout/Footer';
-import { FormatService } from '../services/format/formatService';
+import { FormatService } from '@/services/format/formatService';
 
 interface User {
   id: string;

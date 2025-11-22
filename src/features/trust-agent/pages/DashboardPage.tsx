@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Shield, Clock, CheckCircle, XCircle, AlertCircle, FileText, Users, TrendingUp } from 'lucide-react';
-import { trustValidationService } from '../services/trustValidationService';
+import { trustValidationService } from '@/services/trustValidationService';
 import { useAuth } from '@/app/providers/AuthProvider';
 
 interface Stats {

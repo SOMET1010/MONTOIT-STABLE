@@ -4,7 +4,7 @@ import { supabase } from '@/services/supabase/client';
 import { Shield, Upload, CheckCircle, XCircle, Clock, AlertCircle, FileText, Camera, Loader } from 'lucide-react';
 import Header from '@/app/layout/Header';
 import Footer from '@/app/layout/Footer';
-import { apiKeyService } from '../services/apiKeyService';
+import { apiKeyService } from '@/services/apiKeyService';
 
 interface VerificationData {
   id: string;

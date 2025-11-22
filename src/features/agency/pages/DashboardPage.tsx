@@ -5,8 +5,8 @@ import {
   Building2, Users, Home, TrendingUp, Coins, UserPlus,
   Calendar, Phone, Mail, CheckCircle, Clock, AlertCircle, XCircle
 } from 'lucide-react';
-import SimpleBarChart from '../components/charts/SimpleBarChart';
-import SimpleLineChart from '../components/charts/SimpleLineChart';
+import SimpleBarChart from '@/shared/ui/charts/SimpleBarChart';
+import SimpleLineChart from '@/shared/ui/charts/SimpleLineChart';
 
 interface Agency {
   id: string;

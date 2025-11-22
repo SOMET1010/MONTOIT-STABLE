@@ -70,6 +70,30 @@ export function CardBody({ children, className = '', ...props }: CardBodyProps) 
   );
 }
 
+// Alias pour compatibilité avec shadcn/ui
+export const CardContent = CardBody;
+export interface CardContentProps extends CardBodyProps {}
+
+export interface CardTitleProps extends HTMLAttributes<HTMLHeadingElement> {}
+
+export function CardTitle({ children, className = '', ...props }: CardTitleProps) {
+  return (
+    <h3 className={`text-lg font-semibold text-gray-900 ${className}`} {...props}>
+      {children}
+    </h3>
+  );
+}
+
+export interface CardDescriptionProps extends HTMLAttributes<HTMLParagraphElement> {}
+
+export function CardDescription({ children, className = '', ...props }: CardDescriptionProps) {
+  return (
+    <p className={`mt-1 text-sm text-gray-500 ${className}`} {...props}>
+      {children}
+    </p>
+  );
+}
+
 export interface CardFooterProps extends HTMLAttributes<HTMLDivElement> {
   align?: 'left' | 'center' | 'right' | 'between';
 }

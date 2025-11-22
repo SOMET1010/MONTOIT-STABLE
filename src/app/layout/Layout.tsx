@@ -2,8 +2,8 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
 import Header from './Header';
 import Footer from './Footer';
-import Chatbot from './Chatbot';
-import { ErrorBoundary } from './ErrorBoundary';
+import Chatbot from '@/features/messaging/components/Chatbot';
+import { ErrorBoundary } from '@/shared/ui/ErrorBoundary';
 
 const noLayoutRoutes = ['/connexion', '/inscription', '/messages', '/auth/callback'];
 const noHeaderFooterRoutes = [

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Languages, Globe, Check } from 'lucide-react';
-import { azureTranslatorService } from '../services/azure/azureTranslatorService';
+import { azureTranslatorService } from '@/services/azure/azureTranslatorService';
 
 interface Language {
   code: string;

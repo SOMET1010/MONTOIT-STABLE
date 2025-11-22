@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
-import { contractService } from '../services/contractService';
+import { contractService } from '@/services/contractService';
 import {
   FileText, Download, Eye, CheckCircle, Clock, AlertCircle,
   FileSignature, Search, Filter, Calendar, MapPin
 } from 'lucide-react';
-import SignatureStatusBadge from '../components/SignatureStatusBadge';
+// TODO: Create SignatureStatusBadge component
 
 interface Contract {
   id: string;
