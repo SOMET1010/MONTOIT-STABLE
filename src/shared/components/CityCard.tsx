@@ -22,7 +22,7 @@ export default function CityCard({ name, propertyCount, image }: CityCardProps) 
             loading="lazy"
           />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-orange-400 to-orange-600"></div>
+          <div className="w-full h-full bg-gradient-to-br from-terracotta-400 to-coral-600"></div>
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
       </div>
