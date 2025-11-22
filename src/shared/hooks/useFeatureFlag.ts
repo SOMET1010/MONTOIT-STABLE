@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import * as React from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/services/supabase/client";
 
 /**
  * Hook pour vérifier si un feature flag est activé

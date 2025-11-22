@@ -1,8 +1,7 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import Layout from '@/app/layout/Layout';
-// import ProtectedRoute from '@/shared/ui/ProtectedRoute';
-// import RouterErrorBoundary from '@/shared/ui/RouterErrorBoundary';
+import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 
 const Home = lazy(() => import('@/features/property/pages/HomePage'));
 const Auth = lazy(() => import('@/features/auth/pages/AuthPage'));
@@ -93,7 +92,7 @@ export const routes: RouteObject[] = [
   {
     path: '/',
     element: <Layout />,
-    errorElement: <RouterErrorBoundary />,
+    errorElement: <ErrorBoundary />,
     children: [
       { index: true, element: <Home /> },
       { path: 'connexion', element: <Auth /> },

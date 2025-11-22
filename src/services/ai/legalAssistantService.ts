@@ -1,5 +1,5 @@
 import { LLMOrchestrator, LLMRequest } from './llmOrchestrator';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 
 export interface LegalQuery {
   question: string;

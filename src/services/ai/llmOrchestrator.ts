@@ -1,5 +1,5 @@
 import { AzureAIService } from './azureAIService';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 
 export type LLMModel = 'gpt-4' | 'gpt-35-turbo' | 'specialized';
 

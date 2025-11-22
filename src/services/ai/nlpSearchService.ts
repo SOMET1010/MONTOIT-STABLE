@@ -1,5 +1,5 @@
 import { azureAIService } from './azureAIService';
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 
 interface SearchCriteria {
   city?: string;

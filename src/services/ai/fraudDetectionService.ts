@@ -1,4 +1,4 @@
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 import { azureAIService } from './azureAIService';
 
 interface FraudRiskAssessment {

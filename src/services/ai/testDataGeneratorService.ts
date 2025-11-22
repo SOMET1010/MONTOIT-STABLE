@@ -1,4 +1,4 @@
-import { supabase } from '../../lib/supabase';
+import { supabase } from '@/services/supabase/client';
 import { AzureAIService } from './azureAIService';
 import { getPropertyImages, getNeighborhoodImage } from '../../lib/constants/ivoirianImages';
 
