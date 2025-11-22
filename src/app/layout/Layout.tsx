@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
-import SimplifiedHeader from './SimplifiedHeader';
-import Footer from './Footer';
+import HeaderPremium from './HeaderPremium';
+import FooterPremium from './FooterPremium';
 import Chatbot from '@/features/messaging/components/Chatbot';
 import { ErrorBoundary } from '@/shared/ui/ErrorBoundary';
 import { ToastContainer } from '@/shared/hooks/useToast';
@@ -57,7 +57,7 @@ export default function Layout() {
 
   return (
     <ErrorBoundary>
-      {shouldShowHeaderFooter && <SimplifiedHeader />}
+      {shouldShowHeaderFooter && <HeaderPremium />}
       <ToastContainer />
       <Suspense
         fallback={
@@ -70,7 +70,7 @@ export default function Layout() {
           <Outlet />
         </main>
       </Suspense>
-      {shouldShowHeaderFooter && <Footer />}
+      {shouldShowHeaderFooter && <FooterPremium />}
       <Chatbot />
     </ErrorBoundary>
   );
