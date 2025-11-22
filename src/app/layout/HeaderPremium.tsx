@@ -5,7 +5,11 @@ import { useState, useEffect } from 'react';
 import { useBreakpoint } from '@/shared/hooks/useBreakpoint';
 import ThemeToggle from '@/shared/ui/ThemeToggle';
 
-export default function HeaderPremium() {
+interface HeaderPremiumProps {
+  transparent?: boolean;
+}
+
+export default function HeaderPremium({ transparent = false }: HeaderPremiumProps) {
   const { user, profile, signOut } = useAuth();
   const { unreadCount } = useMessageNotifications();
   const { isMobile } = useBreakpoint();
@@ -39,9 +43,13 @@ export default function HeaderPremium() {
     { label: 'Paramètres', href: '/profil', icon: Settings },
   ] : [];
 
+  const headerClass = transparent && !scrolled
+    ? 'bg-transparent text-white backdrop-blur-none'
+    : 'bg-white/95 backdrop-blur-md shadow-sm';
+
   return (
     <>
-      <header className={`header-premium ${scrolled ? 'scrolled' : ''}`}>
+      <header className={`header-premium transition-all duration-300 ${headerClass}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16 md:h-20">
             {/* Logo Animé */}

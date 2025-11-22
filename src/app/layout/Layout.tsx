@@ -55,9 +55,15 @@ export default function Layout() {
     );
   }
 
+  const isHomePage = location.pathname === '/';
+
   return (
     <ErrorBoundary>
-      {shouldShowHeaderFooter && <HeaderPremium />}
+      {shouldShowHeaderFooter && (
+        <div className={isHomePage ? 'fixed top-0 left-0 right-0 z-50' : ''}>
+          <HeaderPremium transparent={isHomePage} />
+        </div>
+      )}
       <ToastContainer />
       <Suspense
         fallback={
