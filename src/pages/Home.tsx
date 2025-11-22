@@ -243,13 +243,13 @@ export default function Home() {
                       <Shield className="h-7 w-7 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Plateforme soutenue par l'ANSUT</h3>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique sécurisée</h3>
                       <p className="text-gray-600 leading-relaxed">
-                        Sécurité et protection des données assurées. La plateforme Mon Toit bénéficie du soutien de l'Agence Nationale du Service Universel des Télécommunications.
+                        Sécurité et protection des données assurées. Tous les contrats sont signés électroniquement via CryptoNeo et marqués d'un cachet électronique visible garantissant leur authenticité.
                       </p>
                       <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-terracotta-50 rounded-full">
                         <Shield className="h-4 w-4 text-terracotta-600" />
-                        <span className="text-sm font-semibold text-terracotta-700">Encadré par l'ANSUT</span>
+                        <span className="text-sm font-semibold text-terracotta-700">Contrats certifiés</span>
                       </div>
                     </div>
                   </div>

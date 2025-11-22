@@ -146,7 +146,7 @@ Total: 8 fichiers modifiés + 1 nouveau + 9 docs (106+ pages)
 
 ```
 ✅ Erreur 1:  Logo ANSUT                    → Phase 1
-✅ Erreur 6:  Bloc certification ANSUT       → Phase 1
+✅ Erreur 6:  Bloc cachet électronique visible       → Phase 1
 ✅ Erreur 10: Encart rose ANSUT              → Phase 1
 ✅ Erreur 11: OAuth non fonctionnel          → Phase 2
 ✅ Erreur 12: Téléphone manquant             → Phase 1
@@ -189,7 +189,7 @@ Total: 8 fichiers modifiés + 1 nouveau + 9 docs (106+ pages)
 ### ⚪ NON REPRODUITES (6)
 
 ```
-✅ Erreur 4:  "Certifié ANSUT" QuickSearch   → Pas trouvé
+✅ Erreur 4:  "Avec cachet électronique" QuickSearch   → Pas trouvé
 ✅ Erreur 5:  Publier → 404                  → Routes OK
 ✅ Erreur 16: Chatbot pas fermable           → Bouton X OK
 ✅ Erreur 22: "autree" faute                 → Pas trouvé

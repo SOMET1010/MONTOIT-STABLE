@@ -185,7 +185,7 @@ All optimizations are based on the comprehensive user profiles and personas docu
   verificationStatus={{
     oneci_verified: true,
     cnam_verified: false,
-    ansut_certified: false
+    identity_verified: false
   }}
   rating={4.5}
   reviewCount={12}

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import * as React from "react";
 import { supabase } from "@/lib/supabase";
 
 /**
@@ -214,9 +215,9 @@ export function FeatureFlag({
   const { isEnabled, isLoading } = useFeatureFlag(flag);
 
   if (isLoading) {
-    return <>{loadingFallback}</>;
+    return React.createElement(React.Fragment, null, loadingFallback);
   }
 
-  return <>{isEnabled ? children : fallback}</>;
+  return React.createElement(React.Fragment, null, isEnabled ? children : fallback);
 }
 

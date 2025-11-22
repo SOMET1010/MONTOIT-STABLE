@@ -8,7 +8,7 @@
 
 ## 📊 Vue d'ensemble
 
-L'Epic 1 implémente le système complet de vérification et certification ANSUT pour la plateforme Mon Toit, permettant aux locataires d'obtenir une certification officielle qui améliore leur crédibilité et leur accès aux propriétés.
+L'Epic 1 implémente le système complet de vérification et cachet électronique visible pour la plateforme Mon Toit, permettant aux locataires d'obtenir une certification officielle qui améliore leur crédibilité et leur accès aux propriétés.
 
 ---
 

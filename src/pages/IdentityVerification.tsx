@@ -20,12 +20,12 @@ interface VerificationData {
   oneci_number: string | null;
   cnam_number: string | null;
   rejection_reason: string | null;
-  ansut_certified: boolean;
+  identity_verified: boolean;
   created_at: string;
   updated_at: string;
 }
 
-export default function AnsutVerification() {
+export default function IdentityVerification() {
   const { user, profile } = useAuth();
   const [verification, setVerification] = useState<VerificationData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -420,12 +420,11 @@ export default function AnsutVerification() {
                 <Shield className="w-10 h-10 text-terracotta-600" />
                 <h1 className="text-4xl font-bold text-gradient">Vérification Mon Toit</h1>
               </div>
-              {verification?.ansut_certified && (
+              {verification?.identity_verified && (
                 <AnsutBadge certified={true} size="large" />
               )}
             </div>
-            <p className="text-gray-600 text-lg">
-              Obtenez votre certification officielle ANSUT en trois étapes simples
+            <p className="text-gray-600 text-lg">              Complétez la vérification de votre identité en trois étapes simples
             </p>
           </div>
 

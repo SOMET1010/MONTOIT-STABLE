@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { Building2, Mail, Lock, User, UserCircle, Sparkles, Shield, CheckCircle, Chrome, Facebook, KeyRound, ArrowLeft, Phone, AlertTriangle, Info } from 'lucide-react';
+import { supabase } from '../lib/supabase';
+import { Building2, Mail, Lock, User, UserCircle, Sparkles, Shield, CheckCircle, Chrome, Facebook, KeyRound, ArrowLeft, Phone, AlertTriangle, Info, MessageCircle } from 'lucide-react';
 
 export default function Auth() {
+  const navigate = useNavigate();
   const currentPath = window.location.pathname;
   const [isLogin, setIsLogin] = useState(currentPath === '/connexion');
   const [isForgotPassword, setIsForgotPassword] = useState(false);
@@ -10,6 +13,7 @@ export default function Auth() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
+  const [verificationType, setVerificationType] = useState<'email' | 'sms' | 'whatsapp'>('email');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -127,28 +131,45 @@ export default function Auth() {
           }
           return;
         }
-        setSuccess('Inscription réussie ! Redirection...');
-
-        const pendingAction = sessionStorage.getItem('pendingAction');
-        setTimeout(() => {
-          if (pendingAction) {
-            try {
-              const action = JSON.parse(pendingAction);
-              sessionStorage.removeItem('pendingAction');
-              if (action.action === 'apply') {
-                window.location.href = `/candidature/${action.propertyId}`;
-              } else if (action.action === 'visit') {
-                window.location.href = `/visiter/${action.propertyId}`;
-              } else {
-                window.location.href = '/choix-profil';
-              }
-            } catch (e) {
-              window.location.href = '/choix-profil';
+        // Envoyer le code OTP
+        // Utiliser le type de vérification choisi par l'utilisateur
+        const finalVerificationType = verificationType;
+        const verificationTarget = (verificationType === 'email') ? email : phone;
+        
+        try {
+          const { data: otpData, error: otpError } = await supabase.functions.invoke('send-verification-code', {
+            body: {
+              email: finalVerificationType === 'email' ? email : undefined,
+              phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
+              type: finalVerificationType,
+              name: fullName
             }
-          } else {
-            window.location.href = '/choix-profil';
+          });
+
+          if (otpError) {
+            console.error('OTP send error:', otpError);
+            setError('Inscription réussie mais erreur d\'envoi du code de vérification. Veuillez vous reconnecter.');
+            return;
           }
-        }, 2000);
+
+          const methodName = finalVerificationType === 'email' ? 'email' : finalVerificationType === 'whatsapp' ? 'WhatsApp' : 'SMS';
+          setSuccess(`Inscription réussie ! Code de vérification envoyé par ${methodName}`);
+          
+          // Rediriger vers la page de vérification OTP
+          setTimeout(() => {
+            navigate('/verify-otp', {
+              state: {
+                email: finalVerificationType === 'email' ? email : undefined,
+                phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
+                type: finalVerificationType,
+                name: fullName
+              }
+            });
+          }, 1500);
+        } catch (otpErr: any) {
+          console.error('OTP error:', otpErr);
+          setError('Inscription réussie mais erreur d\'envoi du code. Veuillez vous reconnecter.');
+        }
       }
     } catch (err: any) {
       console.error('Auth error:', err);
@@ -281,18 +302,78 @@ export default function Auth() {
               )}
 
               {!isLogin && !isForgotPassword && (
-                <div className="mb-6 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-2xl animate-slide-down">
-                  <div className="flex items-start space-x-3">
-                    <Info className="h-5 w-5 text-cyan-600 flex-shrink-0 mt-0.5" />
-                    <div className="text-sm text-cyan-800">
-                      <p className="font-semibold mb-1">Inscription flexible avec vérification</p>
-                      <p className="text-xs leading-relaxed">
-                        Vous pouvez vous inscrire avec <span className="font-semibold">email OU téléphone</span> (les deux ne sont pas obligatoires).
-                        Un code de vérification sera envoyé selon votre choix pour valider votre compte.
-                      </p>
+                <>
+                  <div className="mb-6 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-2xl animate-slide-down">
+                    <div className="flex items-start space-x-3">
+                      <Info className="h-5 w-5 text-cyan-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm text-cyan-800">
+                        <p className="font-semibold mb-1">Inscription flexible avec vérification</p>
+                        <p className="text-xs leading-relaxed">
+                          Choisissez votre méthode de vérification : <span className="font-semibold">Email, SMS ou WhatsApp</span>.
+                          Un code de vérification sera envoyé pour valider votre compte.
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+
+                  <div className="mb-6 animate-slide-down" style={{ animationDelay: '0.1s' }}>
+                    <label className="block text-sm font-bold text-gray-700 mb-3">
+                      Méthode de vérification
+                    </label>
+                    <div className="grid grid-cols-3 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setVerificationType('email')}
+                        className={`p-4 rounded-2xl border-2 transition-all ${
+                          verificationType === 'email'
+                            ? 'border-cyan-500 bg-cyan-50'
+                            : 'border-gray-200 bg-white hover:border-cyan-300'
+                        }`}
+                      >
+                        <Mail className={`h-6 w-6 mx-auto mb-2 ${
+                          verificationType === 'email' ? 'text-cyan-600' : 'text-gray-400'
+                        }`} />
+                        <p className={`text-xs font-semibold ${
+                          verificationType === 'email' ? 'text-cyan-700' : 'text-gray-600'
+                        }`}>Email</p>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setVerificationType('sms')}
+                        className={`p-4 rounded-2xl border-2 transition-all ${
+                          verificationType === 'sms'
+                            ? 'border-cyan-500 bg-cyan-50'
+                            : 'border-gray-200 bg-white hover:border-cyan-300'
+                        }`}
+                      >
+                        <Phone className={`h-6 w-6 mx-auto mb-2 ${
+                          verificationType === 'sms' ? 'text-cyan-600' : 'text-gray-400'
+                        }`} />
+                        <p className={`text-xs font-semibold ${
+                          verificationType === 'sms' ? 'text-cyan-700' : 'text-gray-600'
+                        }`}>SMS</p>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setVerificationType('whatsapp')}
+                        className={`p-4 rounded-2xl border-2 transition-all ${
+                          verificationType === 'whatsapp'
+                            ? 'border-cyan-500 bg-cyan-50'
+                            : 'border-gray-200 bg-white hover:border-cyan-300'
+                        }`}
+                      >
+                        <MessageCircle className={`h-6 w-6 mx-auto mb-2 ${
+                          verificationType === 'whatsapp' ? 'text-cyan-600' : 'text-gray-400'
+                        }`} />
+                        <p className={`text-xs font-semibold ${
+                          verificationType === 'whatsapp' ? 'text-cyan-700' : 'text-gray-600'
+                        }`}>WhatsApp</p>
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
 
               <form onSubmit={handleSubmit} className="space-y-5">
@@ -317,12 +398,13 @@ export default function Auth() {
 
                     <div className="animate-slide-down" style={{ animationDelay: '0.05s' }}>
                       <label className="block text-sm font-bold text-gray-700 mb-2">
-                        Numéro de téléphone <span className="text-gray-500 text-xs font-normal">(optionnel)</span>
+                        Numéro de téléphone {(verificationType === 'sms' || verificationType === 'whatsapp') ? '' : <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
                       </label>
                       <div className="relative">
                         <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
                         <input
                           type="tel"
+                          required={verificationType === 'sms' || verificationType === 'whatsapp'}
                           value={phone}
                           onChange={(e) => setPhone(e.target.value)}
                           className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
@@ -331,20 +413,25 @@ export default function Auth() {
                           title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
                         />
                       </div>
-                      <p className="mt-1 text-xs text-gray-600">Optionnel - Format: +225 XX XX XX XX XX</p>
+                      <p className="mt-1 text-xs text-gray-600">
+                        {(verificationType === 'sms' || verificationType === 'whatsapp') 
+                          ? 'Obligatoire pour la vérification - Format: +225 XX XX XX XX XX'
+                          : 'Optionnel - Format: +225 XX XX XX XX XX'
+                        }
+                      </p>
                     </div>
                   </>
                 )}
 
                 <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0s' : '0.15s' }}>
                   <label className="block text-sm font-bold text-gray-700 mb-2">
-                    Email
+                    Email {!isLogin && verificationType !== 'email' && <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
                     <input
                       type="email"
-                      required
+                      required={isLogin || verificationType === 'email'}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"

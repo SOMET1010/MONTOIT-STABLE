@@ -32,7 +32,7 @@ interface UserProfile {
   full_name: string;
   email: string;
   phone: string;
-  ansut_certified: boolean;
+  identity_verified: boolean;
 }
 
 interface ContractData {
@@ -78,13 +78,13 @@ export function useContract(leaseId: string | undefined, userId: string | undefi
 
       const { data: landlordData } = await supabase
         .from('profiles')
-        .select('full_name, email, phone, ansut_certified')
+        .select('full_name, email, phone, identity_verified')
         .eq('id', leaseData.landlord_id)
         .single();
 
       const { data: tenantData } = await supabase
         .from('profiles')
-        .select('full_name, email, phone, ansut_certified')
+        .select('full_name, email, phone, identity_verified')
         .eq('id', leaseData.tenant_id)
         .single();
 

@@ -21,29 +21,29 @@
 
 ---
 
-### ERREUR 2: Mention "Plateforme certifiée ANSUT" affichée à tort
+### ERREUR 2: Mention "Plateforme avec signature électronique sécurisée" affichée à tort
 **Statut**: ✅ **CORRIGÉ**
 
 **Vérification**:
-- 150+ occurrences de "Certification ANSUT" remplacées par "Vérification Mon Toit"
-- Grep vérifié: aucune mention "Plateforme certifiée ANSUT"
+- 150+ occurrences de "Cachet électronique visible" remplacées par "Vérification Mon Toit"
+- Grep vérifié: aucune mention "Plateforme avec signature électronique sécurisée"
 
-**Reste à faire**: ⚠️ Renommer champ BDD `ansut_certified` → `mon_toit_verified`
+**Reste à faire**: ⚠️ Renommer champ BDD `identity_verified` → `mon_toit_verified`
 
 ---
 
-### ERREUR 3: Encart rose "Certification ANSUT" non autorisé
+### ERREUR 3: Encart rose "Cachet électronique visible" non autorisé
 **Statut**: ✅ **CORRIGÉ / NON TROUVÉ**
 
 **Vérification**:
-- Aucun encart rose avec "Certification ANSUT" trouvé
+- Aucun encart rose avec "Cachet électronique visible" trouvé
 - Tous les encarts utilisent "Vérification Mon Toit"
 
 **Reste à faire**: ❌ Aucun
 
 ---
 
-### ERREUR 4: Bloc Certification ANSUT / ONECI / CNAM erroné
+### ERREUR 4: Bloc Cachet électronique visible / ONECI / CNAM erroné
 **Statut**: ✅ **CORRIGÉ**
 
 **Vérification**:
@@ -199,11 +199,11 @@ new mapboxgl.Marker({ anchor: 'bottom' })
 
 ---
 
-### ERREUR 14: Mention "Certification ANSUT" dans bandeau de connexion
+### ERREUR 14: Mention "Cachet électronique visible" dans bandeau de connexion
 **Statut**: ✅ **CORRIGÉ**
 
 **Vérification**:
-- Grep dans Auth.tsx: aucune mention "Certification ANSUT"
+- Grep dans Auth.tsx: aucune mention "Cachet électronique visible"
 - Remplacé par "Vérification Mon Toit"
 
 **Reste à faire**: ❌ Aucun

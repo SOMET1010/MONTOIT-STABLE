@@ -26,16 +26,16 @@ Sur les 30 observations documentées, **18 corrections ont été implémentées*
 
 ### 🔴 CRITIQUES (7/7 - 100%)
 
-#### ✅ 1. Suppression du bandeau "Certification ANSUT"
+#### ✅ 1. Suppression du bandeau "Cachet électronique visible"
 **Observation #13**
 - **Fichier supprimé:** `src/components/CertificationReminder.tsx`
-- **Impact:** Bandeau orange "Complétez votre certification ANSUT" complètement retiré
+- **Impact:** Bandeau orange "Complétez votre cachet électronique visible" complètement retiré
 - **Statut:** ✅ Terminé
 
 #### ✅ 2. Correction du libellé AnsutBadge
 **Observation #1, #14**
 - **Fichier:** `src/components/AnsutBadge.tsx`
-- **Changement:** "Certifié ANSUT" → "Certifié par ANSUT"
+- **Changement:** "Avec cachet électronique" → "Certifié par ANSUT"
 - **Lignes modifiées:** 49, 59
 - **Statut:** ✅ Terminé
 
@@ -48,11 +48,11 @@ Sur les 30 observations documentées, **18 corrections ont été implémentées*
 #### ✅ 4. Suppression mention certification du Footer
 **Observation #9**
 - **Fichier:** `src/components/Footer.tsx`
-- **Impact:** Mention "Plateforme certifiée ANSUT" déjà supprimée
+- **Impact:** Mention "Plateforme avec signature électronique sécurisée" déjà supprimée
 - **Texte actuel:** "Plateforme immobilière pour un accès universel au logement en Côte d'Ivoire"
 - **Statut:** ✅ Confirmé
 
-#### ✅ 5. Suppression bloc "Certification ANSUT" page d'accueil
+#### ✅ 5. Suppression bloc "Cachet électronique visible" page d'accueil
 **Observations #6, #10**
 - **Fichier:** `src/pages/Home.tsx`
 - **Impact:** Bandeau rose et encart de certification complètement retirés
@@ -161,7 +161,7 @@ Sur les 30 observations documentées, **18 corrections ont été implémentées*
 #### ✅ 16. Suppression mentions inappropriées bloc recherche
 **Observation #4**
 - **Fichier:** `src/components/QuickSearch.tsx`
-- **Correction déjà appliquée:** "Certifié ANSUT" supprimé
+- **Correction déjà appliquée:** "Avec cachet électronique" supprimé
 - **Texte actuel:** "100% gratuit • Sécurisé"
 - **Lignes:** 173-179
 - **Statut:** ✅ Confirmé
@@ -296,7 +296,7 @@ npm run build
 
 ### Améliorations de l'expérience utilisateur
 
-1. **Clarté accrue** - Suppression de toutes les mentions confuses sur la "Certification ANSUT"
+1. **Clarté accrue** - Suppression de toutes les mentions confuses sur la "Cachet électronique visible"
 2. **Navigation simplifiée** - Profil utilisateur épuré et facile à comprendre
 3. **Transparence financière** - Distinction claire entre loyer, caution et total
 4. **Sécurité renforcée** - Message KYC plus explicite pour protéger propriétaires et locataires
@@ -304,8 +304,8 @@ npm run build
 
 ### Réduction des confusions
 
-- ❌ "Complétez votre certification ANSUT" (bandeau intrusif)
-- ❌ "Certifié ANSUT" (badge mal formulé)
+- ❌ "Complétez votre cachet électronique visible" (bandeau intrusif)
+- ❌ "Avec cachet électronique" (badge mal formulé)
 - ❌ "100% Vérifié" (promesse non tenue)
 - ❌ "Total estimé 1er mois" (confusion loyer/caution)
 - ✅ Messages clairs et factuels

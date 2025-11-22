@@ -39,7 +39,7 @@ export default function AdminApiKeys() {
   const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (user && profile?.user_type === 'admin_ansut') {
+    if (user && profile?.user_type === 'admin') {
       loadApiKeys();
       loadLogs();
     }
@@ -171,7 +171,7 @@ export default function AdminApiKeys() {
     return icons[serviceName] || '🔑';
   };
 
-  if (!user || profile?.user_type !== 'admin_ansut') {
+  if (!user || profile?.user_type !== 'admin') {
     return (
       <>
         <Header />
@@ -182,7 +182,7 @@ export default function AdminApiKeys() {
               Accès refusé
             </h2>
             <p className="text-gray-600">
-              Cette page est réservée aux administrateurs ANSUT
+              Cette page est réservée aux administrateurs
             </p>
           </div>
         </div>

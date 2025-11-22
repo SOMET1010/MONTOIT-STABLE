@@ -244,8 +244,8 @@ export default function ApplicationDetail() {
                   </div>
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <span className="text-gray-700 font-medium block">Plateforme certifiée ANSUT</span>
-                      <span className="text-xs text-gray-500">Service soutenu par l'ANSUT</span>
+                      <span className="text-gray-700 font-medium block">Signature électronique sécurisée</span>
+                      <span className="text-xs text-gray-500">Contrats avec cachet électronique visible</span>
                     </div>
                     {applicantProfile.is_verified ? (
                       <CheckCircle className="h-6 w-6 text-olive-600" />

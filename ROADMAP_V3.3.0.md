@@ -87,7 +87,7 @@
 **Équipe:** 2 développeurs + 1 QA
 
 #### Semaine 1-2 (Sprint 18)
-- US-063: Demande Certificat CEV (21 pts)
+- US-063: Demande Certificat Électronique de Vérification (CEV) ONECI (21 pts)
 - US-064: API ONECI Soumission (21 pts)
 - US-065: Webhook ONECI Statut (13 pts)
 - US-066: Affichage Vérification CEV (13 pts)

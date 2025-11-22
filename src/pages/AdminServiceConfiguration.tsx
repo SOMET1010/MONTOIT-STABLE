@@ -54,7 +54,7 @@ export default function AdminServiceConfiguration() {
   };
 
   useEffect(() => {
-    if (user && profile?.user_type === 'admin_ansut') {
+    if (user && profile?.user_type === 'admin') {
       loadConfigs();
     }
   }, [user, profile]);
@@ -135,7 +135,7 @@ export default function AdminServiceConfiguration() {
     }
   };
 
-  if (!user || profile?.user_type !== 'admin_ansut') {
+  if (!user || profile?.user_type !== 'admin') {
     return (
       <>
         <Header />
@@ -144,7 +144,7 @@ export default function AdminServiceConfiguration() {
             <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 mb-2">Accès refusé</h2>
             <p className="text-gray-600">
-              Cette page est réservée aux administrateurs ANSUT
+              Cette page est réservée aux administrateurs
             </p>
           </div>
         </div>

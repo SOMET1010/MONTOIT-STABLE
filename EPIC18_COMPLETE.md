@@ -138,9 +138,9 @@ L'**EPIC 18: Système Tiers de Confiance** est maintenant **100% opérationnel**
 
 #### Workflow Utilisateur
 
-**Étape 1:** Obtenir certification ANSUT (Epic 1)
+**Étape 1:** Obtenir cachet électronique visible (Epic 1)
 - ONECI + CNAM + Smile ID
-- Badge "Certifié ANSUT" ✅
+- Badge "Avec cachet électronique" ✅
 
 **Étape 2:** Demander validation Tiers de Confiance
 - Page `/request-trust-validation`

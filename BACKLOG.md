@@ -90,7 +90,7 @@
 
 ## 🎯 BACKLOG PRODUCT (Priorisé)
 
-### EPIC 1: Vérification d'Identité et Certification ANSUT
+### EPIC 1: Vérification d'Identité et Cachet électronique visible
 **Priorité:** CRITIQUE
 **Valeur Business:** HAUTE
 **Complexité:** HAUTE
@@ -100,7 +100,7 @@
 **US-001: Formulaire de Vérification ONECI**
 - **En tant que** locataire ou propriétaire
 - **Je veux** soumettre mes informations CNI pour vérification
-- **Afin de** obtenir la certification ANSUT
+- **Afin de** obtenir la cachet électronique visible
 
 **Critères d'acceptation:**
 - [ ] Page /profile/verification accessible
@@ -158,7 +158,7 @@
 **US-004: Vérification Faciale Smile ID**
 - **En tant que** utilisateur vérifié ONECI
 - **Je veux** prouver mon identité par reconnaissance faciale
-- **Afin de** compléter ma certification ANSUT
+- **Afin de** compléter ma cachet électronique visible
 
 **Critères d'acceptation:**
 - [ ] Interface de capture webcam
@@ -169,7 +169,7 @@
 - [ ] Comparaison selfie vs photo CNI
 - [ ] Score de correspondance min 80%
 - [ ] Mise à jour user_verifications
-- [ ] Attribution badge "Certifié ANSUT"
+- [ ] Attribution badge "Avec cachet électronique"
 
 **Points:** 13
 **Dépendances:** US-002, accès API Smile ID
@@ -182,7 +182,7 @@
 - **Afin de** prouver ma fiabilité
 
 **Critères d'acceptation:**
-- [ ] Badge "Certifié ANSUT" sur le profil
+- [ ] Badge "Avec cachet électronique" sur le profil
 - [ ] Badge visible dans les résultats de recherche
 - [ ] Badge sur les annonces de propriétés
 - [ ] Badge dans la messagerie
@@ -305,7 +305,7 @@
 - [ ] Affichage du PDF dans le navigateur
 - [ ] Bouton "Je veux signer ce bail"
 - [ ] Modal de confirmation avec récapitulatif
-- [ ] Vérification: profil certifié ANSUT obligatoire
+- [ ] Vérification: profil avec cachet électronique obligatoire
 - [ ] Bouton "Demander la signature électronique"
 
 **Points:** 8
@@ -1256,7 +1256,7 @@
   - [ ] Recherche de logement
   - [ ] Paiements
   - [ ] Baux et contrats
-  - [ ] Certification ANSUT
+  - [ ] Cachet électronique visible
   - [ ] Problèmes techniques
 - [ ] Barre de recherche FAQ
 - [ ] Questions fréquentes (min 30)
@@ -1557,7 +1557,7 @@
   - [ ] "Comment trouver un logement à Abidjan"
   - [ ] "Droits et devoirs du locataire en CI"
   - [ ] "Comment éviter les arnaques immobilières"
-  - [ ] "Certification ANSUT: mode d'emploi"
+  - [ ] "Cachet électronique visible: mode d'emploi"
   - [ ] "Payer son loyer via Mobile Money"
 - [ ] Partage réseaux sociaux
 - [ ] Commentaires (optionnel)
@@ -1735,7 +1735,7 @@ Pour qu'une User Story soit considérée comme terminée:
   - Brevo (SMS)
 
 ### Licences et Certifications
-- Certification ANSUT officielle
+- Cachet électronique visible officielle
 - Agrément signature électronique
 - Conformité RGPD/protection données
 - Conformité légale baux électroniques CI

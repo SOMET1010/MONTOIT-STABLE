@@ -72,15 +72,15 @@
 ### 3. Identité de Marque (ANSUT → Mon Toit) ⚠️
 
 **Actions effectuées**:
-- ✅ Remplacement global de "Certification ANSUT" → "Vérification Mon Toit"
-- ✅ Remplacement global de "Certifié ANSUT" → "Vérifié Mon Toit"
+- ✅ Remplacement global de "Cachet électronique visible" → "Vérification Mon Toit"
+- ✅ Remplacement global de "Avec cachet électronique" → "Vérifié Mon Toit"
 - ✅ Remplacement de "certification ansut" → "vérification Mon Toit"
 - ✅ AnsutBadge.tsx déjà correct avec "Vérifié Mon Toit"
 
 **Fichiers modifiés**: 150+ occurrences dans 31 fichiers
 
 **Restent à corriger**:
-- ❌ Champ base de données `ansut_certified` → renommer en `mon_toit_verified`
+- ❌ Champ base de données `identity_verified` → renommer en `mon_toit_verified`
 - ❌ Fichier `AnsutVerification.tsx` → renommer en `MonToitVerification.tsx`
 - ❌ Route `/ansut-verification` → renommer
 
@@ -122,7 +122,7 @@
 | 10 | Encart rose | ✅ Non trouvé | ✅ Résolu |
 
 **Actions prioritaires**:
-- Renommer champ BDD `ansut_certified`
+- Renommer champ BDD `identity_verified`
 - Renommer fichier `AnsutVerification.tsx`
 
 ---

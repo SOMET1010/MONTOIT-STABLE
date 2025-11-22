@@ -1050,7 +1050,7 @@ function ContractSignature({ contractId }) {
             <span className="font-medium">Signature Électronique Simple</span>
           </div>
           <p className="text-sm text-muted-foreground mt-2">
-            Signature électronique sans certification ANSUT.
+            Signature électronique sans cachet électronique visible.
           </p>
         </div>
       )}

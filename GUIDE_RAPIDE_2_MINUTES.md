@@ -66,7 +66,7 @@ Ouvrez l'app → Connectez-vous → Cliquez sur le chatbot → Testez !
 Questions suggérées :
 - "Je cherche un appartement à Cocody"
 - "Comment éviter les arnaques ?"
-- "Qu'est-ce que la certification ANSUT ?"
+- "Qu'est-ce que la cachet électronique visible ?"
 
 ---
 

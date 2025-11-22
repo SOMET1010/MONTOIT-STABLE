@@ -184,7 +184,7 @@ Votre compte dispose de :
 
 **Vérifications:**
 - ✅ Vérification générale
-- ✅ Certification ANSUT
+- ✅ Cachet électronique visible
 - ✅ Vérification faciale
 - ✅ Vérification ONECI
 - ✅ Vérification CNAM

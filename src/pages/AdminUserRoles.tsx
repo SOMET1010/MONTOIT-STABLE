@@ -39,7 +39,7 @@ export default function AdminUserRoles() {
     { value: 'locataire', label: 'Locataire' },
     { value: 'proprietaire', label: 'Propriétaire' },
     { value: 'agence', label: 'Agence' },
-    { value: 'admin_ansut', label: 'Admin ANSUT' },
+    { value: 'admin', label: 'Administrateur' },
   ];
 
   const searchUser = async () => {
@@ -72,7 +72,7 @@ export default function AdminUserRoles() {
       const currentRoles = data.role ? data.role.split(',') : [];
       setSelectedRoles(currentRoles);
       setSelectedUserType(data.user_type || 'locataire');
-      setMakeAdmin(currentRoles.includes('admin') || data.user_type === 'admin_ansut');
+      setMakeAdmin(currentRoles.includes('admin') || data.user_type === 'admin');
       setMakeTrustAgent(currentRoles.includes('trust_agent'));
 
       setMessage({ type: 'success', text: 'Utilisateur trouvé !' });
@@ -121,7 +121,7 @@ export default function AdminUserRoles() {
         .from('profiles')
         .update({
           role: rolesString,
-          user_type: makeAdmin ? 'admin_ansut' : selectedUserType,
+          user_type: makeAdmin ? 'admin' : selectedUserType,
           active_role: makeAdmin ? 'admin' : (rolesToSave[0] || selectedUserType),
           trust_verified: makeTrustAgent,
           trust_score: makeTrustAgent ? 100 : foundUser.trust_verified ? 100 : null,

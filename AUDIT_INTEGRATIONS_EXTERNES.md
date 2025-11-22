@@ -313,7 +313,7 @@ curl -X POST \
 
 #### Recommandations
 
-**Priorité CRITIQUE** : La signature CEV est **obligatoire** pour la certification ANSUT.
+**Priorité CRITIQUE** : La signature électronique (CryptoNeo) est **obligatoire** pour la cachet électronique visible.
 
 **Actions à faire :**
 
@@ -356,7 +356,7 @@ ONECI_PARTNER_ID=your_partner_id
 
 #### Recommandations
 
-**Priorité CRITIQUE** : La vérification ONECI est **obligatoire** pour la certification ANSUT.
+**Priorité CRITIQUE** : La vérification ONECI est **obligatoire** pour la cachet électronique visible.
 
 **Actions à faire :**
 
@@ -696,7 +696,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 
 #### Jour 3-4 : CryptoNeo (Signature CEV)
 
-**Sans CryptoNeo, pas de certification ANSUT.**
+**Sans CryptoNeo, pas de cachet électronique visible.**
 
 1. Contacter CryptoNeo via ANSUT
 2. Obtenir credentials
@@ -753,7 +753,7 @@ SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 Ces deux services sont **bloquants** pour le lancement. Sans eux, la plateforme ne peut pas :
 
 - Accepter de paiements (InTouch)
-- Obtenir la certification ANSUT (CryptoNeo)
+- Obtenir la cachet électronique visible (CryptoNeo)
 
 **Recommandation :** Commencer les démarches **immédiatement**.
 

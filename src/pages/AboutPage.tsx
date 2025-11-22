@@ -21,13 +21,13 @@ export default function AboutPage() {
             />
             <div>
               <h1 className="text-4xl font-bold text-gradient">À propos de Mon Toit</h1>
-              <p className="text-lg text-gray-600">Plateforme immobilière certifiée ANSUT</p>
+              <p className="text-lg text-gray-600">Plateforme immobilière avec signature électronique sécurisée</p>
             </div>
           </div>
 
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed mb-6">
-              Mon Toit est une plateforme immobilière innovante soutenue par l'ANSUT (Agence Nationale du Service Universel des Télécommunications) qui vise à faciliter l'accès au logement en Côte d'Ivoire.
+              Mon Toit est une plateforme immobilière innovante qui vise à faciliter l'accès au logement en Côte d'Ivoire grâce à la signature électronique sécurisée et la vérification d'identité officielle.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center">
@@ -57,7 +57,7 @@ export default function AboutPage() {
               </li>
               <li className="flex items-start">
                 <span className="inline-block w-2 h-2 bg-terracotta-500 rounded-full mt-2 mr-3"></span>
-                <span><strong>Support ANSUT :</strong> Plateforme certifiée et soutenue par une institution gouvernementale</span>
+                <span><strong>Cachet électronique visible :</strong> Tous les contrats sont marqués d'un cachet électronique garantissant leur authenticité</span>
               </li>
             </ul>
 
@@ -86,10 +86,10 @@ export default function AboutPage() {
 
             <h2 className="text-2xl font-bold text-gray-900 mt-8 mb-4 flex items-center">
               <Award className="h-6 w-6 text-amber-600 mr-3" />
-              Certification ANSUT
+              Sécurité et Conformité
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              Mon Toit bénéficie du soutien et de la certification de l'ANSUT, garantissant le respect des normes nationales en matière de services numériques et de protection des utilisateurs. Cette certification témoigne de notre engagement envers la qualité, la sécurité et la conformité réglementaire.
+              Mon Toit respecte les normes nationales en matière de services numériques et de protection des utilisateurs. Nous utilisons la signature électronique via CryptoNeo et appliquons un cachet électronique visible sur tous les contrats. Les utilisateurs peuvent optionnellement demander un Certificat Électronique de Vérification (CEV) auprès de l'ONECI pour renforcer la validité légale de leur contrat.
             </p>
 
             <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 p-6 rounded-xl mt-8">

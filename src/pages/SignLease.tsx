@@ -37,7 +37,7 @@ interface UserProfile {
   full_name: string;
   email: string;
   phone: string;
-  ansut_certified: boolean;
+  identity_verified: boolean;
 }
 
 export default function SignLease() {
@@ -89,12 +89,12 @@ export default function SignLease() {
           .single(),
         supabase
           .from('profiles')
-          .select('full_name, email, phone, ansut_certified')
+          .select('full_name, email, phone, identity_verified')
           .eq('id', leaseData.landlord_id)
           .single(),
         supabase
           .from('profiles')
-          .select('full_name, email, phone, ansut_certified')
+          .select('full_name, email, phone, identity_verified')
           .eq('id', leaseData.tenant_id)
           .single()
       ]);
@@ -112,7 +112,7 @@ export default function SignLease() {
   };
 
   const requestOTP = async () => {
-    if (!profile?.ansut_certified) {
+    if (!profile?.identity_verified) {
       setError('Vous devez être vérifié Mon Toit pour signer un bail');
       return;
     }
@@ -372,7 +372,7 @@ export default function SignLease() {
             </div>
           )}
 
-          {!profile?.ansut_certified && (
+          {!profile?.identity_verified && (
             <div className="bg-amber-50 border-2 border-amber-300 rounded-xl p-6 mb-6">
               <div className="flex items-start space-x-4">
                 <Shield className="w-8 h-8 text-amber-600 flex-shrink-0" />
@@ -415,7 +415,7 @@ export default function SignLease() {
               <div>
                 <h3 className="font-bold text-gray-700 mb-2 flex items-center space-x-2">
                   <span>Bailleur</span>
-                  {landlordProfile?.ansut_certified && <AnsutBadge certified={true} size="small" />}
+                  {landlordProfile?.identity_verified && <AnsutBadge certified={true} size="small" />}
                 </h3>
                 <p className="text-gray-900">{landlordProfile?.full_name}</p>
                 <p className="text-sm text-gray-600">{landlordProfile?.email}</p>
@@ -424,7 +424,7 @@ export default function SignLease() {
               <div>
                 <h3 className="font-bold text-gray-700 mb-2 flex items-center space-x-2">
                   <span>Locataire</span>
-                  {tenantProfile?.ansut_certified && <AnsutBadge certified={true} size="small" />}
+                  {tenantProfile?.identity_verified && <AnsutBadge certified={true} size="small" />}
                 </h3>
                 <p className="text-gray-900">{tenantProfile?.full_name}</p>
                 <p className="text-sm text-gray-600">{tenantProfile?.email}</p>
@@ -504,7 +504,7 @@ export default function SignLease() {
             </div>
           </div>
 
-          {!hasUserSigned && profile?.ansut_certified && (
+          {!hasUserSigned && profile?.identity_verified && (
             <div className="bg-white rounded-2xl shadow-lg p-8">
               <div className="text-center">
                 <Shield className="w-16 h-16 text-terracotta-500 mx-auto mb-4" />

@@ -78,7 +78,7 @@ export const userRepository = {
     let score = 0;
     if (profile.oneci_verified) score += 2;
     if (profile.cnam_verified) score += 1;
-    if (profile.ansut_certified) score += 2;
+    if (profile.identity_verified) score += 2;
 
     return { data: score, error: null };
   },

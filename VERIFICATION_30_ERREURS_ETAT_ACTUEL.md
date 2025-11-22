@@ -26,8 +26,8 @@ Sur les 30 erreurs identifiées:
 - ✅ AnsutBadge renommé en "Vérifié Mon Toit"
 
 **Ce qui reste à corriger**:
-- ❌ Champ `ansut_certified` dans table `user_verifications` (ligne 34-42 Header.tsx)
-- ❌ Références "Certification ANSUT" dans 20 fichiers
+- ❌ Champ `identity_verified` dans table `user_verifications` (ligne 34-42 Header.tsx)
+- ❌ Références "Cachet électronique visible" dans 20 fichiers
 
 **Impact**: MOYEN
 **Priorité**: 🟡 MOYENNE
@@ -58,9 +58,9 @@ Badge de confiance Mon Toit.
 ```
 
 **Reste à corriger dans 20 fichiers**:
-- SignLease.tsx: "certification ANSUT" (lignes 116, 357, 380, 382)
-- CreateContract.tsx: "certifié ANSUT" (lignes 141, 351, 366)
-- AnsutVerification.tsx: "Certification ANSUT" (lignes 403, 421)
+- SignLease.tsx: "cachet électronique visible" (lignes 116, 357, 380, 382)
+- CreateContract.tsx: "avec cachet électronique" (lignes 141, 351, 366)
+- AnsutVerification.tsx: "Cachet électronique visible" (lignes 403, 421)
 - Et 17 autres fichiers
 
 **Priorité**: 🔴 CRITIQUE - Risque légal
@@ -74,10 +74,10 @@ Le Footer ne contient aucune mention ANSUT incorrecte.
 
 ---
 
-### ✅ ERREUR 10: Encart rose "Certification ANSUT"
+### ✅ ERREUR 10: Encart rose "Cachet électronique visible"
 **Statut**: ✅ **NON TROUVÉ**
 
-Aucun encart rose avec "Certification ANSUT" trouvé.
+Aucun encart rose avec "Cachet électronique visible" trouvé.
 
 ---
 
@@ -161,10 +161,10 @@ Aucun encart rose avec "Certification ANSUT" trouvé.
 
 ---
 
-### ✅ ERREUR 13: Bandeau "Certification ANSUT"
+### ✅ ERREUR 13: Bandeau "Cachet électronique visible"
 **Statut**: ✅ **NON TROUVÉ**
 
-Pas de bandeau post-inscription avec "Certification ANSUT"
+Pas de bandeau post-inscription avec "Cachet électronique visible"
 
 ---
 

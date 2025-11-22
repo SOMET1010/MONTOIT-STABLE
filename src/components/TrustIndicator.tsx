@@ -7,7 +7,7 @@ interface TrustIndicatorProps {
   verificationStatus?: {
     oneci_verified: boolean;
     cnam_verified: boolean;
-    ansut_certified: boolean;
+    identity_verified: boolean;
   };
   rating?: number;
   reviewCount?: number;
@@ -32,7 +32,7 @@ export default function TrustIndicator({
     if (verificationStatus) {
       if (verificationStatus.oneci_verified) score += 2;
       if (verificationStatus.cnam_verified) score += 1;
-      if (verificationStatus.ansut_certified) score += 2;
+      if (verificationStatus.identity_verified) score += 2;
     }
 
     return { score, maxScore };
@@ -149,16 +149,16 @@ export default function TrustIndicator({
 
           <div className={`flex items-center justify-between ${sizeClasses.text}`}>
             <div className="flex items-center space-x-2">
-              {verificationStatus.ansut_certified ? (
+              {verificationStatus.identity_verified ? (
                 <CheckCircle className={`${sizeClasses.icon} text-green-600`} />
               ) : (
                 <AlertCircle className={`${sizeClasses.icon} text-gray-400`} />
               )}
-              <span className={verificationStatus.ansut_certified ? 'text-gray-900 font-medium' : 'text-gray-500'}>
+              <span className={verificationStatus.identity_verified ? 'text-gray-900 font-medium' : 'text-gray-500'}>
                 Profil vérifié
               </span>
             </div>
-            {verificationStatus.ansut_certified && (
+            {verificationStatus.identity_verified && (
               <span className="text-green-600 font-semibold">Vérifié</span>
             )}
           </div>

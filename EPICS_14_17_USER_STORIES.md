@@ -42,10 +42,10 @@ Le **Certificat Électronique Validé (CEV)** est le niveau ultime de certificat
 
 ---
 
-#### US-063: Demande de Certificat CEV
+#### US-063: Demande de Certificat Électronique de Vérification (CEV) ONECI
 
 **En tant que** propriétaire ayant un bail signé électroniquement
-**Je veux** obtenir un Certificat CEV de l'ONECI
+**Je veux** obtenir un Certificat Électronique de Vérification (CEV) ONECI de l'ONECI
 **Afin que** mon bail ait force légale complète
 
 **Critères d'acceptation:**
@@ -57,7 +57,7 @@ Le **Certificat Électronique Validé (CEV)** est le niveau ultime de certificat
 - [ ] Paiement initial effectué (Epic 3)
 
 **Workflow:**
-- [ ] Bouton "Obtenir Certificat CEV" sur page contrat
+- [ ] Bouton "Obtenir Certificat Électronique de Vérification (CEV) ONECI" sur page contrat
 - [ ] Modal explicatif CEV (bénéfices, coût, délai)
 - [ ] Coût CEV: 5 000 FCFA (frais ONECI)
 - [ ] Vérification prérequis automatique
@@ -116,7 +116,7 @@ CREATE TABLE cev_requests (
   oneci_review_date TIMESTAMPTZ,
   oneci_response_data JSONB,
 
-  -- Certificat CEV
+  -- Certificat Électronique de Vérification (CEV) ONECI
   cev_number TEXT UNIQUE,
   cev_issue_date TIMESTAMPTZ,
   cev_expiry_date TIMESTAMPTZ,
@@ -319,7 +319,7 @@ CREATE TABLE cev_requests (
   qr_code: "data:image/png;base64,...",
   verification_url: "https://oneci.ci/verify/CEV-CI-2025-456789",
   certificate_download_url: "https://oneci.ci/download/cert-12345.pdf",
-  message: "Certificat CEV émis avec succès"
+  message: "Certificat Électronique de Vérification (CEV) ONECI émis avec succès"
 }
 ```
 
@@ -382,7 +382,7 @@ CREATE TABLE cev_requests (
 #### US-066: Affichage et Vérification CEV
 
 **En tant que** propriétaire/locataire/tiers
-**Je veux** voir et vérifier mon Certificat CEV
+**Je veux** voir et vérifier mon Certificat Électronique de Vérification (CEV) ONECI
 **Afin de** prouver l'authenticité du bail
 
 **Critères d'acceptation:**
@@ -395,7 +395,7 @@ CREATE TABLE cev_requests (
 - [ ] Tooltip: "Bail certifié force légale complète"
 - [ ] Clic → modal détails certificat
 
-**2. Modal Certificat CEV**
+**2. Modal Certificat Électronique de Vérification (CEV) ONECI**
 - [ ] Aperçu PDF certificat ONECI
 - [ ] QR Code grand format (scan facile)
 - [ ] Numéro CEV: `CEV-CI-2025-456789`
@@ -747,7 +747,7 @@ $$;
 **SEO:**
 - [ ] Pages optimisées: "bail certifié oneci côte d'ivoire"
 - [ ] Blog articles:
-  - [ ] "Qu'est-ce qu'un Certificat CEV ?"
+  - [ ] "Qu'est-ce qu'un Certificat Électronique de Vérification (CEV) ONECI ?"
   - [ ] "Différence signature électronique vs CEV"
   - [ ] "Protégez votre bail avec ONECI"
   - [ ] "Guide complet CEV pour propriétaires"

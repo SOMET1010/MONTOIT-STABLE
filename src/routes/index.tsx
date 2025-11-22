@@ -37,7 +37,7 @@ const MakePayment = lazy(() => import('../pages/MakePayment'));
 const PaymentHistory = lazy(() => import('../pages/PaymentHistory'));
 
 const VerificationRequest = lazy(() => import('../pages/VerificationRequest'));
-const AnsutVerification = lazy(() => import('../pages/AnsutVerification'));
+const IdentityVerification = lazy(() => import('../pages/IdentityVerification'));
 const VerificationSettings = lazy(() => import('../pages/VerificationSettings'));
 const MyCertificates = lazy(() => import('../pages/MyCertificates'));
 const RequestTrustValidation = lazy(() => import('../pages/RequestTrustValidation'));
@@ -265,7 +265,7 @@ export const routes: RouteObject[] = [
         path: 'certification-ansut',
         element: (
           <ProtectedRoute>
-            <AnsutVerification />
+            <IdentityVerification />
           </ProtectedRoute>
         ),
       },
@@ -273,7 +273,7 @@ export const routes: RouteObject[] = [
         path: 'ansut-verification',
         element: (
           <ProtectedRoute>
-            <AnsutVerification />
+            <IdentityVerification />
           </ProtectedRoute>
         ),
       },

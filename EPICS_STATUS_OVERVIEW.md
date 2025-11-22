@@ -8,7 +8,7 @@
 
 ## ✅ EPICs COMPLÉTÉS (13/17)
 
-### Epic 1: ✅ Vérification d'Identité et Certification ANSUT
+### Epic 1: ✅ Vérification d'Identité et Cachet électronique visible
 **Status:** 100% COMPLET
 **Complété:** 29 Octobre 2025
 **Contenu:**

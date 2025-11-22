@@ -1,4 +1,4 @@
-export type UserType = 'locataire' | 'proprietaire' | 'agence' | 'admin_ansut';
+export type UserType = 'locataire' | 'proprietaire' | 'agence' | 'admin';
 export type UserRole = 'admin' | 'user' | 'agent' | 'moderator';
 export type PropertyCategory = 'residentiel' | 'commercial';
 export type PropertyType = 'appartement' | 'maison' | 'villa' | 'studio' | 'duplex' | 'chambre' | 'bureau' | 'commerce' | 'entrepot' | 'terrain';

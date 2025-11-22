@@ -23,7 +23,7 @@ Le système CEV (Certificat Électronique Validé) permet aux propriétaires de 
 - **Workflow complet**: `pending_documents` → `submitted` → `under_review` → `issued/rejected`
 - **Documents requis**: CNI (recto/verso) propriétaire et locataire, titre de propriété, photo du bien, bail signé
 - **Données ONECI**: ID demande, numéro référence, dates traitement
-- **Certificat CEV**: Numéro unique, document PDF, QR code, URL de vérification
+- **Certificat Électronique de Vérification (CEV) ONECI**: Numéro unique, document PDF, QR code, URL de vérification
 - **Frais**: 5,000 FCFA par demande
 - **Tracking complet**: Soumission, révision, statuts
 
@@ -470,7 +470,7 @@ Lorsque votre propriétaire initie une demande CEV, vous recevrez une notificati
 
 ## 🎯 User Stories complétées
 
-### US-096: Demande Certificat CEV ✅
+### US-096: Demande Certificat Électronique de Vérification (CEV) ONECI ✅
 - Interface vérification prérequis
 - Upload multi-documents
 - Soumission à ONECI

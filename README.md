@@ -6,7 +6,7 @@
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-green)](https://supabase.com/)
 [![Version](https://img.shields.io/badge/Version-3.3.0-brightgreen)](CHANGELOG.md)
 
-Plateforme moderne de gestion locative en Côte d'Ivoire avec certification ANSUT, signature électronique, et paiement mobile money.
+Plateforme moderne de gestion locative en Côte d'Ivoire avec cachet électronique visible, signature électronique, et paiement mobile money.
 
 ## 🎉 Architecture Refactoring Complete (v3.3.0)
 
@@ -37,7 +37,7 @@ See [ARCHITECTURAL_REFACTORING_PHASE1_COMPLETE.md](ARCHITECTURAL_REFACTORING_PHA
 - 🚧 **Vérification ANSUT** - Vérification d'identité ONECI, CNAM, Smile ID
 - 🚧 **Signature électronique** - Intégration CryptoNeo pour signature légale
 - 🚧 **Contrats numériques** - Génération et gestion de baux électroniques
-- 🚧 **Certification** - Système de certification ANSUT complet
+- 🚧 **Certification** - Système de cachet électronique visible complet
 
 ### Planifiées (Epics 3-12)
 

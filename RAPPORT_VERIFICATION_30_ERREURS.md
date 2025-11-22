@@ -83,7 +83,7 @@ Le bandeau principal utilise des classes Tailwind pour l'espacement mais nécess
 
 ---
 
-### ❌ ERREUR 4: Recherche rapide - "Certifié ANSUT" mal placé
+### ❌ ERREUR 4: Recherche rapide - "Avec cachet électronique" mal placé
 
 **Statut**: ❌ **NON TROUVÉE DANS LE CODE**
 
@@ -92,11 +92,11 @@ Le bandeau principal utilise des classes Tailwind pour l'espacement mais nécess
 - `src/pages/Home.tsx`
 
 **Diagnostic**:
-Aucune mention de "Certifié ANSUT" n'a été trouvée dans le composant QuickSearch.
+Aucune mention de "Avec cachet électronique" n'a été trouvée dans le composant QuickSearch.
 
 ```bash
 # Recherche effectuée
-grep -n "Certifié ANSUT" src/components/QuickSearch.tsx
+grep -n "Avec cachet électronique" src/components/QuickSearch.tsx
 # Résultat: Aucune correspondance
 ```
 
@@ -108,7 +108,7 @@ grep -n "Certifié ANSUT" src/components/QuickSearch.tsx
 
 ---
 
-### ❌ ERREUR 6: Bloc Certification ANSUT faux (ONECI / CNAM)
+### ❌ ERREUR 6: Bloc Cachet électronique visible faux (ONECI / CNAM)
 
 **Statut**: ⚠️ **CONFIRMÉE**
 
@@ -162,13 +162,13 @@ Le Footer contient plusieurs liens et mentions. Vérification nécessaire des te
 
 ---
 
-### ❌ ERREUR 10: Encart rose "Certification ANSUT" à supprimer
+### ❌ ERREUR 10: Encart rose "Cachet électronique visible" à supprimer
 
 **Statut**: ⚠️ **RECHERCHE EN COURS**
 
 **Fichiers à vérifier**:
 - Tous les composants avec background rose/pink
-- Recherche pattern: `bg-pink|bg-rose|Certification ANSUT`
+- Recherche pattern: `bg-pink|bg-rose|Cachet électronique visible`
 
 **Recommandation**: Recherche exhaustive nécessaire
 
@@ -409,7 +409,7 @@ const { data, error } = await supabase.auth.signUp({
 
 ---
 
-### ❌ ERREUR 13: Bandeau "Certification ANSUT"
+### ❌ ERREUR 13: Bandeau "Cachet électronique visible"
 
 **Statut**: ⚠️ **À LOCALISER**
 
@@ -839,7 +839,7 @@ Le bouton de candidature fonctionne mais le flux KYC n'est pas obligatoire:
 ### 🔴 CRITIQUES (Action immédiate requise)
 
 1. **Erreur 1**: Mentions ANSUT incorrectes (risque légal)
-2. **Erreur 6**: Bloc certification ANSUT faux
+2. **Erreur 6**: Bloc cachet électronique visible faux
 3. **Erreur 11**: OAuth non fonctionnel
 4. **Erreur 12**: Inscription sans téléphone/OTP
 5. **Erreur 14**: Menus accessibles avant profil

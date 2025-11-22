@@ -557,14 +557,14 @@ Le CEV est un **cachet numérique officiel** apposé sur les documents électron
      - PDF signé envoyé à API ONECI
      - CEV (Cachet Électronique Visible) apposé
      - Document cacheté retourné
-     - Certificat CEV généré
+     - Certificat Électronique de Vérification (CEV) ONECI généré
   5. **Horodatage certifié**:
      - Timestamp ONECI officiel (inaltérable)
      - Hash SHA-256 du document final
      - Chaîne de confiance complète
   6. **Archivage sécurisé**:
      - Document avec CEV dans Supabase Storage (encrypted)
-     - Certificat CEV séparé
+     - Certificat Électronique de Vérification (CEV) ONECI séparé
      - Backup quotidien automatique
      - Rétention: 10 ans minimum (loi CI)
 - [ ] Table `lease_contracts` enrichie:

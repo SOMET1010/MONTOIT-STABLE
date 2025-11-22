@@ -286,8 +286,8 @@ export default function ApplicationForm() {
                 </div>
                 <div className="flex items-center justify-between pb-3 border-b border-gray-200">
                   <div className="flex-1">
-                    <span className="text-gray-700 font-medium block">Plateforme certifiée ANSUT</span>
-                    <span className="text-xs text-gray-500">Service soutenu par l'ANSUT</span>
+                    <span className="text-gray-700 font-medium block">Signature électronique sécurisée</span>
+                    <span className="text-xs text-gray-500">Contrats avec cachet électronique visible</span>
                   </div>
                   <span className="font-bold px-4 py-2 rounded-full bg-gradient-to-r from-olive-100 to-green-100 text-olive-800 border border-olive-300">
                     ✓ Service officiel
