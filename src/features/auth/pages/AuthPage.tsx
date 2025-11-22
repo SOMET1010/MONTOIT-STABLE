@@ -14,6 +14,7 @@ export default function Auth() {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [verificationType, setVerificationType] = useState<'email' | 'sms' | 'whatsapp'>('email');
+  const [loginMethod, setLoginMethod] = useState<'email' | 'phone'>('email');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -81,26 +82,89 @@ export default function Auth() {
           setSuccess('');
         }, 5000);
       } else if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) throw error;
+        // Connexion par téléphone avec OTP
+        if (loginMethod === 'phone') {
+          if (!phone) {
+            setError('Veuillez entrer votre numéro de téléphone');
+            return;
+          }
 
-        const pendingAction = sessionStorage.getItem('pendingAction');
-        if (pendingAction) {
+          if (!validatePhone(phone)) {
+            setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
+            return;
+          }
+
+          // Vérifier si l'utilisateur existe avec ce numéro
+          const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('id, phone, full_name')
+            .eq('phone', phone)
+            .single();
+
+          if (profileError || !profileData) {
+            setError('Aucun compte trouvé avec ce numéro de téléphone. Veuillez vous inscrire.');
+            return;
+          }
+
+          // Envoyer le code OTP
           try {
-            const action = JSON.parse(pendingAction);
-            sessionStorage.removeItem('pendingAction');
-            if (action.action === 'apply') {
-              window.location.href = `/candidature/${action.propertyId}`;
-            } else if (action.action === 'visit') {
-              window.location.href = `/visiter/${action.propertyId}`;
-            } else {
-              window.location.href = '/';
+            const otpType = verificationType === 'email' ? 'sms' : verificationType;
+            const { data: otpData, error: otpError } = await supabase.functions.invoke('send-verification-code', {
+              body: {
+                phone: phone,
+                type: otpType,
+                name: profileData.full_name,
+                isLogin: true
+              }
+            });
+
+            if (otpError) {
+              console.error('OTP send error:', otpError);
+              setError('Erreur lors de l\'envoi du code de vérification. Veuillez réessayer.');
+              return;
             }
-          } catch (e) {
-            window.location.href = '/';
+
+            const methodName = otpType === 'whatsapp' ? 'WhatsApp' : 'SMS';
+            setSuccess(`Code de vérification envoyé par ${methodName}`);
+            
+            // Rediriger vers la page de vérification OTP
+            setTimeout(() => {
+              navigate('/verification-otp', {
+                state: {
+                  phone: phone,
+                  type: otpType,
+                  name: profileData.full_name,
+                  isLogin: true
+                }
+              });
+            }, 1500);
+          } catch (otpErr: any) {
+            console.error('OTP error:', otpErr);
+            setError('Erreur lors de l\'envoi du code. Veuillez réessayer.');
           }
         } else {
-          window.location.href = '/';
+          // Connexion classique par email + mot de passe
+          const { error } = await signIn(email, password);
+          if (error) throw error;
+
+          const pendingAction = sessionStorage.getItem('pendingAction');
+          if (pendingAction) {
+            try {
+              const action = JSON.parse(pendingAction);
+              sessionStorage.removeItem('pendingAction');
+              if (action.action === 'apply') {
+                window.location.href = `/candidature/${action.propertyId}`;
+              } else if (action.action === 'visit') {
+                window.location.href = `/visiter/${action.propertyId}`;
+              } else {
+                window.location.href = '/';
+              }
+            } catch (e) {
+              window.location.href = '/';
+            }
+          } else {
+            window.location.href = '/';
+          }
         }
       } else {
         if (!validateEmail(email)) {
@@ -301,6 +365,106 @@ export default function Auth() {
                 </div>
               )}
 
+              {isLogin && !isForgotPassword && (
+                <>
+                  <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 rounded-2xl animate-slide-down">
+                    <div className="flex items-start space-x-3">
+                      <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
+                      <div className="text-sm text-blue-800">
+                        <p className="font-semibold mb-1">Connexion flexible</p>
+                        <p className="text-xs leading-relaxed">
+                          Connectez-vous avec votre <span className="font-semibold">email + mot de passe</span> ou recevez un <span className="font-semibold">code OTP par téléphone</span>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-6 animate-slide-down" style={{ animationDelay: '0.1s' }}>
+                    <label className="block text-sm font-bold text-gray-700 mb-3">
+                      Méthode de connexion
+                    </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setLoginMethod('email')}
+                        className={`p-4 rounded-2xl border-2 transition-all ${
+                          loginMethod === 'email'
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 bg-white hover:border-blue-300'
+                        }`}
+                      >
+                        <Mail className={`h-6 w-6 mx-auto mb-2 ${
+                          loginMethod === 'email' ? 'text-blue-600' : 'text-gray-400'
+                        }`} />
+                        <p className={`text-xs font-semibold ${
+                          loginMethod === 'email' ? 'text-blue-700' : 'text-gray-600'
+                        }`}>Email + Mot de passe</p>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setLoginMethod('phone')}
+                        className={`p-4 rounded-2xl border-2 transition-all ${
+                          loginMethod === 'phone'
+                            ? 'border-blue-500 bg-blue-50'
+                            : 'border-gray-200 bg-white hover:border-blue-300'
+                        }`}
+                      >
+                        <Phone className={`h-6 w-6 mx-auto mb-2 ${
+                          loginMethod === 'phone' ? 'text-blue-600' : 'text-gray-400'
+                        }`} />
+                        <p className={`text-xs font-semibold ${
+                          loginMethod === 'phone' ? 'text-blue-700' : 'text-gray-600'
+                        }`}>Téléphone + OTP</p>
+                      </button>
+                    </div>
+                  </div>
+
+                  {loginMethod === 'phone' && (
+                    <div className="mb-6 animate-slide-down" style={{ animationDelay: '0.15s' }}>
+                      <label className="block text-sm font-bold text-gray-700 mb-3">
+                        Méthode d'envoi OTP
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setVerificationType('sms')}
+                          className={`p-3 rounded-2xl border-2 transition-all ${
+                            verificationType === 'sms'
+                              ? 'border-cyan-500 bg-cyan-50'
+                              : 'border-gray-200 bg-white hover:border-cyan-300'
+                          }`}
+                        >
+                          <Phone className={`h-5 w-5 mx-auto mb-1 ${
+                            verificationType === 'sms' ? 'text-cyan-600' : 'text-gray-400'
+                          }`} />
+                          <p className={`text-xs font-semibold ${
+                            verificationType === 'sms' ? 'text-cyan-700' : 'text-gray-600'
+                          }`}>SMS</p>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setVerificationType('whatsapp')}
+                          className={`p-3 rounded-2xl border-2 transition-all ${
+                            verificationType === 'whatsapp'
+                              ? 'border-cyan-500 bg-cyan-50'
+                              : 'border-gray-200 bg-white hover:border-cyan-300'
+                          }`}
+                        >
+                          <MessageCircle className={`h-5 w-5 mx-auto mb-1 ${
+                            verificationType === 'whatsapp' ? 'text-cyan-600' : 'text-gray-400'
+                          }`} />
+                          <p className={`text-xs font-semibold ${
+                            verificationType === 'whatsapp' ? 'text-cyan-700' : 'text-gray-600'
+                          }`}>WhatsApp</p>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+
               {!isLogin && !isForgotPassword && (
                 <>
                   <div className="mb-6 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-2xl animate-slide-down">
@@ -423,24 +587,52 @@ export default function Auth() {
                   </>
                 )}
 
-                <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0s' : '0.15s' }}>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
-                    Email {!isLogin && verificationType !== 'email' && <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                    <input
-                      type="email"
-                      required={isLogin || verificationType === 'email'}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                      placeholder="votre@email.com"
-                    />
+                {/* Champ Téléphone pour connexion par téléphone */}
+                {isLogin && loginMethod === 'phone' && (
+                  <div className="animate-slide-down" style={{ animationDelay: '0.2s' }}>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Numéro de téléphone
+                    </label>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                      <input
+                        type="tel"
+                        required
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                        placeholder="+225 XX XX XX XX XX"
+                        pattern="[+]?[0-9\s]+"
+                        title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-gray-600">
+                      Format: +225 XX XX XX XX XX
+                    </p>
                   </div>
-                </div>
+                )}
 
-                {!isForgotPassword && (
+                {/* Champ Email pour connexion par email ou inscription */}
+                {(!isLogin || loginMethod === 'email') && (
+                  <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0s' : '0.15s' }}>
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Email {!isLogin && verificationType !== 'email' && <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                      <input
+                        type="email"
+                        required={(isLogin && loginMethod === 'email') || (!isLogin && verificationType === 'email')}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                        placeholder="votre@email.com"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {!isForgotPassword && (!isLogin || loginMethod === 'email') && (
                   <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0.1s' : '0.2s' }}>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
                       Mot de passe
@@ -506,7 +698,7 @@ export default function Auth() {
                   </div>
                 )}
 
-                {isLogin && !isForgotPassword && (
+                {isLogin && !isForgotPassword && loginMethod === 'email' && (
                   <div className="flex justify-end -mt-2">
                     <button
                       type="button"
@@ -537,8 +729,10 @@ export default function Auth() {
                       <KeyRound className="w-5 h-5" />
                       <span>Envoyer le lien</span>
                     </span>
+                  ) : isLogin ? (
+                    loginMethod === 'phone' ? 'Recevoir le code OTP' : 'Se connecter'
                   ) : (
-                    isLogin ? 'Se connecter' : "S'inscrire"
+                    "S'inscrire"
                   )}
                 </button>
               </form>
