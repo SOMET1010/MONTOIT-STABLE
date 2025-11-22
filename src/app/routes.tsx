@@ -6,6 +6,7 @@ import ProtectedRoute from '@/shared/ui/ProtectedRoute';
 
 const Home = lazy(() => import('@/features/property/pages/HomePage'));
 const Auth = lazy(() => import('@/features/auth/pages/AuthPage'));
+const ModernAuth = lazy(() => import('@/features/auth/pages/ModernAuthPage'));
 const AuthCallback = lazy(() => import('@/features/auth/pages/CallbackPage'));
 const ForgotPassword = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'));
 const ResetPassword = lazy(() => import('@/features/auth/pages/ResetPasswordPage'));
@@ -98,6 +99,7 @@ export const routes: RouteObject[] = [
       { index: true, element: <Home /> },
       { path: 'connexion', element: <Auth /> },
       { path: 'inscription', element: <Auth /> },
+      { path: 'auth', element: <ModernAuth /> },
       { path: 'auth/callback', element: <AuthCallback /> },
       { path: 'mot-de-passe-oublie', element: <ForgotPassword /> },
       { path: 'reinitialiser-mot-de-passe', element: <ResetPassword /> },
