@@ -168,14 +168,20 @@ export default function Auth() {
           }
         }
       } else {
-        if (!validateEmail(email)) {
-          setError('Adresse email invalide. Veuillez entrer une adresse email valide.');
-          return;
+        // Validation email uniquement si inscription par email
+        if (verificationType === 'email') {
+          if (!email || !validateEmail(email)) {
+            setError('Adresse email invalide. Veuillez entrer une adresse email valide.');
+            return;
+          }
         }
 
-        if (phone && !validatePhone(phone)) {
-          setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
-          return;
+        // Validation téléphone uniquement si inscription par SMS/WhatsApp
+        if (verificationType === 'sms' || verificationType === 'whatsapp') {
+          if (!phone || !validatePhone(phone)) {
+            setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
+            return;
+          }
         }
 
         // Pour SMS/WhatsApp, pas besoin de mot de passe
