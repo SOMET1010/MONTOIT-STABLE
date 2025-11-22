@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Toit - Maquette Page d'Accueil</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #111827;
+            background: white;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 16px 24px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #FF6B35;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .header-nav a {
+            text-decoration: none;
+            color: #4B5563;
+            font-weight: 500;
+        }
+
+        .btn-primary {
+            background: #FF6B35;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn-primary:hover {
+            background: #E55A2B;
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 72px;
+            height: 600px;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('/images/hero-abidjan.jpg') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 24px;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .search-bar {
+            background: white;
+            border-radius: 9999px;
+            padding: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 0;
+        }
+
+        .search-field {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-right: 1px solid #e5e7eb;
+        }
+
+        .search-field:last-of-type {
+            border-right: none;
+        }
+
+        .search-field label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .search-field input,
+        .search-field select {
+            border: none;
+            outline: none;
+            font-size: 14px;
+            width: 100%;
+            color: #111827;
+        }
+
+        .search-button {
+            background: #FF6B35;
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 9999px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Section Container */
+        .section {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 80px 24px;
+        }
+
+        .section-header {
+            margin-bottom: 32px;
+        }
+
+        .section-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .section-header p {
+            font-size: 18px;
+            color: #6B7280;
+        }
+
+        /* Profils Section */
+        .profils-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+        }
+
+        .profil-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .profil-card:hover {
+            border-color: #FF6B35;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.1);
+        }
+
+        .profil-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .profil-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .profil-card ul {
+            list-style: none;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+
+        .profil-card li {
+            padding: 8px 0;
+            color: #6B7280;
+        }
+
+        .profil-card li:before {
+            content: "✓ ";
+            color: #FF6B35;
+            font-weight: 700;
+            margin-right: 8px;
+        }
+
+        .btn-secondary {
+            background: #F3F4F6;
+            color: #111827;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            transition: background 0.2s;
+        }
+
+        .btn-secondary:hover {
+            background: #E5E7EB;
+        }
+
+        /* Carousel */
+        .carousel {
+            position: relative;
+        }
+
+        .carousel-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .carousel-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .property-card {
+            flex-shrink: 0;
+            width: 320px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .property-image {
+            width: 100%;
+            height: 288px;
+            background: #E5E7EB;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .property-price {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .property-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .property-info p {
+            font-size: 14px;
+            color: #6B7280;
+            margin-bottom: 4px;
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: #F9FAFB;
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+        }
+
+        .feature-card h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .feature-card p {
+            color: #6B7280;
+            line-height: 1.6;
+            margin-bottom: 24px;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            background: #FF6B35;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* How It Works */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 48px;
+        }
+
+        .step {
+            text-align: center;
+        }
+
+        .step-number {
+            width: 64px;
+            height: 64px;
+            background: #FF6B35;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-center;
+            font-size: 32px;
+            font-weight: 700;
+            margin: 0 auto 24px;
+        }
+
+        .step h3 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .step p {
+            color: #6B7280;
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            background: linear-gradient(135deg, #FF6B35 0%, #E55A2B 100%);
+            padding: 80px 24px;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 40px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 32px;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+        }
+
+        .btn-white {
+            background: white;
+            color: #FF6B35;
+            padding: 16px 32px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+
+        .btn-white:hover {
+            transform: scale(1.05);
+        }
+
+        /* Footer */
+        footer {
+            background: #111827;
+            color: white;
+            padding: 48px 24px;
+            text-align: center;
+        }
+
+        footer p {
+            color: #9CA3AF;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profils-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .search-bar {
+                flex-direction: column;
+                border-radius: 16px;
+            }
+
+            .search-field {
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .search-button {
+                width: 100%;
+                justify-content: center;
+                border-radius: 12px;
+            }
+        }
+
+        /* Badge */
+        .badge {
+            display: inline-block;
+            background: #10B981;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo">Mon Toit 🏠</div>
+        <nav class="header-nav">
+            <a href="#">Rechercher</a>
+            <a href="#">Comment ça marche</a>
+            <a href="#" class="btn-primary">Connexion</a>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Trouvez votre logement en Côte d'Ivoire</h1>
+            <div class="search-bar">
+                <div class="search-field">
+                    <label>Où ?</label>
+                    <input type="text" placeholder="Abidjan, Cocody...">
+                </div>
+                <div class="search-field">
+                    <label>Type</label>
+                    <select>
+                        <option>Tous</option>
+                        <option>Appartement</option>
+                        <option>Villa</option>
+                        <option>Studio</option>
+                    </select>
+                </div>
+                <div class="search-field">
+                    <label>Prix max</label>
+                    <input type="text" placeholder="500 000 FCFA">
+                </div>
+                <button class="search-button">
+                    🔍 Rechercher
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profils Section -->
+    <section class="section">
+        <div class="section-header" style="text-align: center;">
+            <h2>Qui êtes-vous ?</h2>
+            <p>Mon Toit accompagne chaque acteur de la location</p>
+        </div>
+        <div class="profils-grid">
+            <div class="profil-card">
+                <div class="profil-icon">👤</div>
+                <h3>LOCATAIRE</h3>
+                <ul>
+                    <li>Cherchez votre logement</li>
+                    <li>Postulez avec ANSUT</li>
+                    <li>Payez en Mobile Money</li>
+                    <li>Signez électroniquement</li>
+                </ul>
+                <a href="#" class="btn-secondary">Commencer</a>
+            </div>
+            <div class="profil-card">
+                <div class="profil-icon">🏠</div>
+                <h3>PROPRIÉTAIRE</h3>
+                <ul>
+                    <li>Publiez gratuitement</li>
+                    <li>Sélectionnez vos locataires</li>
+                    <li>Encaissez en ligne</li>
+                    <li>Gérez vos baux</li>
+                </ul>
+                <a href="#" class="btn-secondary">Commencer</a>
+            </div>
+            <div class="profil-card">
+                <div class="profil-icon">🤝</div>
+                <h3>AGENT IMMOBILIER</h3>
+                <ul>
+                    <li>Gérez vos mandats</li>
+                    <li>Accompagnez vos clients</li>
+                    <li>Facturez vos commissions</li>
+                    <li>Suivez vos transactions</li>
+                </ul>
+                <a href="#" class="btn-secondary">Commencer</a>
+            </div>
+            <div class="profil-card">
+                <div class="profil-icon">✓</div>
+                <h3>GARANT</h3>
+                <ul>
+                    <li>Validez les dossiers</li>
+                    <li>Certifiez les documents</li>
+                    <li>Garantissez les locataires</li>
+                    <li>Sécurisez les transactions</li>
+                </ul>
+                <a href="#" class="btn-secondary">Commencer</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Propriétés Populaires -->
+    <section class="section" style="background: #F9FAFB;">
+        <div class="section-header">
+            <h2>Propriétés populaires à Abidjan</h2>
+        </div>
+        <div class="carousel">
+            <div class="carousel-container">
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏢</div>
+                        <div class="property-price">250 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Cocody, Riviera</h3>
+                        <p>Appartement 2 chambres</p>
+                        <p>⭐ 4.8 · 2 ch. · 1 sdb. · 65 m²</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏡</div>
+                        <div class="property-price">450 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Plateau, Centre-ville</h3>
+                        <p>Villa 4 chambres</p>
+                        <p>⭐ 4.9 · 4 ch. · 3 sdb. · 180 m²</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏠</div>
+                        <div class="property-price">180 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Yopougon, Niangon</h3>
+                        <p>Studio meublé</p>
+                        <p>⭐ 4.7 · 1 ch. · 1 sdb. · 35 m²</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏘️</div>
+                        <div class="property-price">350 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Marcory, Zone 4</h3>
+                        <p>Appartement 3 chambres</p>
+                        <p>⭐ 4.8 · 3 ch. · 2 sdb. · 95 m²</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fonctionnalités Uniques -->
+    <section class="section">
+        <div class="section-header" style="text-align: center;">
+            <h2>Pourquoi Mon Toit est différent</h2>
+            <p>La seule plateforme avec vérification ANSUT et paiement Mobile Money</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3>Vérification ANSUT</h3>
+                <p>Toutes les propriétés sont vérifiées officiellement par l'ANSUT. Louez en toute confiance.</p>
+                <span class="feature-badge">Certifié ANSUT</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile Money</h3>
+                <p>Payez avec Orange Money, MTN Money ou Moov Money. Paiements instantanés et sécurisés.</p>
+                <span class="feature-badge">🟠 MTN 🟡 Moov</span>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">✍️</div>
+                <h3>Signature Électronique</h3>
+                <p>Signez vos baux électroniquement avec CryptoNeo. Valeur juridique garantie.</p>
+                <span class="feature-badge">Légal en CI</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Nouveautés -->
+    <section class="section" style="background: #F9FAFB;">
+        <div class="section-header">
+            <h2>Nouveautés <span class="badge">NOUVEAU</span></h2>
+            <p>Découvrez les dernières propriétés ajoutées</p>
+        </div>
+        <div class="carousel">
+            <div class="carousel-container">
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏢</div>
+                        <div class="property-price">320 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Cocody, Angré</h3>
+                        <p>Appartement standing</p>
+                        <p>⭐ Nouveau · 3 ch. · 2 sdb. · 110 m²</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏡</div>
+                        <div class="property-price">550 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Bingerville, Résidentiel</h3>
+                        <p>Villa moderne</p>
+                        <p>⭐ Nouveau · 5 ch. · 4 sdb. · 250 m²</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏠</div>
+                        <div class="property-price">200 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Abobo, Pk18</h3>
+                        <p>Appartement 2 pièces</p>
+                        <p>⭐ Nouveau · 2 ch. · 1 sdb. · 55 m²</p>
+                    </div>
+                </div>
+                <div class="property-card">
+                    <div class="property-image">
+                        <div style="background: #CBD5E1; width: 100%; height: 100%; display: flex; align-items: center; justify-center; font-size: 48px;">🏘️</div>
+                        <div class="property-price">280 000 FCFA</div>
+                    </div>
+                    <div class="property-info">
+                        <h3>Treichville, Biafra</h3>
+                        <p>Duplex rénové</p>
+                        <p>⭐ Nouveau · 3 ch. · 2 sdb. · 85 m²</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comment ça marche -->
+    <section class="section">
+        <div class="section-header" style="text-align: center;">
+            <h2>Comment ça marche</h2>
+            <p>3 étapes pour trouver votre logement</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>🔍 Cherchez</h3>
+                <p>Trouvez le logement idéal parmi nos milliers d'annonces vérifiées ANSUT.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>📄 Postulez</h3>
+                <p>Créez votre dossier locataire avec vérification ANSUT et documents certifiés.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>🏡 Emménagez</h3>
+                <p>Signez électroniquement et payez en Mobile Money. C'est tout !</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="cta-section">
+        <h2>Prêt à commencer ?</h2>
+        <p>Rejoignez des milliers d'utilisateurs qui ont trouvé leur logement idéal</p>
+        <div class="cta-buttons">
+            <a href="#" class="btn-white">Je suis locataire</a>
+            <a href="#" class="btn-white">Je suis propriétaire</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Mon Toit - Plateforme immobilière en Côte d'Ivoire</p>
+        <p style="margin-top: 16px;">Vérification ANSUT • Mobile Money • Signature Électronique</p>
+    </footer>
+</body>
+</html>

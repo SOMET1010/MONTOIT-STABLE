@@ -1,19 +1,21 @@
 import { useState, useEffect } from 'react';
-import { Search, MapPin, Shield, FileSignature, Smartphone, TrendingUp, Building2, Sparkles, Home as HomeIcon, Users, Map } from 'lucide-react';
+import { Search, MapPin, Home as HomeIcon } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
-import QuickSearch from '@/features/property/components/QuickSearch';
-import { FormatService } from '@/services/format/formatService';
-import MapWrapper from '@/shared/ui/MapWrapper';
-import { TrustSection, TestimonialsCarousel } from '@/features/trust';
+import PropertyCard from '@/shared/components/PropertyCard';
+import ProfileCard from '@/shared/components/ProfileCard';
+import FeatureCard from '@/shared/components/FeatureCard';
+import Carousel from '@/shared/components/Carousel';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
 export default function Home() {
   const [properties, setProperties] = useState<Property[]>([]);
-  const [totalProperties, setTotalProperties] = useState(0);
+  const [newProperties, setNewProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchCity, setSearchCity] = useState('');
+  const [propertyType, setPropertyType] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
 
   useEffect(() => {
     loadProperties();
@@ -21,25 +23,31 @@ export default function Home() {
 
   const loadProperties = async () => {
     try {
-      const { data, error } = await supabase
+      // Popular properties (by views)
+      const { data: popularData, error: popularError } = await supabase
+        .from('properties')
+        .select('*')
+        .eq('status', 'disponible')
+        .order('views', { ascending: false })
+        .limit(8);
+
+      if (popularError) throw popularError;
+      setProperties(popularData || []);
+
+      // New properties (by created_at)
+      const { data: newData, error: newError } = await supabase
         .from('properties')
         .select('*')
         .eq('status', 'disponible')
         .order('created_at', { ascending: false })
-        .limit(6);
+        .limit(8);
 
-      if (error) throw error;
-      setProperties(data || []);
-
-      const { count } = await supabase
-        .from('properties')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'disponible');
-
-      setTotalProperties(count || 0);
+      if (newError) throw newError;
+      setNewProperties(newData || []);
     } catch (error) {
       console.error('Error loading properties:', error);
       setProperties([]);
+      setNewProperties([]);
     } finally {
       setLoading(false);
     }
@@ -47,508 +55,325 @@ export default function Home() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchCity) {
-      window.location.href = `/recherche?city=${encodeURIComponent(searchCity)}`;
-    } else {
-      window.location.href = '/recherche';
-    }
+    const params = new URLSearchParams();
+    if (searchCity) params.append('city', searchCity);
+    if (propertyType) params.append('type', propertyType);
+    if (maxPrice) params.append('maxPrice', maxPrice);
+    
+    window.location.href = `/recherche${params.toString() ? '?' + params.toString() : ''}`;
   };
 
   return (
-    <div className="min-h-screen custom-cursor">
-      <section
-        className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-white py-20 md:py-32"
-      >
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight px-4 text-gray-900">
-              Trouvez votre logement idéal en Côte d'Ivoire
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="relative h-[500px] sm:h-[600px] bg-gray-900">
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(/images/hero-abidjan.jpg)' }}
+        >
+          <div className="absolute inset-0 bg-black/40"></div>
+        </div>
+        
+        <div className="relative h-full flex items-center justify-center px-4">
+          <div className="w-full max-w-4xl">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6 sm:mb-8 px-4">
+              Trouvez votre logement en Côte d'Ivoire
             </h1>
+            
+            {/* Search Bar - Mobile First */}
+            <form onSubmit={handleSearch} className="bg-white rounded-2xl sm:rounded-full shadow-2xl p-3 sm:p-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
+                {/* Where */}
+                <div className="flex-1 px-4 sm:px-6 py-3">
+                  <label className="block text-xs font-semibold text-gray-900 mb-1">Où ?</label>
+                  <input
+                    type="text"
+                    placeholder="Abidjan, Cocody..."
+                    className="w-full bg-transparent text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none"
+                    value={searchCity}
+                    onChange={(e) => setSearchCity(e.target.value)}
+                  />
+                </div>
 
-            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-3xl mx-auto px-4 leading-relaxed">
-              Vérification ANSUT • Paiement sécurisé • Signature électronique
-            </p>
-          </div>
+                {/* Type */}
+                <div className="flex-1 px-4 sm:px-6 py-3">
+                  <label className="block text-xs font-semibold text-gray-900 mb-1">Type</label>
+                  <select
+                    className="w-full bg-transparent text-sm sm:text-base text-gray-900 focus:outline-none"
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                  >
+                    <option value="">Tous</option>
+                    <option value="appartement">Appartement</option>
+                    <option value="villa">Villa</option>
+                    <option value="studio">Studio</option>
+                    <option value="maison">Maison</option>
+                  </select>
+                </div>
 
-          <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
-            <div className="flex flex-col md:flex-row items-center gap-2 bg-white rounded-2xl shadow-lg p-2">
-              <div className="flex-1 w-full flex items-center px-4 py-3">
-                <MapPin className="h-5 w-5 text-orange-500 mr-3 flex-shrink-0" />
-                <input
-                  type="text"
-                  placeholder="Abidjan, Cocody, Plateau..."
-                  className="flex-1 bg-transparent text-gray-900 placeholder-gray-500 focus:outline-none text-base"
-                  value={searchCity}
-                  onChange={(e) => setSearchCity(e.target.value)}
-                />
+                {/* Price */}
+                <div className="flex-1 px-4 sm:px-6 py-3">
+                  <label className="block text-xs font-semibold text-gray-900 mb-1">Prix max</label>
+                  <input
+                    type="text"
+                    placeholder="500 000 FCFA"
+                    className="w-full bg-transparent text-sm sm:text-base text-gray-900 placeholder-gray-500 focus:outline-none"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                  />
+                </div>
+
+                {/* Search Button */}
+                <div className="px-2 py-2">
+                  <button
+                    type="submit"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl sm:rounded-full transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Search className="h-5 w-5" />
+                    <span>Rechercher</span>
+                  </button>
+                </div>
               </div>
-              <button
-                type="submit"
-                className="w-full md:w-auto px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2"
-              >
-                <Search className="h-5 w-5" />
-                <span>Rechercher</span>
-              </button>
-            </div>
-          </form>
-
-          <div className="flex flex-wrap justify-center gap-2 mt-6">
-            <button onClick={() => {setSearchCity('Abidjan'); handleSearch({preventDefault: () => {}});}} className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
-              Abidjan
-            </button>
-            <button onClick={() => {setSearchCity('Cocody'); handleSearch({preventDefault: () => {}});}} className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
-              Cocody
-            </button>
-            <button onClick={() => {setSearchCity('Plateau'); handleSearch({preventDefault: () => {}});}} className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
-              Plateau
-            </button>
+            </form>
           </div>
         </div>
-
-
       </section>
 
-      <section className="py-12 bg-gray-50 relative">
+      {/* Profils Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <QuickSearch />
-        </div>
-      </section>
-
-      <TrustSection />
-
-      <section className="py-24 bg-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-block mb-4 px-4 py-2 bg-orange-100 rounded-full">
-              <span className="text-orange-700 font-bold text-sm">L'IMMOBILIER RÉINVENTÉ</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Une plateforme complète pour tous vos besoins
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+              Qui êtes-vous ?
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              De la recherche au paiement, en passant par la signature électronique, tout est pensé pour simplifier votre parcours immobilier
+            <p className="text-base sm:text-lg text-gray-600">
+              Mon Toit accompagne chaque acteur de la location
             </p>
           </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="space-y-6">
-              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center">
-                    <Shield className="h-7 w-7 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique sécurisée</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Sécurité et protection des données assurées. Tous les contrats sont signés électroniquement via CryptoNeo et marqués d'un cachet électronique visible garantissant leur authenticité.
-                    </p>
-                    <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-orange-50 rounded-full">
-                      <Shield className="h-4 w-4 text-orange-600" />
-                      <span className="text-sm font-semibold text-orange-700">Contrats certifiés</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center">
-                    <FileSignature className="h-7 w-7 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique légale</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Contrats 100% digitaux avec CryptoNeo, conformes à la réglementation ivoirienne. Plus besoin de déplacement, signez depuis chez vous.
-                    </p>
-                    <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-orange-50 rounded-full">
-                      <Sparkles className="h-4 w-4 text-orange-600" />
-                      <span className="text-sm font-semibold text-orange-700">Valeur juridique garantie</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center">
-                    <Smartphone className="h-7 w-7 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Paiement Mobile Money</h3>
-                    <p className="text-gray-600 leading-relaxed">
-                      Orange Money, MTN Money, Moov Money et Carte bancaire. Paiements instantanés et sécurisés avec notifications en temps réel.
-                    </p>
-                    <div className="mt-4 grid grid-cols-3 gap-2">
-                      <div className="px-3 py-2 bg-orange-50 rounded-lg text-center">
-                        <span className="text-xs font-bold text-orange-700">Orange</span>
-                      </div>
-                      <div className="px-3 py-2 bg-yellow-50 rounded-lg text-center">
-                        <span className="text-xs font-bold text-yellow-700">MTN</span>
-                      </div>
-                      <div className="px-3 py-2 bg-blue-50 rounded-lg text-center">
-                        <span className="text-xs font-bold text-blue-700">Moov</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative">
-              <div className="sticky top-24">
-                <div className="relative">
-                  <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-                    <div className="mb-6">
-                      <h3 className="text-3xl font-bold text-gray-900 mb-2">L'innovation au service de l'immobilier</h3>
-                      <p className="text-gray-600">Technologie ivoirienne, pour les Ivoiriens</p>
-                    </div>
-
-                    <div className="space-y-6">
-                      <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-olive-50 to-green-50 rounded-xl border-2 border-olive-200">
-                        <div className="flex-shrink-0 w-12 h-12 bg-olive-500 rounded-full flex items-center justify-center">
-                          <Shield className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-gray-900">100%</div>
-                          <div className="text-sm text-gray-600">Utilisateurs vérifiés</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 rounded-xl border-2 border-cyan-200">
-                        <div className="flex-shrink-0 w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center">
-                          <FileSignature className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-gray-900">100%</div>
-                          <div className="text-sm text-gray-600">Digital & Sans papier</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-2 border-amber-200">
-                        <div className="flex-shrink-0 w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center">
-                          <TrendingUp className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-gray-900">{totalProperties}+</div>
-                          <div className="text-sm text-gray-600">Propriétés disponibles</div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center space-x-4 p-4 bg-gradient-to-r from-coral-50 to-pink-50 rounded-xl border-2 border-coral-200">
-                        <div className="flex-shrink-0 w-12 h-12 bg-coral-500 rounded-full flex items-center justify-center">
-                          <Users className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <div className="text-2xl font-bold text-gray-900">24/7</div>
-                          <div className="text-sm text-gray-600">Support disponible</div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-8 p-6 bg-orange-500 rounded-2xl text-white">
-                      <div className="flex items-center space-x-3 mb-3">
-                        <Sparkles className="h-6 w-6" />
-                        <span className="font-bold text-lg">Prêt à commencer ?</span>
-                      </div>
-                      <p className="text-white/90 mb-4">Rejoignez des milliers d'utilisateurs qui ont trouvé leur logement idéal</p>
-                      <a href="/recherche" className="block w-full text-center bg-white text-orange-600 font-bold py-3 px-6 rounded-xl hover:bg-orange-50 transition-colors">
-                        Découvrir les logements
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            <ProfileCard
+              icon="👤"
+              title="LOCATAIRE"
+              features={[
+                "Cherchez votre logement",
+                "Postulez avec ANSUT",
+                "Payez en Mobile Money",
+                "Signez électroniquement"
+              ]}
+              ctaText="Commencer"
+              ctaLink="/recherche"
+            />
+            <ProfileCard
+              icon="🏠"
+              title="PROPRIÉTAIRE"
+              features={[
+                "Publiez gratuitement",
+                "Sélectionnez vos locataires",
+                "Encaissez en ligne",
+                "Gérez vos baux"
+              ]}
+              ctaText="Commencer"
+              ctaLink="/ajouter-propriete"
+            />
+            <ProfileCard
+              icon="🤝"
+              title="AGENT IMMOBILIER"
+              features={[
+                "Gérez vos mandats",
+                "Accompagnez vos clients",
+                "Facturez vos commissions",
+                "Suivez vos transactions"
+              ]}
+              ctaText="Commencer"
+              ctaLink="/agence/tableau-de-bord"
+            />
+            <ProfileCard
+              icon="✓"
+              title="GARANT"
+              features={[
+                "Validez les dossiers",
+                "Certifiez les documents",
+                "Garantissez les locataires",
+                "Sécurisez les transactions"
+              ]}
+              ctaText="Commencer"
+              ctaLink="/agent-confiance/tableau-de-bord"
+            />
           </div>
         </div>
       </section>
 
-      <section className="py-20 bg-gray-50 relative overflow-hidden">
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex flex-col md:flex-row justify-between items-center mb-12">
-            <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-                Propriétés récentes
-              </h2>
-              <p className="text-gray-600 text-lg">Découvrez les dernières offres disponibles</p>
-            </div>
-            <a
-              href="/recherche"
-              className="mt-4 md:mt-0 btn-secondary flex items-center space-x-2"
-            >
-              <span>Voir les {totalProperties} propriétés</span>
-              <TrendingUp className="h-5 w-5" />
-            </a>
-          </div>
-
-          {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
-                  <div className="h-64 bg-gradient-to-br from-gray-200 to-gray-300"></div>
-                  <div className="p-6 space-y-4">
-                    <div className="h-6 bg-gray-200 rounded-lg w-3/4"></div>
-                    <div className="h-4 bg-gray-200 rounded-lg w-1/2"></div>
-                    <div className="h-4 bg-gray-200 rounded-lg w-2/3"></div>
-                  </div>
+      {/* Popular Properties */}
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+          <Carousel
+            title="Propriétés populaires à Abidjan"
+            viewAllLink="/recherche"
+            viewAllText="Voir tout"
+          >
+            {loading ? (
+              [...Array(4)].map((_, i) => (
+                <div key={i} className="w-full sm:w-80 flex-shrink-0">
+                  <div className="h-64 sm:h-72 bg-gray-200 rounded-xl animate-pulse mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3"></div>
                 </div>
-              ))}
-            </div>
-          ) : properties.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {properties.map((property, index) => (
-                <a
+              ))
+            ) : properties.length === 0 ? (
+              <div className="w-full text-center py-16">
+                <HomeIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">Aucune propriété disponible</p>
+              </div>
+            ) : (
+              properties.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))
+            )}
+          </Carousel>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+              Pourquoi Mon Toit est différent
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600">
+              La seule plateforme avec vérification ANSUT et paiement Mobile Money
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <FeatureCard
+              icon="🛡️"
+              title="Vérification ANSUT"
+              description="Toutes les propriétés sont vérifiées officiellement par l'ANSUT. Louez en toute confiance."
+              badge="Certifié ANSUT"
+            />
+            <FeatureCard
+              icon="📱"
+              title="Mobile Money"
+              description="Payez avec Orange Money, MTN Money ou Moov Money. Paiements instantanés et sécurisés."
+              badge="🟠 MTN 🟡 Moov"
+            />
+            <FeatureCard
+              icon="✍️"
+              title="Signature Électronique"
+              description="Signez vos baux électroniquement avec CryptoNeo. Valeur juridique garantie."
+              badge="Légal en CI"
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* New Properties */}
+      <section className="py-12 sm:py-16 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+          <Carousel
+            title="Nouveautés"
+            subtitle="Découvrez les dernières propriétés ajoutées"
+            viewAllLink="/recherche?sort=newest"
+            viewAllText="Voir tout"
+          >
+            {loading ? (
+              [...Array(4)].map((_, i) => (
+                <div key={i} className="w-full sm:w-80 flex-shrink-0">
+                  <div className="h-64 sm:h-72 bg-gray-200 rounded-xl animate-pulse mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse mb-2"></div>
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-2/3"></div>
+                </div>
+              ))
+            ) : newProperties.length === 0 ? (
+              <div className="w-full text-center py-16">
+                <HomeIcon className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500">Aucune propriété disponible</p>
+              </div>
+            ) : (
+              newProperties.map((property) => (
+                <PropertyCard
                   key={property.id}
-                  href={`/propriete/${property.id}`}
-                  className="card-scrapbook overflow-hidden group"
-                  style={{
-                    transform: `rotate(${index % 2 === 0 ? '-1deg' : '1deg'})`,
-                  }}
-                >
-                  <div className="relative h-64 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
-                    {property.main_image ? (
-                      <img
-                        src={property.main_image}
-                        alt={property.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <Building2 className="h-20 w-20" />
-                      </div>
-                    )}
-                    <div className="absolute top-3 right-3 bg-gradient-to-r from-terracotta-500 to-coral-500 text-white px-4 py-2 rounded-2xl text-sm font-bold shadow-glow transform -rotate-3 group-hover:rotate-0 transition-transform">
-                      {FormatService.formatCurrency(property.monthly_rent)}/mois
-                    </div>
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-xl text-xs font-bold text-gray-800 capitalize shadow-lg">
-                      {property.property_type}
-                    </div>
-                  </div>
-
-                  <div className="p-6 bg-gradient-to-br from-white to-amber-50/30">
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-terracotta-600 transition-colors line-clamp-2">
-                      {property.title}
-                    </h3>
-
-                    <p className="text-gray-600 flex items-center space-x-2 text-sm mb-4">
-                      <MapPin className="h-4 w-4 text-terracotta-500 flex-shrink-0" />
-                      <span className="line-clamp-1">{property.city}, {property.neighborhood || 'Côte d\'Ivoire'}</span>
-                    </p>
-
-                    <div className="flex items-center justify-between text-sm text-gray-600 border-t border-gray-200 pt-4">
-                      <div className="flex items-center space-x-1">
-                        <HomeIcon className="h-4 w-4 text-olive-600" />
-                        <span className="font-semibold">{property.bedrooms || 1} ch.</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Users className="h-4 w-4 text-cyan-600" />
-                        <span className="font-semibold">{property.bathrooms || 1} SDB</span>
-                      </div>
-                      {property.surface_area && (
-                        <div className="flex items-center space-x-1">
-                          <span className="font-semibold text-coral-600">{property.surface_area}m²</span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </a>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-16 bg-gradient-to-br from-amber-50 to-coral-50 rounded-3xl">
-              <Building2 className="h-20 w-20 text-terracotta-300 mx-auto mb-4" />
-              <p className="text-xl text-gray-600">Aucune propriété disponible pour le moment.</p>
-            </div>
-          )}
+                  property={property}
+                  showBadge={true}
+                  badgeText="NOUVEAU"
+                />
+              ))
+            )}
+          </Carousel>
         </div>
       </section>
 
-      <TestimonialsCarousel />
-
-      <section className="py-20 bg-gradient-to-br from-amber-50 to-coral-50">
+      {/* How It Works */}
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              <span className="text-gradient">Explorez</span> par Quartier
+          <div className="text-center mb-8 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+              Comment ça marche
             </h2>
-            <p className="text-gray-600 text-lg">
-              Découvrez la localisation des propriétés disponibles à Abidjan
+            <p className="text-base sm:text-lg text-gray-600">
+              3 étapes pour trouver votre logement
             </p>
           </div>
-
-          <div className="card-scrapbook overflow-hidden">
-              <MapWrapper
-                properties={(properties || [])
-                  .filter(p => p.longitude && p.latitude)
-                  .map(p => ({
-                    id: p.id,
-                    title: p.title,
-                    monthly_rent: p.monthly_rent,
-                    longitude: p.longitude!,
-                    latitude: p.latitude!,
-                  status: p.status,
-                  images: p.images as string[],
-                  city: p.city,
-                  neighborhood: p.neighborhood,
-                }))}
-                zoom={12}
-                height="500px"
-                fitBounds={properties.length > 0}
-                onMarkerClick={(property) => {
-                  window.location.href = `/propriete/${property.id}`;
-                }}
-              />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6">
+                1
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+                🔍 Cherchez
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                Trouvez le logement idéal parmi nos milliers d'annonces vérifiées ANSUT.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6">
+                2
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+                📄 Postulez
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                Créez votre dossier locataire avec vérification ANSUT et documents certifiés.
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6">
+                3
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+                🏡 Emménagez
+              </h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
+                Signez électroniquement et payez en Mobile Money. C'est tout !
+              </p>
+            </div>
           </div>
+        </div>
+      </section>
 
-          <div className="mt-8 text-center">
+      {/* CTA Section */}
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-orange-500 to-orange-600">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
+            Prêt à commencer ?
+          </h2>
+          <p className="text-lg sm:text-xl text-white/90 mb-6 sm:mb-8">
+            Rejoignez des milliers d'utilisateurs qui ont trouvé leur logement idéal
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <a
               href="/recherche"
-              className="btn-primary inline-flex items-center space-x-2"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-lg text-base sm:text-lg"
             >
-              <Map className="h-5 w-5" />
-              <span>Explorer toutes les propriétés</span>
+              Je suis locataire
             </a>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-24 bg-gradient-to-br from-terracotta-500 via-coral-500 to-amber-500 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-full h-full" style={{
-            backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)',
-            backgroundSize: '40px 40px'
-          }}></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
-              <span className="text-white font-bold text-sm">SIMPLE ET RAPIDE</span>
-            </div>
-            <h2 className="text-5xl md:text-6xl font-bold text-white mb-6">
-              Comment ça marche ?
-            </h2>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              En 4 étapes simples, trouvez votre logement et signez votre contrat
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-terracotta-400 to-coral-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
-                  1
-                </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-olive-100 to-olive-200 rounded-2xl flex items-center justify-center mb-6">
-                    <Search className="h-8 w-8 text-olive-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Recherchez</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Parcourez nos milliers d'annonces vérifiées et trouvez le logement qui vous correspond
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
-                  2
-                </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-cyan-100 to-cyan-200 rounded-2xl flex items-center justify-center mb-6">
-                    <Shield className="h-8 w-8 text-cyan-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Vérifiez votre identité</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Vérification d'identité officielle via ONECI + biométrie pour établir la confiance
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-amber-400 to-orange-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
-                  3
-                </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-amber-100 to-amber-200 rounded-2xl flex items-center justify-center mb-6">
-                    <FileSignature className="h-8 w-8 text-amber-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Signez</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Signature électronique légale avec CryptoNeo. Tout se fait en ligne, sans déplacement
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="group relative">
-              <div className="absolute -inset-1 bg-white/30 rounded-3xl blur"></div>
-              <div className="relative bg-white rounded-3xl p-8 shadow-2xl transform hover:-translate-y-2 transition-all duration-300">
-                <div className="absolute -top-6 -left-6 w-16 h-16 bg-gradient-to-br from-green-400 to-emerald-400 rounded-2xl flex items-center justify-center text-white font-bold text-2xl shadow-xl transform rotate-12 group-hover:rotate-0 transition-transform">
-                  4
-                </div>
-                <div className="mt-6">
-                  <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-green-200 rounded-2xl flex items-center justify-center mb-6">
-                    <HomeIcon className="h-8 w-8 text-green-600" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-3">Emménagez</h3>
-                  <p className="text-gray-600 leading-relaxed">
-                    Payez via Mobile Money et emménagez dans votre nouveau logement en toute sérénité
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-16 text-center">
-            <div className="inline-block bg-white rounded-3xl p-10 shadow-2xl max-w-2xl">
-              <h3 className="text-3xl font-bold text-gray-900 mb-4">
-                Prêt à trouver votre logement idéal ?
-              </h3>
-              <p className="text-gray-600 mb-6 text-lg">
-                Rejoignez des milliers d'Ivoiriens qui ont déjà trouvé leur bonheur
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="/inscription" className="btn-primary px-8 py-4 text-lg">
-                  Créer mon compte gratuitement
-                </a>
-                <a href="/recherche" className="bg-white border-3 border-terracotta-500 text-terracotta-600 font-bold px-8 py-4 rounded-2xl hover:bg-terracotta-50 transition-all text-lg">
-                  Parcourir les annonces
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="py-16 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-terracotta-400">{totalProperties}+</div>
-              <div className="text-gray-400">Propriétés</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-cyan-400">100%</div>
-              <div className="text-gray-400">Vérifiés</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-amber-400">24/7</div>
-              <div className="text-gray-400">Support</div>
-            </div>
-            <div className="space-y-2">
-              <div className="text-4xl font-bold text-green-400">100%</div>
-              <div className="text-gray-400">Digital</div>
-            </div>
+            <a
+              href="/ajouter-propriete"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-lg text-base sm:text-lg"
+            >
+              Je suis propriétaire
+            </a>
           </div>
         </div>
       </section>
