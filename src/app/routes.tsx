@@ -2,6 +2,7 @@ import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import Layout from '@/app/layout/Layout';
 import ErrorBoundary from '@/shared/ui/ErrorBoundary';
+import ProtectedRoute from '@/shared/ui/ProtectedRoute';
 
 const Home = lazy(() => import('@/features/property/pages/HomePage'));
 const Auth = lazy(() => import('@/features/auth/pages/AuthPage'));
