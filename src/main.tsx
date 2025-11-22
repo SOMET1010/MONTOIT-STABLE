@@ -6,6 +6,7 @@ import { AuthProvider } from '@/app/providers/AuthProvider';
 import { ThemeProvider } from '@/shared/contexts/ThemeContext';
 import App from './App.tsx';
 import './index.css';
+import './shared/styles/mobile-optimization.css';
 
 const queryClient = createQueryClient();
 
