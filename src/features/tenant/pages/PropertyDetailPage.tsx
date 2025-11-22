@@ -3,6 +3,9 @@ import { MapPin, Bed, Bath, Home, ParkingCircle, Wind, Sofa, Calendar, Eye, Arro
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { PropertyDetailSkeleton } from '@/shared/ui/Skeleton';
+import ImageGallery from '@/features/property/components/ImageGallery';
+import SocialShare from '@/shared/ui/SocialShare';
+import EnhancedAnsutBadge from '@/features/verification/components/EnhancedAnsutBadge';
 import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];
@@ -246,55 +249,11 @@ export default function PropertyDetail() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
-            <div className="card-scrapbook overflow-hidden mb-6 animate-slide-down">
-              {images.length > 0 ? (
-                <>
-                  <div className="relative h-96 bg-gray-200 group cursor-pointer" onClick={() => { setShowFullscreenGallery(true); setFullscreenImageIndex(selectedImage); }}>
-                    <img
-                      src={images[selectedImage]}
-                      alt={property.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-terracotta-500 to-coral-500 text-white px-6 py-3 rounded-2xl text-lg font-bold shadow-glow-lg animate-glow">
-                      {property.monthly_rent.toLocaleString()} FCFA/mois
-                    </div>
-                    <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-sm text-white px-4 py-2 rounded-xl flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Maximize2 className="h-4 w-4" />
-                      <span className="text-sm font-medium">Voir en plein écran</span>
-                    </div>
-                    <div className="absolute bottom-4 left-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-lg text-sm font-medium">
-                      {selectedImage + 1} / {images.length}
-                    </div>
-                  </div>
-                  {images.length > 1 && (
-                    <div className="grid grid-cols-5 gap-2 p-4">
-                      {images.slice(0, 10).map((img, index) => (
-                        <button
-                          key={index}
-                          onClick={() => setSelectedImage(index)}
-                          className={`relative h-20 rounded-lg overflow-hidden transition-all duration-300 transform hover:scale-105 ${
-                            selectedImage === index ? 'ring-4 ring-terracotta-500 shadow-glow' : 'opacity-70 hover:opacity-100'
-                          }`}
-                        >
-                          <img src={img} alt={`Image ${index + 1}`} className="w-full h-full object-cover" />
-                        </button>
-                      ))}
-                      {images.length > 10 && (
-                        <button
-                          onClick={() => { setShowFullscreenGallery(true); setFullscreenImageIndex(0); }}
-                          className="relative h-20 rounded-lg overflow-hidden bg-gradient-to-br from-terracotta-500 to-coral-500 flex items-center justify-center text-white font-bold hover:scale-105 transition-transform"
-                        >
-                          +{images.length - 10}
-                        </button>
-                      )}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="h-96 bg-gray-200 flex items-center justify-center">
-                  <Home className="h-24 w-24 text-gray-400" />
-                </div>
-              )}
+            <div className="mb-6 animate-slide-down">
+              <ImageGallery
+                images={images}
+                propertyTitle={property.title}
+              />
             </div>
 
             <div className="card-scrapbook p-8 mb-6 animate-slide-up" style={{ animationDelay: '0.1s' }}>
@@ -307,6 +266,13 @@ export default function PropertyDetail() {
                   </p>
                 </div>
                 <div className="flex items-center space-x-3">
+                  <SocialShare
+                    url={window.location.href}
+                    title={property.title}
+                    description={property.description || ''}
+                    image={images[0]}
+                    hashtags={['MonToit', 'Abidjan', property.city]}
+                  />
                   <button
                     onClick={toggleFavorite}
                     className={`p-3 rounded-full transition-all duration-300 transform hover:scale-110 ${
@@ -546,17 +512,17 @@ export default function PropertyDetail() {
                     <div>
                       <p className="font-medium text-gray-900">{owner.full_name || 'Propriétaire'}</p>
                       <p className="text-sm text-gray-600 capitalize">{owner.user_type}</p>
+                      <div className="mt-2">
+                        <EnhancedAnsutBadge
+                          verified={owner.ansut_verified || false}
+                          size="sm"
+                          showTooltip={true}
+                          userName={owner.full_name || undefined}
+                          verifiedAt={owner.verified_at || undefined}
+                        />
+                      </div>
                     </div>
                   </div>
-                  {owner.is_verified && (
-                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 px-4 py-3 rounded-xl mb-4">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <CheckCircle className="h-5 w-5 text-blue-600" />
-                        <span className="font-bold text-blue-900">Identité vérifiée ONECI</span>
-                      </div>
-                      <p className="text-xs text-gray-600 ml-7">Document CNI authentifié par l'Office National d'Identification (ONECI)</p>
-                    </div>
-                  )}
                 </div>
               )}
 

@@ -3,6 +3,7 @@ import { useAuth } from '@/app/providers/AuthProvider';
 import { useMessageNotifications } from '@/features/messaging';
 import { useState } from 'react';
 import { useBreakpoint } from '@/shared/hooks/useBreakpoint';
+import ThemeToggle, { CompactThemeToggle } from '@/shared/ui/ThemeToggle';
 
 export default function SimplifiedHeader() {
   const { user, profile, signOut } = useAuth();
@@ -29,7 +30,7 @@ export default function SimplifiedHeader() {
   ] : [];
 
   return (
-    <header className="bg-white/90 backdrop-blur-lg shadow-sm border-b border-gray-200 sticky top-0 z-50">
+    <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
@@ -55,7 +56,7 @@ export default function SimplifiedHeader() {
           <nav className="hidden md:flex items-center space-x-2">
             <a
               href="/"
-              className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-all duration-200 font-semibold"
+              className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200 font-semibold"
             >
               <Home className="h-5 w-5" />
               <span>Accueil</span>
@@ -65,7 +66,7 @@ export default function SimplifiedHeader() {
               <a
                 key={item.label}
                 href={item.href}
-                className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-all duration-200 font-semibold relative"
+                className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-semibold relative"
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
@@ -76,6 +77,8 @@ export default function SimplifiedHeader() {
                 )}
               </a>
             ))}
+
+            <ThemeToggle />
 
             {user ? (
               <div className="relative">
@@ -89,12 +92,12 @@ export default function SimplifiedHeader() {
                 </button>
 
                 {showUserMenu && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl border border-gray-200 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-gray-100">
-                      <p className="text-sm font-semibold text-gray-900 truncate">
+                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                         {profile?.full_name || 'Utilisateur'}
                       </p>
-                      <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
                     </div>
 
                     {userMenuItems.map((item) => (

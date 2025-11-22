@@ -5,6 +5,7 @@ import type { Database } from '@/shared/lib/database.types';
 import QuickSearch from '@/features/property/components/QuickSearch';
 import { FormatService } from '@/services/format/formatService';
 import MapWrapper from '@/shared/ui/MapWrapper';
+import { TrustSection, TestimonialsCarousel } from '@/features/trust';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -205,6 +206,8 @@ export default function Home() {
           <QuickSearch />
         </div>
       </section>
+
+      <TrustSection />
 
       <section className="py-24 bg-gradient-to-b from-amber-50 via-white to-cyan-50 relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
@@ -480,6 +483,8 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      <TestimonialsCarousel />
 
       <section className="py-20 bg-gradient-to-br from-amber-50 to-coral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
