@@ -21,7 +21,7 @@ export default function HeaderSimplified() {
     },
     {
       label: 'Publier',
-      href: '/publier',
+      href: '/ajouter-propriete',
       icon: PlusCircle,
       color: 'green',
       description: 'Publier une annonce',
@@ -44,15 +44,15 @@ export default function HeaderSimplified() {
     { label: 'Mes Favoris', href: '/favoris', icon: Heart },
     { label: 'Mes Visites', href: '/mes-visites', icon: Calendar },
     { label: 'Mes Contrats', href: '/mes-contrats', icon: FileText },
-    { label: 'Notifications', href: '/notifications', icon: Bell },
+    { label: 'Notifications', href: '/notifications/preferences', icon: Bell },
     ...(profile?.user_type === 'locataire' ? [
-      { label: 'Mon Score', href: '/score-locataire', icon: Award }
+      { label: 'Mon Score', href: '/locataire/score', icon: Award }
     ] : []),
     ...(profile?.user_type === 'proprietaire' || profile?.user_type === 'agence' ? [
-      { label: 'Mes Propriétés', href: '/mes-proprietes', icon: Building2 }
+      { label: 'Mes Propriétés', href: '/proprietaire/mes-proprietes', icon: Building2 }
     ] : []),
-    { label: 'Paramètres', href: '/parametres', icon: Settings },
-    { label: 'Vérification ANSUT', href: '/verification-identite', icon: Shield },
+    { label: 'Paramètres', href: '/profil', icon: Settings },
+    { label: 'Vérification ANSUT', href: '/verification', icon: Shield },
   ];
 
   const colorClasses = {
@@ -175,13 +175,13 @@ export default function HeaderSimplified() {
             ) : (
               <div className="flex items-center space-x-2">
                 <a
-                  href="/auth?mode=login"
+                  href="/connexion"
                   className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
                 >
                   Connexion
                 </a>
                 <a
-                  href="/auth?mode=signup"
+                  href="/inscription"
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg transition-colors"
                 >
                   Inscription

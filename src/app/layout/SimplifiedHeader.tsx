@@ -126,13 +126,13 @@ export default function SimplifiedHeader() {
             ) : (
               <div className="flex items-center space-x-2">
                 <a
-                  href="/auth?mode=login"
+                  href="/connexion"
                   className="px-4 py-2 rounded-xl text-gray-700 hover:bg-gray-100 transition-all duration-200 font-semibold"
                 >
                   Connexion
                 </a>
                 <a
-                  href="/auth?mode=register"
+                  href="/inscription"
                   className="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 font-semibold"
                 >
                   Inscription
@@ -213,14 +213,14 @@ export default function SimplifiedHeader() {
               <>
                 <div className="border-t border-gray-200 my-2"></div>
                 <a
-                  href="/auth?mode=login"
+                  href="/connexion"
                   className="block px-4 py-3 rounded-xl text-gray-700 hover:bg-gray-100 transition-all duration-200 font-semibold text-center"
                   onClick={() => setShowMobileMenu(false)}
                 >
                   Connexion
                 </a>
                 <a
-                  href="/auth?mode=register"
+                  href="/inscription"
                   className="block px-4 py-3 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 font-semibold text-center"
                   onClick={() => setShowMobileMenu(false)}
                 >

@@ -185,7 +185,7 @@ export default function TrustSection() {
               Commencer ma recherche
             </a>
             <a
-              href="/auth?mode=register"
+              href="/inscription"
               className="inline-flex items-center justify-center px-8 py-4 bg-blue-500 text-white font-bold rounded-xl hover:bg-blue-400 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               Créer mon compte gratuit
