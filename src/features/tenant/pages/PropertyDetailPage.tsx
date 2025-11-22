@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { MapPin, Bed, Bath, Home, ParkingCircle, Wind, Sofa, Calendar, Eye, ArrowLeft, Send, Heart, X, ChevronLeft, ChevronRight, Maximize2, Shield, CheckCircle, MessageCircle, Clock, Coins, AlertTriangle, Info } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
+import { PropertyDetailSkeleton } from '@/shared/ui/Skeleton';
 import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];
@@ -212,8 +213,10 @@ export default function PropertyDetail() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-coral-50 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-terracotta-500"></div>
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 to-coral-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <PropertyDetailSkeleton />
+        </div>
       </div>
     );
   }

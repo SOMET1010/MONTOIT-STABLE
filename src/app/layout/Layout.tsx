@@ -1,9 +1,10 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { Suspense } from 'react';
-import Header from './Header';
+import SimplifiedHeader from './SimplifiedHeader';
 import Footer from './Footer';
 import Chatbot from '@/features/messaging/components/Chatbot';
 import { ErrorBoundary } from '@/shared/ui/ErrorBoundary';
+import { ToastContainer } from '@/shared/hooks/useToast';
 
 const noLayoutRoutes = ['/connexion', '/inscription', '/messages', '/auth/callback'];
 const noHeaderFooterRoutes = [
@@ -56,7 +57,8 @@ export default function Layout() {
 
   return (
     <ErrorBoundary>
-      {shouldShowHeaderFooter && <Header />}
+      {shouldShowHeaderFooter && <SimplifiedHeader />}
+      <ToastContainer />
       <Suspense
         fallback={
           <div className="min-h-screen flex items-center justify-center">

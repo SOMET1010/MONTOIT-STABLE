@@ -23,24 +23,24 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed';
+      'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98 touch-manipulation';
 
     const variantClasses = {
       primary:
-        'bg-indigo-600 text-white hover:bg-indigo-700 focus:ring-indigo-500 active:bg-indigo-800',
+        'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500 shadow-md hover:shadow-lg',
       secondary:
-        'bg-gray-200 text-gray-900 hover:bg-gray-300 focus:ring-gray-400 active:bg-gray-400',
+        'bg-white border-2 border-blue-600 text-blue-700 hover:bg-blue-50 focus:ring-blue-500',
       outline:
-        'border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-50 focus:ring-indigo-500 active:bg-indigo-100',
+        'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 focus:ring-gray-400',
       ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-300 active:bg-gray-200',
       danger:
-        'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 active:bg-red-800',
+        'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 active:bg-red-800 shadow-md hover:shadow-lg',
     };
 
     const sizeClasses = {
-      sm: 'px-3 py-1.5 text-sm',
-      md: 'px-4 py-2 text-base',
-      lg: 'px-6 py-3 text-lg',
+      sm: 'px-4 py-2 text-sm min-h-[40px]',
+      md: 'px-6 py-3 text-base min-h-[48px]',
+      lg: 'px-8 py-4 text-lg min-h-[56px]',
     };
 
     const widthClass = fullWidth ? 'w-full' : '';

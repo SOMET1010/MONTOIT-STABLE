@@ -14,3 +14,6 @@ export type { CardProps, CardHeaderProps, CardBodyProps, CardFooterProps } from 
 
 export { default as Modal, ConfirmModal } from './Modal';
 export type { ModalProps, ConfirmModalProps } from './Modal';
+
+export { Skeleton, SkeletonText, PropertyCardSkeleton, PropertyDetailSkeleton, FormSkeleton } from './Skeleton';
+export type { SkeletonProps } from './Skeleton';
