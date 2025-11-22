@@ -49,11 +49,13 @@ export default function HeroSpectacular({ onSearch }: HeroSpectacularProps) {
   }));
 
   return (
-    <section className="relative h-[500px] sm:h-[600px] bg-gray-900 overflow-hidden">
+    <section className="relative h-[500px] sm:h-[600px] lg:h-[700px] xl:h-[800px] bg-gray-900 overflow-hidden" aria-label="Hero section with property search">
       {/* Diaporama avec effet blur artistique */}
       {heroImages.map((image, index) => (
         <div
           key={image}
+          role="img"
+          aria-label={`Résidence moderne à Abidjan - Image ${index + 1} sur ${heroImages.length}`}
           className={`hero-slide-image absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
             index === currentSlide ? 'opacity-100' : 'opacity-0'
           }`}

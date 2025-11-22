@@ -86,10 +86,10 @@ export default function Home() {
       <HeroSpectacular onSearch={handleSearch} />
 
       {/* Profils Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white" aria-labelledby="profiles-section-title">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 animate-fade-in">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+            <h2 id="profiles-section-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Qui êtes-vous ?
             </h2>
             <p className="text-base sm:text-lg text-gray-600">
@@ -150,8 +150,8 @@ export default function Home() {
       </section>
 
       {/* Popular Properties */}
-      <section className="py-12 sm:py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 bg-gray-50" aria-label="Propriétés populaires">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Carousel
             title="Propriétés populaires à Abidjan"
             viewAllLink="/recherche"
@@ -180,11 +180,11 @@ export default function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-12 sm:py-16 bg-white">
+      <section className="py-12 sm:py-16 bg-white" aria-label="Statistiques de la plateforme">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
             <div className="text-center animate-fade-in">
-              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+              <div className="text-4xl sm:text-5xl font-bold text-gradient mb-2">
                 {properties.length > 0 ? `${properties.length * 125}+` : '1000+'}
               </div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">
@@ -192,7 +192,7 @@ export default function Home() {
               </div>
             </div>
             <div className="text-center animate-fade-in stagger-1">
-              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+              <div className="text-4xl sm:text-5xl font-bold text-gradient mb-2">
                 5000+
               </div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">
@@ -200,7 +200,7 @@ export default function Home() {
               </div>
             </div>
             <div className="text-center animate-fade-in stagger-2">
-              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+              <div className="text-4xl sm:text-5xl font-bold text-gradient mb-2">
                 2500+
               </div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">
@@ -208,7 +208,7 @@ export default function Home() {
               </div>
             </div>
             <div className="text-center animate-fade-in stagger-3">
-              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+              <div className="text-4xl sm:text-5xl font-bold text-gradient mb-2">
                 15+
               </div>
               <div className="text-sm sm:text-base text-gray-600 font-medium">
@@ -220,8 +220,8 @@ export default function Home() {
       </section>
 
       {/* New Properties */}
-      <section className="py-12 sm:py-16 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-0 sm:px-6 lg:px-8">
+      <section className="py-12 sm:py-16 bg-gray-50" aria-label="Nouvelles propriétés">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Carousel
             title="Nouveautés"
             subtitle="Découvrez les dernières propriétés ajoutées"
@@ -256,10 +256,10 @@ export default function Home() {
       </section>
 
       {/* Popular Cities */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white" aria-labelledby="popular-cities-title">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 animate-fade-in">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+            <h2 id="popular-cities-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Villes populaires
             </h2>
             <p className="text-base sm:text-lg text-gray-600">
@@ -278,10 +278,10 @@ export default function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white">
+      <section className="py-12 sm:py-16 md:py-20 bg-white" aria-labelledby="how-it-works-title">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8 sm:mb-12 animate-fade-in">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+            <h2 id="how-it-works-title" className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Comment ça marche
             </h2>
             <p className="text-base sm:text-lg text-gray-600">
@@ -290,7 +290,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
             <div className="text-center">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-terracotta-500 to-coral-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                 1
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
@@ -301,7 +301,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-terracotta-500 to-coral-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                 2
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
@@ -312,7 +312,7 @@ export default function Home() {
               </p>
             </div>
             <div className="text-center">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-orange-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-terracotta-500 to-coral-500 text-white rounded-full flex items-center justify-center text-3xl sm:text-4xl font-bold mx-auto mb-4 sm:mb-6 shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300">
                 3
               </div>
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
@@ -327,7 +327,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 gradient-orange shadow-orange">
+      <section className="py-16 sm:py-20 bg-gradient-to-r from-terracotta-500 via-coral-500 to-amber-500 shadow-premium" aria-label="Appel à l'action">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
             Prêt à commencer ?
@@ -338,13 +338,15 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <a
               href="/recherche"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 shadow-premium text-base sm:text-lg btn-premium"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-terracotta-600 dark:text-terracotta-700 font-bold rounded-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 shadow-premium text-base sm:text-lg btn-premium"
+              aria-label="Commencer la recherche en tant que locataire"
             >
               Je suis locataire
             </a>
             <a
               href="/ajouter-propriete"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 shadow-premium text-base sm:text-lg btn-premium"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-terracotta-600 dark:text-terracotta-700 font-bold rounded-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 shadow-premium text-base sm:text-lg btn-premium"
+              aria-label="Commencer à publier une propriété en tant que propriétaire"
             >
               Je suis propriétaire
             </a>
