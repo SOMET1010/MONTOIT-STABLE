@@ -7,7 +7,7 @@ interface FeatureCardProps {
 
 export default function FeatureCard({ icon, title, description, badge }: FeatureCardProps) {
   return (
-    <div className="bg-gray-50 rounded-2xl p-6 sm:p-10 text-center">
+    <div className="gradient-orange-soft rounded-2xl p-6 sm:p-10 text-center shadow-premium hover-lift animate-scale-in">
       {/* Icon */}
       <div className="text-5xl sm:text-6xl mb-4 sm:mb-6">
         {icon}
@@ -24,7 +24,7 @@ export default function FeatureCard({ icon, title, description, badge }: Feature
       </p>
 
       {/* Badge */}
-      <span className="inline-block px-4 py-2 bg-orange-500 text-white rounded-full text-xs sm:text-sm font-semibold">
+      <span className="inline-block px-4 py-2 gradient-orange text-white rounded-full text-xs sm:text-sm font-semibold shadow-orange badge-shimmer">
         {badge}
       </span>
     </div>

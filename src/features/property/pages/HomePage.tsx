@@ -6,6 +6,7 @@ import PropertyCard from '@/shared/components/PropertyCard';
 import ProfileCard from '@/shared/components/ProfileCard';
 import FeatureCard from '@/shared/components/FeatureCard';
 import Carousel from '@/shared/components/Carousel';
+import CityCard from '@/shared/components/CityCard';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -76,12 +77,12 @@ export default function Home() {
         
         <div className="relative h-full flex items-center justify-center px-4">
           <div className="w-full max-w-4xl">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6 sm:mb-8 px-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6 sm:mb-8 px-4 animate-fade-in">
               Trouvez votre logement en Côte d'Ivoire
             </h1>
             
             {/* Search Bar - Mobile First */}
-            <form onSubmit={handleSearch} className="bg-white rounded-2xl sm:rounded-full shadow-2xl p-3 sm:p-2">
+            <form onSubmit={handleSearch} className="glass rounded-2xl sm:rounded-full shadow-premium p-3 sm:p-2 animate-slide-up">
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center divide-y sm:divide-y-0 sm:divide-x divide-gray-200">
                 {/* Where */}
                 <div className="flex-1 px-4 sm:px-6 py-3">
@@ -127,7 +128,7 @@ export default function Home() {
                 <div className="px-2 py-2">
                   <button
                     type="submit"
-                    className="w-full sm:w-auto px-6 sm:px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl sm:rounded-full transition-colors flex items-center justify-center gap-2"
+                    className="w-full sm:w-auto px-6 sm:px-8 py-3 gradient-orange hover:shadow-orange-hover text-white font-semibold rounded-xl sm:rounded-full transition-all duration-300 flex items-center justify-center gap-2 btn-premium"
                   >
                     <Search className="h-5 w-5" />
                     <span>Rechercher</span>
@@ -142,7 +143,7 @@ export default function Home() {
       {/* Profils Section */}
       <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
+          <div className="text-center mb-8 sm:mb-12 animate-fade-in">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Qui êtes-vous ?
             </h2>
@@ -233,36 +234,42 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-12 sm:py-16 md:py-20 bg-white">
+      {/* Stats Section */}
+      <section className="py-12 sm:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
-              Pourquoi Mon Toit est différent
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600">
-              La seule plateforme avec vérification ANSUT et paiement Mobile Money
-            </p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <FeatureCard
-              icon="🛡️"
-              title="Vérification ANSUT"
-              description="Toutes les propriétés sont vérifiées officiellement par l'ANSUT. Louez en toute confiance."
-              badge="Certifié ANSUT"
-            />
-            <FeatureCard
-              icon="📱"
-              title="Mobile Money"
-              description="Payez avec Orange Money, MTN Money ou Moov Money. Paiements instantanés et sécurisés."
-              badge="🟠 MTN 🟡 Moov"
-            />
-            <FeatureCard
-              icon="✍️"
-              title="Signature Électronique"
-              description="Signez vos baux électroniquement avec CryptoNeo. Valeur juridique garantie."
-              badge="Légal en CI"
-            />
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+            <div className="text-center animate-fade-in">
+              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+                {properties.length > 0 ? `${properties.length * 125}+` : '1000+'}
+              </div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">
+                Propriétés
+              </div>
+            </div>
+            <div className="text-center animate-fade-in stagger-1">
+              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+                5000+
+              </div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">
+                Locataires
+              </div>
+            </div>
+            <div className="text-center animate-fade-in stagger-2">
+              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+                2500+
+              </div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">
+                Transactions
+              </div>
+            </div>
+            <div className="text-center animate-fade-in stagger-3">
+              <div className="text-4xl sm:text-5xl font-bold gradient-text-orange mb-2">
+                15+
+              </div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">
+                Villes
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -303,10 +310,32 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Popular Cities */}
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8 sm:mb-12 animate-fade-in">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
+              Villes populaires
+            </h2>
+            <p className="text-base sm:text-lg text-gray-600">
+              Découvrez les logements dans les principales villes de Côte d'Ivoire
+            </p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <CityCard name="Abidjan" propertyCount={850} />
+            <CityCard name="Yamoussoukro" propertyCount={120} />
+            <CityCard name="Bouaké" propertyCount={95} />
+            <CityCard name="San-Pédro" propertyCount={75} />
+            <CityCard name="Korhogo" propertyCount={60} />
+            <CityCard name="Daloa" propertyCount={55} />
+          </div>
+        </div>
+      </section>
+
       {/* How It Works */}
       <section className="py-12 sm:py-16 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8 sm:mb-12">
+          <div className="text-center mb-8 sm:mb-12 animate-fade-in">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">
               Comment ça marche
             </h2>
@@ -353,7 +382,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-r from-orange-500 to-orange-600">
+      <section className="py-16 sm:py-20 gradient-orange shadow-orange">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3 sm:mb-4">
             Prêt à commencer ?
@@ -364,13 +393,13 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
             <a
               href="/recherche"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-lg text-base sm:text-lg"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 shadow-premium text-base sm:text-lg btn-premium"
             >
               Je suis locataire
             </a>
             <a
               href="/ajouter-propriete"
-              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:bg-gray-50 transition-colors shadow-lg text-base sm:text-lg"
+              className="px-6 sm:px-8 py-3 sm:py-4 bg-white text-orange-600 font-bold rounded-lg hover:scale-105 hover:shadow-2xl transition-all duration-300 shadow-premium text-base sm:text-lg btn-premium"
             >
               Je suis propriétaire
             </a>

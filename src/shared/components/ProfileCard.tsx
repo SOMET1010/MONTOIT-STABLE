@@ -8,7 +8,7 @@ interface ProfileCardProps {
 
 export default function ProfileCard({ icon, title, features, ctaText, ctaLink }: ProfileCardProps) {
   return (
-    <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 sm:p-8 text-center hover:border-orange-500 hover:shadow-lg transition-all duration-200">
+    <div className="bg-white border-2 border-gray-200 rounded-2xl p-6 sm:p-8 text-center hover:border-orange-500 shadow-premium hover:shadow-orange transition-all duration-300 card-premium animate-slide-up">
       {/* Icon */}
       <div className="text-4xl sm:text-5xl mb-4">
         {icon}
@@ -32,7 +32,7 @@ export default function ProfileCard({ icon, title, features, ctaText, ctaLink }:
       {/* CTA Button */}
       <a
         href={ctaLink}
-        className="block w-full px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold rounded-lg transition-colors text-sm sm:text-base"
+        className="block w-full px-6 py-3 bg-gray-100 hover:bg-orange-500 hover:text-white text-gray-900 font-semibold rounded-lg transition-all duration-300 text-sm sm:text-base btn-premium"
       >
         {ctaText}
       </a>

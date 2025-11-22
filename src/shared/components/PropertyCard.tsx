@@ -14,10 +14,10 @@ export default function PropertyCard({ property, showBadge, badgeText }: Propert
   return (
     <a
       href={`/propriete/${property.id}`}
-      className="group block w-full sm:w-80 flex-shrink-0"
+      className="group block w-full sm:w-80 flex-shrink-0 card-premium hover-lift"
     >
       {/* Image */}
-      <div className="relative h-64 sm:h-72 bg-gray-200 rounded-xl overflow-hidden mb-3">
+      <div className="relative h-64 sm:h-72 bg-gray-200 rounded-xl overflow-hidden mb-3 image-zoom shadow-premium group-hover:shadow-premium-hover transition-shadow duration-300">
         {property.images && property.images.length > 0 ? (
           <img
             src={property.images[0]}
@@ -32,13 +32,13 @@ export default function PropertyCard({ property, showBadge, badgeText }: Propert
         )}
         
         {/* Price Badge */}
-        <div className="absolute top-3 right-3 px-3 py-1 bg-white rounded-lg text-sm font-semibold text-gray-900 shadow-md">
+        <div className="absolute top-3 right-3 px-3 py-1 glass rounded-lg text-sm font-semibold text-gray-900 shadow-premium">
           {FormatService.formatPrice(property.price)}
         </div>
 
         {/* Optional Badge (Nouveau, etc.) */}
         {showBadge && badgeText && (
-          <div className="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white rounded-lg text-xs font-semibold shadow-md">
+          <div className="absolute top-3 left-3 px-3 py-1 bg-green-500 text-white rounded-lg text-xs font-semibold shadow-premium badge-pulse">
             {badgeText}
           </div>
         )}

@@ -8,6 +8,7 @@ import App from './App.tsx';
 import './index.css';
 import './shared/styles/mobile-optimization.css';
 import './shared/styles/breadcrumb.css';
+import './shared/styles/premium-effects.css';
 
 const queryClient = createQueryClient();
 
