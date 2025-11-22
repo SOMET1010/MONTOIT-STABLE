@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Camera, CheckCircle, XCircle, Loader2 } from 'lucide-react';
-import { Button } from './button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './card';
+import { Button } from './Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './Card';
 
 interface SmilelessVerificationProps {
   userId: string;
