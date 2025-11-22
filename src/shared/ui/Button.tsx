@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { Loader } from 'lucide-react';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger' | 'success';
   size?: 'sm' | 'md' | 'lg';
   loading?: boolean;
   fullWidth?: boolean;
@@ -23,18 +23,20 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseClasses =
-      'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-98 touch-manipulation';
+      'inline-flex items-center justify-center font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] touch-manipulation';
 
     const variantClasses = {
       primary:
-        'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 focus:ring-blue-500 shadow-md hover:shadow-lg',
+        'bg-gradient-to-r from-terracotta-500 to-coral-500 text-white hover:from-terracotta-600 hover:to-coral-600 focus:ring-terracotta-500 shadow-md hover:shadow-lg hover:shadow-terracotta-500/20',
       secondary:
-        'bg-white border-2 border-blue-600 text-blue-700 hover:bg-blue-50 focus:ring-blue-500',
+        'bg-white dark:bg-gray-800 border-2 border-terracotta-500 text-terracotta-600 dark:text-terracotta-400 hover:bg-terracotta-50 dark:hover:bg-terracotta-900/20 focus:ring-terracotta-500',
       outline:
-        'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 focus:ring-gray-400',
-      ghost: 'text-gray-700 hover:bg-gray-100 focus:ring-gray-300 active:bg-gray-200',
+        'border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 hover:border-gray-400 dark:hover:border-gray-500 focus:ring-gray-400',
+      ghost: 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:ring-gray-300 active:bg-gray-200 dark:active:bg-gray-700',
       danger:
         'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 active:bg-red-800 shadow-md hover:shadow-lg',
+      success:
+        'bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 active:bg-green-800 shadow-md hover:shadow-lg',
     };
 
     const sizeClasses = {

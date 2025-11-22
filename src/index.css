@@ -1,14 +1,21 @@
+@import './shared/styles/design-tokens.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   body {
-    @apply font-body bg-gradient-to-br from-amber-50 via-orange-50 to-coral-50;
+    @apply font-sans bg-gradient-to-br from-amber-50 via-terracotta-50 to-coral-50;
+    @apply dark:from-gray-900 dark:via-gray-900 dark:to-gray-800;
   }
 
   * {
     cursor: inherit;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
   }
 }
 
@@ -22,19 +29,42 @@
   }
 
   .btn-primary {
-    @apply bg-gradient-to-r from-terracotta-500 to-coral-500 text-white font-semibold px-6 py-3 rounded-2xl shadow-lg hover:shadow-glow-lg transform hover:scale-105 transition-all duration-300 hover:animate-glow;
+    @apply bg-gradient-to-r from-terracotta-500 to-coral-500 text-white font-semibold px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200;
+    @apply dark:from-terracotta-600 dark:to-coral-600;
   }
 
   .btn-secondary {
-    @apply bg-white border-2 border-terracotta-500 text-terracotta-600 font-semibold px-6 py-3 rounded-2xl hover:bg-terracotta-50 transform hover:scale-105 transition-all duration-300;
+    @apply bg-white dark:bg-gray-800 border-2 border-terracotta-500 dark:border-terracotta-400 text-terracotta-600 dark:text-terracotta-400 font-semibold px-6 py-3 rounded-xl hover:bg-terracotta-50 dark:hover:bg-terracotta-900/20 transform hover:scale-105 transition-all duration-200;
   }
 
   .card-scrapbook {
-    @apply bg-white rounded-lg shadow-card hover:shadow-card-hover transition-all duration-500 transform hover:-rotate-1 hover:scale-105;
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+    @apply border border-gray-200 dark:border-gray-700;
   }
 
   .text-gradient {
     @apply bg-gradient-to-r from-terracotta-500 via-coral-500 to-amber-500 bg-clip-text text-transparent;
+  }
+
+  .gradient-orange {
+    @apply bg-gradient-to-r from-terracotta-500 to-coral-500;
+  }
+
+  .gradient-text-orange {
+    @apply bg-gradient-to-r from-terracotta-500 to-coral-500 bg-clip-text text-transparent;
+  }
+
+  .shadow-premium {
+    box-shadow: 0 10px 25px -5px rgba(242, 120, 92, 0.1), 0 8px 10px -6px rgba(242, 120, 92, 0.1);
+  }
+
+  .shadow-premium-hover {
+    box-shadow: 0 20px 35px -5px rgba(242, 120, 92, 0.15), 0 10px 15px -6px rgba(242, 120, 92, 0.15);
+  }
+
+  .card-premium {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-premium hover:shadow-premium-hover transition-all duration-300;
+    @apply border border-gray-200 dark:border-gray-700;
   }
 
   .badge-glow {
@@ -46,7 +76,7 @@
   @keyframes scale-in {
     0% {
       opacity: 0;
-      transform: scale(0.9);
+      transform: scale(0.95);
     }
     100% {
       opacity: 1;
@@ -63,10 +93,21 @@
     }
   }
 
-  @keyframes slide-in {
+  @keyframes slide-up {
     0% {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes slide-down {
+    0% {
+      opacity: 0;
+      transform: translateY(-20px);
     }
     100% {
       opacity: 1;
@@ -75,15 +116,39 @@
   }
 
   .animate-scale-in {
-    animation: scale-in 0.3s ease-out;
+    animation: scale-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .animate-fade-in {
-    animation: fade-in 0.5s ease-out;
+    animation: fade-in 0.5s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
-  .animate-slide-in {
-    animation: slide-in 0.3s ease-out;
+  .animate-slide-up {
+    animation: slide-up 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .animate-slide-down {
+    animation: slide-down 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .hover-lift:hover {
+    @apply -translate-y-1 shadow-xl;
+  }
+
+  .image-zoom {
+    @apply overflow-hidden;
+  }
+
+  .image-zoom img {
+    @apply transition-transform duration-300 ease-out;
+  }
+
+  .image-zoom:hover img {
+    @apply scale-110;
   }
 }
 
