@@ -2,10 +2,10 @@ import { Building2, Mail, Phone, MapPin, Shield, Heart, Sparkles } from 'lucide-
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-olive-900 text-gray-300 relative overflow-hidden">
+    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300 relative overflow-hidden shadow-premium">
       <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-terracotta-500 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-500 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-600 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 relative z-10">
@@ -26,22 +26,22 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-bold mb-5 text-lg flex items-center space-x-2">
-              <span className="text-terracotta-400">●</span>
+              <span className="text-orange-400">●</span>
               <span>Liens rapides</span>
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="/" className="hover:text-terracotta-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
+                <a href="/" className="hover:text-orange-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
                   🏠 Accueil
                 </a>
               </li>
               <li>
-                <a href="/recherche" className="hover:text-cyan-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
+                <a href="/recherche" className="hover:text-orange-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
                   🔍 Rechercher
                 </a>
               </li>
               <li>
-                <a href="/a-propos" className="hover:text-amber-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
+                <a href="/a-propos" className="hover:text-orange-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
                   ℹ️ À propos
                 </a>
               </li>
@@ -50,22 +50,22 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-bold mb-5 text-lg flex items-center space-x-2">
-              <span className="text-cyan-400">●</span>
+              <span className="text-orange-400">●</span>
               <span>Légal</span>
             </h3>
             <ul className="space-y-3 text-sm">
               <li>
-                <a href="/conditions-utilisation" className="hover:text-terracotta-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
+                <a href="/conditions-utilisation" className="hover:text-orange-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
                   📋 Conditions d'utilisation
                 </a>
               </li>
               <li>
-                <a href="/politique-confidentialite" className="hover:text-cyan-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
+                <a href="/politique-confidentialite" className="hover:text-orange-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
                   🔒 Politique de confidentialité
                 </a>
               </li>
               <li>
-                <a href="/mentions-legales" className="hover:text-amber-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
+                <a href="/mentions-legales" className="hover:text-orange-400 transition-colors hover:translate-x-2 transform inline-block duration-200 font-medium">
                   ⚖️ Mentions légales
                 </a>
               </li>
@@ -74,27 +74,27 @@ export default function Footer() {
 
           <div>
             <h3 className="text-white font-bold mb-5 text-lg flex items-center space-x-2">
-              <span className="text-amber-400">●</span>
+              <span className="text-orange-400">●</span>
               <span>Contact</span>
             </h3>
             <ul className="space-y-3 text-sm">
               <li className="flex items-center space-x-3 group">
-                <div className="w-8 h-8 bg-terracotta-900/50 rounded-lg flex items-center justify-center group-hover:bg-terracotta-800 transition-colors">
-                  <Mail className="h-4 w-4 text-terracotta-400" />
+                <div className="w-8 h-8 bg-orange-900/50 rounded-lg flex items-center justify-center group-hover:bg-orange-800 transition-colors">
+                  <Mail className="h-4 w-4 text-orange-400" />
                 </div>
-                <a href="mailto:contact@mon-toit.ci" className="font-medium text-gray-300 hover:text-terracotta-400 transition-colors">
+                <a href="mailto:contact@mon-toit.ci" className="font-medium text-gray-300 hover:text-orange-400 transition-colors">
                   contact@mon-toit.ci
                 </a>
               </li>
               <li className="flex items-center space-x-3 group">
-                <div className="w-8 h-8 bg-cyan-900/50 rounded-lg flex items-center justify-center group-hover:bg-cyan-800 transition-colors">
-                  <Phone className="h-4 w-4 text-cyan-400" />
+                <div className="w-8 h-8 bg-orange-900/50 rounded-lg flex items-center justify-center group-hover:bg-orange-800 transition-colors">
+                  <Phone className="h-4 w-4 text-orange-400" />
                 </div>
                 <span className="font-medium text-gray-400 italic">Numéro disponible prochainement</span>
               </li>
               <li className="flex items-center space-x-3 group">
-                <div className="w-8 h-8 bg-amber-900/50 rounded-lg flex items-center justify-center group-hover:bg-amber-800 transition-colors">
-                  <MapPin className="h-4 w-4 text-amber-400" />
+                <div className="w-8 h-8 bg-orange-900/50 rounded-lg flex items-center justify-center group-hover:bg-orange-800 transition-colors">
+                  <MapPin className="h-4 w-4 text-orange-400" />
                 </div>
                 <span className="font-medium">Abidjan, Côte d'Ivoire</span>
               </li>

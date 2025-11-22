@@ -30,7 +30,7 @@ export default function SimplifiedHeader() {
   ] : [];
 
   return (
-    <header className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-lg shadow-sm border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+    <header className="glass dark:bg-gray-900/90 backdrop-blur-lg shadow-premium border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50 animate-slide-down">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 md:h-20">
           {/* Logo */}
@@ -43,7 +43,7 @@ export default function SimplifiedHeader() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-lg md:text-xl font-bold text-blue-600">
+              <span className="text-lg md:text-xl font-bold gradient-text-orange">
                 Mon Toit
               </span>
               {!isMobile && (
@@ -66,7 +66,7 @@ export default function SimplifiedHeader() {
               <a
                 key={item.label}
                 href={item.href}
-                className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200 font-semibold relative"
+                className="flex items-center space-x-2 px-4 py-2 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:text-orange-600 dark:hover:text-orange-400 transition-all duration-300 font-semibold relative hover-lift"
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
@@ -85,7 +85,7 @@ export default function SimplifiedHeader() {
                 <button
                   onClick={() => setShowUserMenu(!showUserMenu)}
                   onBlur={() => setTimeout(() => setShowUserMenu(false), 200)}
-                  className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 font-semibold"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-xl gradient-orange text-white hover:shadow-orange-hover transition-all duration-300 font-semibold btn-premium"
                 >
                   <User className="h-5 w-5" />
                   <span>Mon Compte</span>
@@ -133,7 +133,7 @@ export default function SimplifiedHeader() {
                 </a>
                 <a
                   href="/inscription"
-                  className="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-all duration-200 font-semibold"
+                  className="px-4 py-2 rounded-xl gradient-orange text-white hover:shadow-orange-hover transition-all duration-300 font-semibold btn-premium"
                 >
                   Inscription
                 </a>

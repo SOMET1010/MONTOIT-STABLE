@@ -17,9 +17,24 @@ export default function Home() {
   const [searchCity, setSearchCity] = useState('');
   const [propertyType, setPropertyType] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  const heroImages = [
+    '/images/hero-residence-securisee.jpg',
+    '/images/hero-logements-sociaux.jpg',
+    '/images/hero-residence-moderne.jpg',
+    '/images/hero-immeubles-parking.jpg',
+  ];
 
   useEffect(() => {
     loadProperties();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const loadProperties = async () => {
@@ -67,12 +82,34 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative h-[500px] sm:h-[600px] bg-gray-900">
-        <div 
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: 'url(/images/hero-abidjan.jpg)' }}
-        >
-          <div className="absolute inset-0 bg-black/40"></div>
+      <section className="relative h-[500px] sm:h-[600px] bg-gray-900 overflow-hidden">
+        {/* Diaporama */}
+        {heroImages.map((image, index) => (
+          <div
+            key={image}
+            className={`absolute inset-0 bg-cover bg-center transition-opacity duration-1000 ${
+              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{ backgroundImage: `url(${image})` }}
+          >
+            <div className="absolute inset-0 bg-black/40"></div>
+          </div>
+        ))}
+
+        {/* Indicateurs */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+          {heroImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                index === currentSlide
+                  ? 'bg-white w-8'
+                  : 'bg-white/50 hover:bg-white/75'
+              }`}
+              aria-label={`Aller à la diapositive ${index + 1}`}
+            />
+          ))}
         </div>
         
         <div className="relative h-full flex items-center justify-center px-4">
