@@ -11,6 +11,7 @@ import './shared/styles/breadcrumb.css';
 import './shared/styles/premium-effects.css';
 import './shared/styles/hero-spectacular.css';
 import './shared/styles/header-footer-premium.css';
+import './shared/styles/premium-design-system.css';
 
 const queryClient = createQueryClient();
 
