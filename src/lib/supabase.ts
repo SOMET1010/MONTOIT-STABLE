@@ -1,16 +1,3 @@
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from './database.types';
-import { apiKeysConfig } from '@/shared/config/api-keys.config';
-
-const { url: supabaseUrl, anonKey: supabaseAnonKey } = apiKeysConfig.supabase;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-  },
-});
+// Réexporter l'instance centralisée pour éviter les multiples instances GoTrueClient
+export { supabase as default, supabase } from '@/services/supabase/client';
+export type { Database } from './database.types';

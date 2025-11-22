@@ -1,8 +1,8 @@
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import Layout from '@/app/layout/Layout';
-// import ProtectedRoute from '@/shared/ui/ProtectedRoute';
-// import RouterErrorBoundary from '@/shared/ui/RouterErrorBoundary';
+import ProtectedRoute from '@/shared/ui/ProtectedRoute';
+import RouterErrorBoundary from '@/shared/ui/RouterErrorBoundary';
 
 const Home = lazy(() => import('@/features/property/pages/HomePage'));
 const Auth = lazy(() => import('@/features/auth/pages/AuthPage'));
@@ -40,7 +40,6 @@ const VerificationRequest = lazy(() => import('@/features/verification/pages/Req
 const IdentityVerification = lazy(() => import('@/features/auth/pages/IdentityVerificationPage'));
 const VerificationSettings = lazy(() => import('@/features/verification/pages/SettingsPage'));
 const MyCertificates = lazy(() => import('@/features/verification/pages/MyCertificatesPage'));
-const RequestTrustValidation = lazy(() => import('@/features/trust-agent/pages/RequestValidationPage'));
 
 const RequestCEV = lazy(() => import('@/features/verification/pages/RequestCEVPage'));
 const CEVRequestDetail = lazy(() => import('@/features/verification/pages/CEVRequestDetailPage'));
