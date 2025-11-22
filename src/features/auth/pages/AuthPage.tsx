@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
 import { Building2, Mail, Lock, User, UserCircle, Sparkles, Shield, CheckCircle, Chrome, Facebook, KeyRound, ArrowLeft, Phone, AlertTriangle, Info, MessageCircle } from 'lucide-react';
+import { PhoneInput } from '@/shared/components/PhoneInput';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -177,34 +178,60 @@ export default function Auth() {
           return;
         }
 
-        const pwdValidation = validatePassword(password);
-        if (!pwdValidation.valid) {
-          setError('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
-          return;
-        }
-
-        const { error } = await signUp(email, password, { full_name: fullName, phone: phone || '' });
-        if (error) {
-          console.error('Signup error:', error);
-          if (error.message?.includes('already registered') || error.message?.includes('User already registered')) {
-            setError('Cet email est déjà utilisé. Connectez-vous.');
-          } else if (error.message?.includes('Database error')) {
-            setError('Erreur de base de données. Veuillez réessayer ou contacter le support.');
-          } else {
-            setError(error.message || 'Erreur lors de l\'inscription');
+        // Pour SMS/WhatsApp, pas besoin de mot de passe
+        if (verificationType === 'email') {
+          const pwdValidation = validatePassword(password);
+          if (!pwdValidation.valid) {
+            setError('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+            return;
           }
-          return;
+          
+          const { error } = await signUp(email, password, { full_name: fullName, phone: phone || '' });
+          if (error) {
+            console.error('Signup error:', error);
+            if (error.message?.includes('already registered') || error.message?.includes('User already registered')) {
+              setError('Cet email est déjà utilisé. Connectez-vous.');
+            } else if (error.message?.includes('Database error')) {
+              setError('Erreur de base de données. Veuillez réessayer ou contacter le support.');
+            } else {
+              setError(error.message || 'Erreur lors de l\'inscription');
+            }
+            return;
+          }
+        } else {
+          // Inscription par SMS/WhatsApp - créer un compte sans mot de passe
+          // Générer un mot de passe temporaire aléatoire (non communiqué à l'utilisateur)
+          const tempPassword = Math.random().toString(36).slice(-16) + Math.random().toString(36).slice(-16);
+          const tempEmail = email || `${phone.replace(/\+/g, '').replace(/\s/g, '')}@temp.montoit.ci`;
+          
+          const { error } = await signUp(tempEmail, tempPassword, { 
+            full_name: fullName, 
+            phone: phone,
+            auth_method: verificationType // Marquer la méthode d'authentification
+          });
+          if (error) {
+            console.error('Signup error:', error);
+            if (error.message?.includes('already registered') || error.message?.includes('User already registered')) {
+              setError('Ce numéro est déjà utilisé. Connectez-vous.');
+            } else if (error.message?.includes('Database error')) {
+              setError('Erreur de base de données. Veuillez réessayer ou contacter le support.');
+            } else {
+              setError(error.message || 'Erreur lors de l\'inscription');
+            }
+            return;
+          }
         }
+        
         // Envoyer le code OTP
-        // Utiliser le type de vérification choisi par l'utilisateur
         const finalVerificationType = verificationType;
-        const verificationTarget = (verificationType === 'email') ? email : phone;
+        const finalEmail = verificationType === 'email' ? email : undefined;
+        const finalPhone = (verificationType === 'sms' || verificationType === 'whatsapp') ? phone : undefined;
         
         try {
           const { data: otpData, error: otpError } = await supabase.functions.invoke('send-verification-code', {
             body: {
-              email: finalVerificationType === 'email' ? email : undefined,
-              phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
+              email: finalEmail,
+              phone: finalPhone,
               type: finalVerificationType,
               name: fullName
             }
@@ -223,8 +250,8 @@ export default function Auth() {
           setTimeout(() => {
             navigate('/verify-otp', {
               state: {
-                email: finalVerificationType === 'email' ? email : undefined,
-                phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
+                email: finalEmail,
+                phone: finalPhone,
                 type: finalVerificationType,
                 name: fullName
               }
@@ -561,28 +588,13 @@ export default function Auth() {
                     </div>
 
                     <div className="animate-slide-down" style={{ animationDelay: '0.05s' }}>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">
-                        Numéro de téléphone {(verificationType === 'sms' || verificationType === 'whatsapp') ? '' : <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                        <input
-                          type="tel"
-                          required={verificationType === 'sms' || verificationType === 'whatsapp'}
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                          placeholder="+225 XX XX XX XX XX"
-                          pattern="[+]?[0-9\s]+"
-                          title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
-                        />
-                      </div>
-                      <p className="mt-1 text-xs text-gray-600">
-                        {(verificationType === 'sms' || verificationType === 'whatsapp') 
-                          ? 'Obligatoire pour la vérification - Format: +225 XX XX XX XX XX'
-                          : 'Optionnel - Format: +225 XX XX XX XX XX'
-                        }
-                      </p>
+                      <PhoneInput
+                        value={phone}
+                        onChange={setPhone}
+                        required={verificationType === 'sms' || verificationType === 'whatsapp'}
+                        label={`Numéro de téléphone${(verificationType !== 'sms' && verificationType !== 'whatsapp') ? ' (optionnel)' : ''}`}
+                        autoValidate={true}
+                      />
                     </div>
                   </>
                 )}
@@ -590,25 +602,13 @@ export default function Auth() {
                 {/* Champ Téléphone pour connexion par téléphone */}
                 {isLogin && loginMethod === 'phone' && (
                   <div className="animate-slide-down" style={{ animationDelay: '0.2s' }}>
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
-                      Numéro de téléphone
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                      <input
-                        type="tel"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                        placeholder="+225 XX XX XX XX XX"
-                        pattern="[+]?[0-9\s]+"
-                        title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
-                      />
-                    </div>
-                    <p className="mt-1 text-xs text-gray-600">
-                      Format: +225 XX XX XX XX XX
-                    </p>
+                    <PhoneInput
+                      value={phone}
+                      onChange={setPhone}
+                      required={true}
+                      label="Numéro de téléphone"
+                      autoValidate={true}
+                    />
                   </div>
                 )}
 
@@ -632,7 +632,8 @@ export default function Auth() {
                   </div>
                 )}
 
-                {!isForgotPassword && (!isLogin || loginMethod === 'email') && (
+                {/* Mot de passe uniquement pour Email ou connexion par email */}
+                {!isForgotPassword && (!isLogin || loginMethod === 'email') && (isLogin || verificationType === 'email') && (
                   <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0.1s' : '0.2s' }}>
                     <label className="block text-sm font-bold text-gray-700 mb-2">
                       Mot de passe
