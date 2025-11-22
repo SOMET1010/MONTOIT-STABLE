@@ -114,9 +114,14 @@ export default function Home() {
         
         <div className="relative h-full flex items-center justify-center px-4">
           <div className="w-full max-w-4xl">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white text-center mb-6 sm:mb-8 px-4 animate-fade-in">
-              Trouvez votre logement en Côte d'Ivoire
-            </h1>
+            <div className="text-center mb-6 sm:mb-8 px-4 animate-fade-in">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-3">
+                Trouvez votre logement en toute confiance
+              </h1>
+              <p className="text-base sm:text-lg md:text-xl text-white/90 font-medium">
+                Identité certifiée • Paiement sécurisé • Pour tous les Ivoiriens
+              </p>
+            </div>
             
             {/* Search Bar - Mobile First */}
             <form onSubmit={handleSearch} className="glass rounded-2xl sm:rounded-full shadow-premium p-3 sm:p-2 animate-slide-up">
