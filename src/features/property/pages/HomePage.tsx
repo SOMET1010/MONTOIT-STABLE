@@ -14,50 +14,10 @@ export default function Home() {
   const [totalProperties, setTotalProperties] = useState(0);
   const [loading, setLoading] = useState(true);
   const [searchCity, setSearchCity] = useState('');
-  const [scrollY, setScrollY] = useState(0);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isCarouselPaused, setIsCarouselPaused] = useState(false);
-
-  const slides = [
-    {
-      image: 'https://images.unsplash.com/photo-1599809275671-b5942cabc7a2?w=1920&q=80',
-      title: 'Abidjan - Quartiers résidentiels modernes',
-      alt: 'Vue panoramique d\'Abidjan avec ses immeubles modernes'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=80',
-      title: 'Villas et résidences de standing à Cocody',
-      alt: 'Villa moderne dans un quartier résidentiel ivoirien'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1920&q=80',
-      title: 'Appartements contemporains à Abidjan',
-      alt: 'Intérieur moderne d\'appartement à Abidjan'
-    },
-    {
-      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1920&q=80',
-      title: 'Logements accessibles pour tous',
-      alt: 'Immeubles résidentiels modernes en Côte d\'Ivoire'
-    }
-  ];
 
   useEffect(() => {
     loadProperties();
-
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-
-    const slideInterval = setInterval(() => {
-      if (!isCarouselPaused) {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-      }
-    }, 5000);
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      clearInterval(slideInterval);
-    };
-  }, [isCarouselPaused]);
+  }, []);
 
   const loadProperties = async () => {
     try {
@@ -97,111 +57,59 @@ export default function Home() {
   return (
     <div className="min-h-screen custom-cursor">
       <section
-        className="relative overflow-hidden bg-gradient-to-br from-terracotta-400 via-coral-400 to-amber-400 text-white py-32"
-        onMouseEnter={() => setIsCarouselPaused(true)}
-        onMouseLeave={() => setIsCarouselPaused(false)}
+        className="relative overflow-hidden bg-gradient-to-br from-orange-50 to-white py-20 md:py-32"
       >
-        <div className="absolute inset-0">
-          {slides.map((slide, index) => (
-            <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentSlide ? 'opacity-50' : 'opacity-0'
-              }`}
-            >
-              <img
-                src={slide.image}
-                alt={slide.alt}
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
-        </div>
-
-        <div className="absolute inset-0 bg-gradient-to-br from-terracotta-500/70 via-coral-500/70 to-amber-500/70" />
-
-        <div
-          className="absolute inset-0 opacity-10"
-          style={{
-            backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-            transform: `translateY(${scrollY * 0.3}px)`,
-          }}
-        />
-
-        <div className="absolute top-10 left-10 w-32 h-32 bg-amber-300/30 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-20 w-40 h-40 bg-coral-300/30 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-12 animate-slide-down">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight px-4">
-              <div className="flex flex-wrap justify-center gap-x-3 gap-y-2">
-                <span className="inline-block animate-scale-in">Trouvez</span>
-                <span className="inline-block animate-scale-in">votre</span>
-                <span className="inline-block animate-scale-in text-amber-200" style={{ animationDelay: '0.1s' }}>logement idéal</span>
-              </div>
-              <div className="mt-4 pt-2 border-t-2 border-white/20 inline-block">
-                <span className="inline-block animate-scale-in text-2xl sm:text-3xl md:text-5xl font-semibold text-cyan-100" style={{ animationDelay: '0.2s' }}>en toute confiance</span>
-              </div>
+          <div className="text-center mb-12">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight px-4 text-gray-900">
+              Trouvez votre logement idéal en Côte d'Ivoire
             </h1>
 
-            <p className="text-lg sm:text-xl md:text-2xl text-amber-100 mb-8 max-w-3xl mx-auto px-4 animate-slide-up leading-relaxed">
-              L'immobilier accessible à tous avec signature électronique et paiement sécurisé
+            <p className="text-lg sm:text-xl text-gray-600 mb-8 max-w-3xl mx-auto px-4 leading-relaxed">
+              Vérification ANSUT • Paiement sécurisé • Signature électronique
             </p>
           </div>
 
-          <form onSubmit={handleSearch} className="max-w-4xl mx-auto animate-scale-in" style={{ animationDelay: '0.4s' }}>
-            <div className="glass-card rounded-3xl p-3 flex flex-col md:flex-row items-center gap-3 transform hover:scale-105 transition-all duration-300">
-              <div className="flex-1 w-full flex items-center bg-white/50 rounded-2xl px-4 py-3">
-                <MapPin className="h-6 w-6 text-terracotta-500 mr-3 flex-shrink-0" />
+          <form onSubmit={handleSearch} className="max-w-4xl mx-auto">
+            <div className="flex flex-col md:flex-row items-center gap-2 bg-white rounded-2xl shadow-lg p-2">
+              <div className="flex-1 w-full flex items-center px-4 py-3">
+                <MapPin className="h-5 w-5 text-orange-500 mr-3 flex-shrink-0" />
                 <input
                   type="text"
-                  placeholder="Où souhaitez-vous habiter ? (Abidjan, Cocody, Plateau...)"
-                  className="flex-1 bg-transparent text-gray-900 placeholder-gray-600 focus:outline-none text-lg"
+                  placeholder="Abidjan, Cocody, Plateau..."
+                  className="flex-1 bg-transparent text-gray-900 placeholder-gray-500 focus:outline-none text-base"
                   value={searchCity}
                   onChange={(e) => setSearchCity(e.target.value)}
                 />
               </div>
               <button
                 type="submit"
-                className="w-full md:w-auto btn-primary flex items-center justify-center space-x-2"
+                className="w-full md:w-auto px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-xl transition-colors flex items-center justify-center space-x-2"
               >
-                <Search className="h-6 w-6" />
-                <span className="text-lg">Rechercher</span>
+                <Search className="h-5 w-5" />
+                <span>Rechercher</span>
               </button>
             </div>
           </form>
 
-          <div className="flex flex-col items-center mt-8 space-y-4 animate-slide-up" style={{ animationDelay: '0.5s' }}>
-            <div className="text-center">
-              <p className="text-sm sm:text-base text-white/90 font-medium px-4">
-                {slides[currentSlide].title}
-              </p>
-            </div>
-            <div className="flex justify-center space-x-3">
-              {slides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentSlide(index)}
-                  className={`transition-all duration-300 rounded-full ${
-                    index === currentSlide
-                      ? 'w-12 h-3 bg-white shadow-glow'
-                      : 'w-3 h-3 bg-white/40 hover:bg-white/60'
-                  }`}
-                  aria-label={`Aller à la diapositive ${index + 1}`}
-                />
-              ))}
-            </div>
+          <div className="flex flex-wrap justify-center gap-2 mt-6">
+            <button onClick={() => {setSearchCity('Abidjan'); handleSearch({preventDefault: () => {}});}} className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              Abidjan
+            </button>
+            <button onClick={() => {setSearchCity('Cocody'); handleSearch({preventDefault: () => {}});}} className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              Cocody
+            </button>
+            <button onClick={() => {setSearchCity('Plateau'); handleSearch({preventDefault: () => {}});}} className="px-4 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-lg text-sm font-medium transition-colors shadow-sm">
+              Plateau
+            </button>
           </div>
         </div>
 
-        <div className="absolute -bottom-1 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#fffbeb"/>
-          </svg>
-        </div>
+
       </section>
 
-      <section className="py-12 bg-amber-50 relative">
+      <section className="py-12 bg-gray-50 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <QuickSearch />
         </div>
@@ -209,27 +117,14 @@ export default function Home() {
 
       <TrustSection />
 
-      <section className="py-24 bg-gradient-to-b from-amber-50 via-white to-cyan-50 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1"/>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" className="text-terracotta-300"/>
-          </svg>
-        </div>
-
+      <section className="py-24 bg-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16 animate-slide-down">
-            <div className="inline-block mb-4 px-4 py-2 bg-gradient-to-r from-terracotta-100 to-coral-100 rounded-full">
-              <span className="text-terracotta-700 font-bold text-sm">L'IMMOBILIER RÉINVENTÉ</span>
+          <div className="text-center mb-16">
+            <div className="inline-block mb-4 px-4 py-2 bg-orange-100 rounded-full">
+              <span className="text-orange-700 font-bold text-sm">L'IMMOBILIER RÉINVENTÉ</span>
             </div>
-            <h2 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6">
-              Une plateforme <span className="text-gradient">complète</span>
-              <br />
-              pour <span className="text-gradient">tous vos besoins</span>
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Une plateforme complète pour tous vos besoins
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               De la recherche au paiement, en passant par la signature électronique, tout est pensé pour simplifier votre parcours immobilier
@@ -237,71 +132,62 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="space-y-6 animate-slide-right">
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-terracotta-400 to-coral-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative bg-white rounded-2xl p-8 border-2 border-terracotta-100">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-terracotta-500 to-coral-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Shield className="h-7 w-7 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique sécurisée</h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        Sécurité et protection des données assurées. Tous les contrats sont signés électroniquement via CryptoNeo et marqués d'un cachet électronique visible garantissant leur authenticité.
-                      </p>
-                      <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-terracotta-50 rounded-full">
-                        <Shield className="h-4 w-4 text-terracotta-600" />
-                        <span className="text-sm font-semibold text-terracotta-700">Contrats certifiés</span>
-                      </div>
+            <div className="space-y-6">
+              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <Shield className="h-7 w-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique sécurisée</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Sécurité et protection des données assurées. Tous les contrats sont signés électroniquement via CryptoNeo et marqués d'un cachet électronique visible garantissant leur authenticité.
+                    </p>
+                    <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-orange-50 rounded-full">
+                      <Shield className="h-4 w-4 text-orange-600" />
+                      <span className="text-sm font-semibold text-orange-700">Contrats certifiés</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative bg-white rounded-2xl p-8 border-2 border-cyan-100">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <FileSignature className="h-7 w-7 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique légale</h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        Contrats 100% digitaux avec CryptoNeo, conformes à la réglementation ivoirienne. Plus besoin de déplacement, signez depuis chez vous.
-                      </p>
-                      <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-cyan-50 rounded-full">
-                        <Sparkles className="h-4 w-4 text-cyan-600" />
-                        <span className="text-sm font-semibold text-cyan-700">Valeur juridique garantie</span>
-                      </div>
+              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <FileSignature className="h-7 w-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Signature électronique légale</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Contrats 100% digitaux avec CryptoNeo, conformes à la réglementation ivoirienne. Plus besoin de déplacement, signez depuis chez vous.
+                    </p>
+                    <div className="mt-4 inline-flex items-center space-x-2 px-4 py-2 bg-orange-50 rounded-full">
+                      <Sparkles className="h-4 w-4 text-orange-600" />
+                      <span className="text-sm font-semibold text-orange-700">Valeur juridique garantie</span>
                     </div>
                   </div>
                 </div>
               </div>
 
-              <div className="group relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-orange-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-300"></div>
-                <div className="relative bg-white rounded-2xl p-8 border-2 border-amber-100">
-                  <div className="flex items-start space-x-4">
-                    <div className="flex-shrink-0 w-14 h-14 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center shadow-lg">
-                      <Smartphone className="h-7 w-7 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">Paiement Mobile Money</h3>
-                      <p className="text-gray-600 leading-relaxed">
-                        Orange Money, MTN Money, Moov Money et Carte bancaire. Paiements instantanés et sécurisés avec notifications en temps réel.
-                      </p>
-                      <div className="mt-4 grid grid-cols-3 gap-2">
-                        <div className="px-3 py-2 bg-orange-50 rounded-lg text-center">
-                          <span className="text-xs font-bold text-orange-700">Orange</span>
-                        </div>
-                        <div className="px-3 py-2 bg-yellow-50 rounded-lg text-center">
-                          <span className="text-xs font-bold text-yellow-700">MTN</span>
-                        </div>
-                        <div className="px-3 py-2 bg-blue-50 rounded-lg text-center">
-                          <span className="text-xs font-bold text-blue-700">Moov</span>
-                        </div>
+              <div className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+                <div className="flex items-start space-x-4">
+                  <div className="flex-shrink-0 w-14 h-14 bg-orange-500 rounded-xl flex items-center justify-center">
+                    <Smartphone className="h-7 w-7 text-white" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Paiement Mobile Money</h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      Orange Money, MTN Money, Moov Money et Carte bancaire. Paiements instantanés et sécurisés avec notifications en temps réel.
+                    </p>
+                    <div className="mt-4 grid grid-cols-3 gap-2">
+                      <div className="px-3 py-2 bg-orange-50 rounded-lg text-center">
+                        <span className="text-xs font-bold text-orange-700">Orange</span>
+                      </div>
+                      <div className="px-3 py-2 bg-yellow-50 rounded-lg text-center">
+                        <span className="text-xs font-bold text-yellow-700">MTN</span>
+                      </div>
+                      <div className="px-3 py-2 bg-blue-50 rounded-lg text-center">
+                        <span className="text-xs font-bold text-blue-700">Moov</span>
                       </div>
                     </div>
                   </div>
@@ -309,11 +195,10 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="relative animate-slide-left">
+            <div className="relative">
               <div className="sticky top-24">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-terracotta-400 to-coral-400 rounded-3xl transform rotate-3"></div>
-                  <div className="relative bg-white rounded-3xl p-8 border-4 border-white shadow-2xl">
+                  <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
                     <div className="mb-6">
                       <h3 className="text-3xl font-bold text-gray-900 mb-2">L'innovation au service de l'immobilier</h3>
                       <p className="text-gray-600">Technologie ivoirienne, pour les Ivoiriens</p>
@@ -361,13 +246,13 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="mt-8 p-6 bg-gradient-to-br from-terracotta-500 to-coral-500 rounded-2xl text-white">
+                    <div className="mt-8 p-6 bg-orange-500 rounded-2xl text-white">
                       <div className="flex items-center space-x-3 mb-3">
                         <Sparkles className="h-6 w-6" />
                         <span className="font-bold text-lg">Prêt à commencer ?</span>
                       </div>
                       <p className="text-white/90 mb-4">Rejoignez des milliers d'utilisateurs qui ont trouvé leur logement idéal</p>
-                      <a href="/recherche" className="block w-full text-center bg-white text-terracotta-600 font-bold py-3 px-6 rounded-xl hover:bg-amber-50 transition-colors">
+                      <a href="/recherche" className="block w-full text-center bg-white text-orange-600 font-bold py-3 px-6 rounded-xl hover:bg-orange-50 transition-colors">
                         Découvrir les logements
                       </a>
                     </div>
@@ -379,17 +264,13 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-20 bg-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-terracotta-300 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-amber-300 rounded-full blur-3xl" />
-        </div>
+      <section className="py-20 bg-gray-50 relative overflow-hidden">
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-center mb-12">
             <div>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-2">
-                <span className="text-gradient">Propriétés</span> récentes
+                Propriétés récentes
               </h2>
               <p className="text-gray-600 text-lg">Découvrez les dernières offres disponibles</p>
             </div>
@@ -542,7 +423,7 @@ export default function Home() {
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16 animate-slide-down">
+          <div className="text-center mb-16">
             <div className="inline-block mb-4 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full">
               <span className="text-white font-bold text-sm">SIMPLE ET RAPIDE</span>
             </div>
@@ -628,7 +509,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="mt-16 text-center animate-slide-up">
+          <div className="mt-16 text-center">
             <div className="inline-block bg-white rounded-3xl p-10 shadow-2xl max-w-2xl">
               <h3 className="text-3xl font-bold text-gray-900 mb-4">
                 Prêt à trouver votre logement idéal ?
