@@ -7,6 +7,7 @@ import { ThemeProvider } from '@/shared/contexts/ThemeContext';
 import App from './App.tsx';
 import './index.css';
 import './shared/styles/mobile-optimization.css';
+import './shared/styles/breadcrumb.css';
 
 const queryClient = createQueryClient();
 
