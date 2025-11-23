@@ -58,7 +58,7 @@ export default function HeaderSimplified() {
   const colorClasses = {
     blue: 'hover:bg-blue-50 hover:text-blue-700',
     green: 'hover:bg-green-50 hover:text-green-700',
-    purple: 'hover:bg-purple-50 hover:text-purple-700',
+    purple: 'hover:bg-orange-50 hover:text-terracotta-700',
     gray: 'hover:bg-gray-100 hover:text-gray-900'
   };
 

@@ -119,8 +119,8 @@ export default function AdminDashboard() {
       title: 'Baux actifs',
       value: stats?.active_leases || 0,
       icon: FileText,
-      color: 'bg-purple-100 text-purple-800',
-      iconBg: 'bg-purple-500'
+      color: 'bg-orange-100 text-terracotta-800',
+      iconBg: 'bg-orange-500'
     },
     {
       title: 'Revenus total',
@@ -239,9 +239,9 @@ export default function AdminDashboard() {
 
               <button
                 onClick={() => window.location.href = '/admin/payments'}
-                className="p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition text-left"
+                className="p-4 bg-orange-50 rounded-lg hover:bg-orange-100 transition text-left"
               >
-                <CreditCard className="w-6 h-6 text-purple-600 mb-2" />
+                <CreditCard className="w-6 h-6 text-terracotta-600 mb-2" />
                 <p className="text-sm font-medium text-gray-900">Paiements</p>
               </button>
 

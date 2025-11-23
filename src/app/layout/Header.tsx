@@ -134,7 +134,7 @@ export default function Header() {
                 </div>
                 <a
                   href="/mes-contrats"
-                  className="flex items-center space-x-2 px-4 py-2 rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 hover:text-purple-700 transition-all duration-300 font-semibold transform hover:scale-105"
+                  className="flex items-center space-x-2 px-4 py-2 rounded-2xl text-gray-700 hover:bg-gradient-to-r hover:from-purple-50 hover:to-purple-100 hover:text-terracotta-700 transition-all duration-300 font-semibold transform hover:scale-105"
                 >
                   <FileText className="h-5 w-5" />
                   <span>Contrats</span>

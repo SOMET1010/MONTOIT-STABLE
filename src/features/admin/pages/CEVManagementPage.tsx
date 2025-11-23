@@ -84,7 +84,7 @@ export default function AdminCEVManagement() {
       },
       under_review: {
         label: 'En révision',
-        color: 'bg-purple-100 text-purple-800',
+        color: 'bg-orange-100 text-terracotta-800',
         icon: Clock,
       },
       documents_requested: {
@@ -198,13 +198,13 @@ export default function AdminCEVManagement() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-purple-600">
+          <div className="bg-white rounded-lg shadow-sm p-4 border-l-4 border-terracotta-600">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-600 mb-1">Taux d'approbation</p>
                 <p className="text-2xl font-bold text-gray-900">{approvalRate}%</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-600" />
+              <TrendingUp className="h-8 w-8 text-terracotta-600" />
             </div>
           </div>
 
