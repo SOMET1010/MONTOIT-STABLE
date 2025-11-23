@@ -4,6 +4,7 @@ import { Search, MapPin, Home as HomeIcon, SlidersHorizontal, X } from 'lucide-r
 import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
 import Breadcrumb from '@/shared/components/navigation/Breadcrumb';
+import { CITY_NAMES, ABIDJAN_NEIGHBORHOODS } from '@/shared/data/cities';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -15,6 +16,7 @@ export default function SearchPropertiesPage() {
 
   // Search filters
   const [city, setCity] = useState(searchParams.get('city') || '');
+  const [neighborhood, setNeighborhood] = useState(searchParams.get('neighborhood') || '');
   const [propertyType, setPropertyType] = useState(searchParams.get('type') || '');
   const [minPrice, setMinPrice] = useState(searchParams.get('minPrice') || '');
   const [maxPrice, setMaxPrice] = useState(searchParams.get('maxPrice') || '');
@@ -85,16 +87,46 @@ export default function SearchPropertiesPage() {
           <form onSubmit={handleSearch} className="space-y-4">
             {/* Main Search Bar */}
             <div className="flex flex-col md:flex-row gap-3">
+              {/* Ville */}
               <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-100 transition-all">
                 <MapPin className="h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Ville ou quartier..."
+                <select
                   value={city}
-                  onChange={(e) => setCity(e.target.value)}
-                  className="flex-1 outline-none bg-transparent text-gray-900 placeholder-gray-400"
-                />
+                  onChange={(e) => {
+                    setCity(e.target.value);
+                    if (e.target.value !== 'Abidjan') {
+                      setNeighborhood('');
+                    }
+                  }}
+                  className="flex-1 outline-none bg-transparent text-gray-900 cursor-pointer"
+                >
+                  <option value="">Toutes les villes</option>
+                  {CITY_NAMES.map((cityName) => (
+                    <option key={cityName} value={cityName}>
+                      {cityName}
+                    </option>
+                  ))}
+                </select>
               </div>
+
+              {/* Quartier (seulement si Abidjan) */}
+              {city === 'Abidjan' && (
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-100 transition-all">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                  <select
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                    className="flex-1 outline-none bg-transparent text-gray-900 cursor-pointer"
+                  >
+                    <option value="">Tous les quartiers</option>
+                    {ABIDJAN_NEIGHBORHOODS.map((hood) => (
+                      <option key={hood} value={hood}>
+                        {hood}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
 
               <div className="flex-1 flex items-center gap-3 px-4 py-3 bg-gray-50 rounded-xl border border-gray-200 focus-within:border-orange-500 focus-within:ring-2 focus-within:ring-orange-100 transition-all">
                 <HomeIcon className="h-5 w-5 text-gray-400" />
