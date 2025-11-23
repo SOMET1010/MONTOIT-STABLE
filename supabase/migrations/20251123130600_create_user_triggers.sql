@@ -5,20 +5,33 @@
 -- create function to automatically create user profile
 -- this function creates a profile record when a new user signs up
 create or replace function handle_new_user()
-returns trigger as $$
+returns trigger
+    set search_path = public, auth
+as $$
 begin
     -- create profile record for new user
     insert into public.profiles (id, full_name, user_type)
     values (
         new.id,
-        coalesce(new.raw_user_meta_data->>'full_name', ''),
-        coalesce((new.raw_user_meta_data->>'user_type')::user_type, 'locataire')
+        coalesce(new.raw_user_meta_data->>'full_name', new.email),
+        coalesce(
+            (new.raw_user_meta_data->>'user_type')::public.user_type,
+            'locataire'::public.user_type
+        )
     );
 
-    -- create verification record for new user
-    insert into public.user_verifications (user_id)
-    values (new.id)
+    -- create verification record for new user with default values
+    insert into public.user_verifications (user_id, tenant_score, last_score_update)
+    values (new.id, 0, now())
     on conflict (user_id) do nothing;
+
+    -- assign default user role only if not already assigned
+    insert into public.user_roles (user_id, role)
+    select new.id, 'user'::public.user_role
+    where not exists (
+        select 1 from public.user_roles
+        where user_id = new.id
+    );
 
     return new;
 end;
@@ -35,32 +48,34 @@ create trigger trigger_handle_new_user
 -- create function to automatically handle user deletion cleanup
 -- this function cleans up user-related data when a user is deleted
 create or replace function handle_user_deletion()
-returns trigger as $$
+returns trigger
+    set search_path = public, auth
+as $$
 begin
     -- delete user's profile
-    delete from profiles where id = old.id;
+    delete from public.profiles where id = old.id;
 
     -- delete user's verification records
-    delete from user_verifications where user_id = old.id;
+    delete from public.user_verifications where user_id = old.id;
 
     -- delete user's role assignments
-    delete from user_roles where user_id = old.id;
+    delete from public.user_roles where user_id = old.id;
 
     -- delete user's favorites
-    delete from property_favorites where user_id = old.id;
+    delete from public.property_favorites where user_id = old.id;
 
     -- delete user's saved searches and alerts
-    delete from property_alerts where user_id = old.id;
-    delete from saved_searches where user_id = old.id;
+    delete from public.property_alerts where user_id = old.id;
+    delete from public.saved_searches where user_id = old.id;
 
     -- delete user's maintenance requests (if tenant)
-    delete from maintenance_requests where tenant_id = old.id;
+    delete from public.maintenance_requests where tenant_id = old.id;
 
     -- handle artisan profile if exists
-    delete from artisans where user_id = old.id;
+    delete from public.artisans where user_id = old.id;
 
     -- handle user reviews
-    delete from artisan_reviews where reviewer_id = old.id;
+    delete from public.artisan_reviews where reviewer_id = old.id;
 
     return old;
 end;

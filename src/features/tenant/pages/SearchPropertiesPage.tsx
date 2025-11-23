@@ -1,6 +1,6 @@
 import { useState, useEffect, lazy, Suspense } from 'react';
 import { Search, MapPin, SlidersHorizontal, Building2, Home, Bed, Bath, X, Sparkles, Map as MapIcon, List, Star } from 'lucide-react';
-import { supabase } from '@/services/supabase/client';
+import { supabasePublic } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
 import { recommendationService } from '@/services/ai/recommendationService';
 import { useAuth } from '@/app/providers/AuthProvider';
@@ -22,7 +22,6 @@ export default function SearchProperties() {
 
   const [searchCity, setSearchCity] = useState('');
   const [propertyType, setPropertyType] = useState<PropertyType | ''>('');
-  const [propertyCategory, setPropertyCategory] = useState<'residentiel' | 'commercial' | ''>('');
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [bedrooms, setBedrooms] = useState('');
@@ -45,8 +44,8 @@ export default function SearchProperties() {
     const radius = params.get('radius');
 
     if (city) setSearchCity(city);
-    if (category) setPropertyCategory(category as 'residentiel' | 'commercial');
     if (type) setPropertyType(type as PropertyType);
+    if (category) setPropertyType(category as PropertyType);
     if (lat && lng) {
       setUserLat(parseFloat(lat));
       setUserLng(parseFloat(lng));
@@ -82,15 +81,13 @@ export default function SearchProperties() {
         return;
       }
 
-      let query = supabase
+      let query = supabasePublic
         .from('properties')
         .select('*')
         .eq('status', 'disponible');
 
-      if (propertyCategory && propertyCategory.trim() !== '') {
-        query = query.eq('property_category', propertyCategory);
-      } else {
-        query = query.eq('property_category', 'residentiel');
+      if (propertyType && propertyType.trim() !== '') {
+        query = query.eq('property_type', propertyType);
       }
 
       if (searchCity && searchCity.trim() !== '' && searchCity !== 'Toutes les villes') {
@@ -250,11 +247,11 @@ export default function SearchProperties() {
                 >
                   <option value="">🏘️ Tous les types</option>
                   <option value="appartement">🏢 Appartement</option>
-                  <option value="maison">🏠 Maison individuelle</option>
                   <option value="villa">🏡 Villa</option>
                   <option value="studio">🚪 Studio</option>
-                  <option value="duplex">🏘️ Duplex</option>
                   <option value="chambre">🛏️ Chambre individuelle</option>
+                  <option value="bureau">🏢 Bureau/Commerce</option>
+                  <option value="commerce">🏪 Local commercial</option>
                 </select>
                 <p className="mt-2 text-xs text-gray-500">
                   Logements résidentiels uniquement

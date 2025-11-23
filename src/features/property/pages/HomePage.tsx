@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Search, MapPin, Shield, FileSignature, Smartphone, TrendingUp, Building2, Sparkles, Home as HomeIcon, Users, Map } from 'lucide-react';
-import { supabase } from '@/services/supabase/client';
+import { supabasePublic } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
 import QuickSearch from '@/features/property/components/QuickSearch';
 import { FormatService } from '@/services/format/formatService';
@@ -60,7 +60,7 @@ export default function Home() {
 
   const loadProperties = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabasePublic
         .from('properties')
         .select('*')
         .eq('status', 'disponible')
@@ -70,7 +70,7 @@ export default function Home() {
       if (error) throw error;
       setProperties(data || []);
 
-      const { count } = await supabase
+      const { count } = await supabasePublic
         .from('properties')
         .select('*', { count: 'exact', head: true })
         .eq('status', 'disponible');

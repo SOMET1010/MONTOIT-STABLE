@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MapPin, Bed, Bath, Home, ParkingCircle, Wind, Sofa, Calendar, Eye, ArrowLeft, Send, Heart, X, ChevronLeft, ChevronRight, Maximize2, Shield, CheckCircle, MessageCircle, Clock, Coins, AlertTriangle, Info } from 'lucide-react';
-import { supabase } from '@/services/supabase/client';
+import { supabasePublic, supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 import type { Database } from '@/shared/lib/database.types';
 
@@ -38,7 +38,7 @@ export default function PropertyDetail() {
 
   const loadProperty = async (id: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabasePublic
         .from('properties')
         .select('*')
         .eq('id', id)
@@ -61,7 +61,7 @@ export default function PropertyDetail() {
 
   const loadOwner = async (ownerId: string) => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await supabasePublic
         .from('profiles')
         .select('*')
         .eq('id', ownerId)
@@ -76,9 +76,22 @@ export default function PropertyDetail() {
 
   const incrementViewCount = async (id: string) => {
     try {
-      await supabase.rpc('increment_view_count', {
-        property_id: id
+      // Use a simple POST request directly to the RPC endpoint
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/rest/v1/rpc/increment_view_count`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': import.meta.env.VITE_SUPABASE_ANON_KEY,
+          // No Authorization header for public access
+        },
+        body: JSON.stringify({
+          property_id_to_update: id
+        })
       });
+
+      if (!response.ok) {
+        console.warn('View count increment failed:', response.status, response.statusText);
+      }
     } catch (error) {
       console.error('Error incrementing view count:', error);
     }

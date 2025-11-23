@@ -139,7 +139,6 @@ export default function AddProperty() {
           city: formData.city,
           neighborhood: formData.neighborhood || null,
           property_type: formData.property_type,
-          property_category: formData.property_category,
           bedrooms: parseInt(formData.bedrooms.toString()),
           bathrooms: parseInt(formData.bathrooms.toString()),
           surface_area: formData.surface_area ? parseFloat(formData.surface_area) : null,

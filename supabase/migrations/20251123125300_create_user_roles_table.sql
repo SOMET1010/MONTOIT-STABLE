@@ -68,10 +68,9 @@ begin
 end;
 $$ language plpgsql security definer;
 
--- create trigger to automatically assign default role to new users
--- this trigger fires after a new user is created in auth.users
-
-create trigger trigger_assign_default_role
-    after insert on auth.users
-    for each row
-    execute function assign_default_role();
+-- note: trigger disabled to prevent dependency issues during migration
+-- default role assignment will be handled in the handle_new_user function
+-- create trigger trigger_assign_default_role
+--     after insert on auth.users
+--     for each row
+--     execute function assign_default_role();
