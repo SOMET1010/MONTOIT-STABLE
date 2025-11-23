@@ -31,7 +31,7 @@ export default function Header() {
     try {
       const { data } = await supabase
         .from('user_verifications')
-        .select('oneci_status, face_verification_status, identity_verified')
+        .select('oneci_status, face_verification_status')
         .eq('user_id', user?.id)
         .maybeSingle();
 
@@ -39,7 +39,7 @@ export default function Header() {
         setVerificationStatus({
           oneciVerified: data.oneci_status === 'verifie',
           faceVerified: data.face_verification_status === 'verifie',
-          identityVerified: data.identity_verified || false
+          identityVerified: data.oneci_status === 'verifie' && data.face_verification_status === 'verifie'
         });
       }
     } catch (error) {

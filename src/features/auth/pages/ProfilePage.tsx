@@ -1,10 +1,20 @@
 import { useState, useEffect } from 'react';
-import { User, Mail, Phone, MapPin, Shield, Save, Camera, CheckCircle, AlertCircle } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Phone,
+  MapPin,
+  Save,
+  Camera,
+  CheckCircle,
+  AlertCircle,
+} from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 import AnsutBadge from '@/features/verification/components/AnsutBadge';
 import AchievementBadges from '@/shared/ui/AchievementBadges';
 import { FEATURES } from '@/shared/config/features.config';
+import ScoreSection from '@/shared/ui/ScoreSection';
 import RoleSwitcher from '@/app/layout/RoleSwitcher';
 
 export default function Profile() {
@@ -57,9 +67,9 @@ export default function Profile() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -80,9 +90,9 @@ export default function Profile() {
 
       if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(fileName);
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from('avatars').getPublicUrl(fileName);
 
       const { error: updateError } = await supabase
         .from('profiles')
@@ -95,7 +105,7 @@ export default function Profile() {
       setSuccess('Photo de profil mise à jour avec succès');
       setTimeout(() => setSuccess(''), 3000);
     } catch (err: any) {
-      setError(err.message || 'Erreur lors de l\'upload de la photo');
+      setError(err.message || "Erreur lors de l'upload de la photo");
     } finally {
       setUploading(false);
     }
@@ -132,7 +142,6 @@ export default function Profile() {
     }
   };
 
-
   if (!profile) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-amber-50 to-coral-50 flex items-center justify-center">
@@ -149,7 +158,9 @@ export default function Profile() {
             <User className="h-10 w-10 text-terracotta-500" />
             <span>Mon Profil</span>
           </h1>
-          <p className="text-gray-700 text-lg">Gérez vos informations personnelles et vos vérifications</p>
+          <p className="text-gray-700 text-lg">
+            Gérez vos informations personnelles et vos vérifications
+          </p>
         </div>
 
         {success && (
@@ -179,7 +190,9 @@ export default function Profile() {
                 ) : (
                   <div className="w-32 h-32 rounded-full bg-gradient-to-br from-terracotta-500 to-coral-500 flex items-center justify-center border-4 border-white shadow-lg">
                     <span className="text-white font-bold text-5xl">
-                      {profile.full_name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'}
+                      {profile.full_name?.[0]?.toUpperCase() ||
+                        user?.email?.[0]?.toUpperCase() ||
+                        'U'}
                     </span>
                   </div>
                 )}
@@ -212,29 +225,46 @@ export default function Profile() {
               <div className="mb-4">
                 <RoleSwitcher />
               </div>
-
             </div>
-
 
             <div className="card-scrapbook p-6 animate-scale-in" style={{ animationDelay: '0.2s' }}>
               <h3 className="font-bold text-gradient text-xl mb-4">Liens rapides</h3>
               <div className="space-y-2">
                 {profile?.user_type === 'locataire' && (
-                  <a href="/score-locataire" className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition">
+                  <a
+                    href="/score-locataire"
+                    className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                  >
                     Voir mon score locataire →
                   </a>
                 )}
-                <a href="/verification/parametres" className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition">
+                <a
+                  href="/verification/parametres"
+                  className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                >
                   Paramètres de vérification →
                 </a>
-                <a href="/notifications/preferences" className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition">
+                <a
+                  href="/notifications/preferences"
+                  className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                >
                   Préférences de notifications →
                 </a>
-                <a href="/mes-contrats" className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition">
+                <a
+                  href="/mes-contrats"
+                  className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                >
                   Mes contrats →
                 </a>
                 {(profile?.user_type === 'locataire' || profile?.user_type === 'proprietaire') && (
-                  <a href={profile?.user_type === 'locataire' ? '/maintenance/locataire' : '/maintenance/proprietaire'} className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition">
+                  <a
+                    href={
+                      profile?.user_type === 'locataire'
+                        ? '/maintenance/locataire'
+                        : '/maintenance/proprietaire'
+                    }
+                    className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                  >
                     Demandes de maintenance →
                   </a>
                 )}
@@ -271,9 +301,7 @@ export default function Profile() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-bold text-gray-800 mb-2">
-                        Email
-                      </label>
+                      <label className="block text-sm font-bold text-gray-800 mb-2">Email</label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
                         <input
@@ -303,9 +331,7 @@ export default function Profile() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-bold text-gray-800 mb-2">
-                        Ville
-                      </label>
+                      <label className="block text-sm font-bold text-gray-800 mb-2">Ville</label>
                       <div className="relative">
                         <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-500" />
                         <input
@@ -346,15 +372,14 @@ export default function Profile() {
               </form>
             </div>
 
-
-            {profile?.user_type === 'locataire' && user && (
-              <ScoreSection userId={user.id} />
-            )}
+            {profile?.user_type === 'locataire' && user && <ScoreSection userId={user.id} />}
 
             {verificationData && (
               <AchievementBadges
                 oneciVerified={verificationData.oneci_status === 'verifie'}
-                cnamVerified={FEATURES.CNAM_VERIFICATION && verificationData.cnam_status === 'verifie'}
+                cnamVerified={
+                  FEATURES.CNAM_VERIFICATION && verificationData.cnam_status === 'verifie'
+                }
                 faceVerified={verificationData.face_verification_status === 'verifie'}
                 tenantScore={verificationData.tenant_score || 0}
                 paymentCount={0}

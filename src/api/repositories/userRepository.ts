@@ -63,7 +63,7 @@ export const userRepository = {
 
   async updateProfileImage(userId: string, imageUrl: string) {
     return handleQuery(
-      supabase.from('profiles').update({ profile_image: imageUrl }).eq('id', userId).select().single()
+      supabase.from('profiles').update({ avatar_url: imageUrl }).eq('id', userId).select().single()
     );
   },
 
@@ -78,7 +78,7 @@ export const userRepository = {
     let score = 0;
     if (profile.oneci_verified) score += 2;
     if (profile.cnam_verified) score += 1;
-    if (profile.identity_verified) score += 2;
+    if (profile.face_verified) score += 2;
 
     return { data: score, error: null };
   },

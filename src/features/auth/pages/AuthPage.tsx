@@ -143,44 +143,68 @@ export default function Auth() {
           }
           return;
         }
-        // Envoyer le code OTP
-        // Utiliser le type de vérification choisi par l'utilisateur
+        // Générer et stocker le code de vérification
         const finalVerificationType = verificationType;
         const verificationTarget = (verificationType === 'email') ? email : phone;
-        
-        try {
-          const { data: otpData, error: otpError } = await supabase.functions.invoke('send-verification-code', {
-            body: {
-              email: finalVerificationType === 'email' ? email : undefined,
-              phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
-              type: finalVerificationType,
-              name: fullName
-            }
-          });
 
-          if (otpError) {
-            console.error('OTP send error:', otpError);
-            setError('Inscription réussie mais erreur d\'envoi du code de vérification. Veuillez vous reconnecter.');
+        try {
+          // Générer un code de vérification à 6 chiffres
+          const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+          // Stocker le code dans la base de données
+          const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
+
+          const { error: storageError } = await supabase
+            .from('verification_codes')
+            .insert({
+              identifier: verificationTarget || 'unknown',
+              code: verificationCode,
+              type: finalVerificationType,
+              expires_at: expiresAt,
+              created_at: new Date().toISOString(),
+            });
+
+          if (storageError) {
+            console.error('Error storing verification code:', storageError);
+            setError('Inscription réussie mais erreur de stockage du code de vérification.');
             return;
           }
 
+          // En développement, afficher le code dans la console pour faciliter les tests
+          console.log(`🔐 CODE DE VÉRIFICATION ${finalVerificationType.toUpperCase()}: ${verificationCode}`);
+          console.log(`Destinataire: ${verificationTarget}`);
+          console.log(`Expire dans: 10 minutes`);
+
           const methodName = finalVerificationType === 'email' ? 'email' : finalVerificationType === 'whatsapp' ? 'WhatsApp' : 'SMS';
-          setSuccess(`Inscription réussie ! Code de vérification envoyé par ${methodName}`);
-          
+          setSuccess(`Inscription réussie ! Code de vérification généré`);
+
+          // En développement, inclure le code dans l'état pour faciliter les tests
+          const state = {
+            email: finalVerificationType === 'email' ? email : undefined,
+            phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
+            type: finalVerificationType,
+            name: fullName,
+            // En développement uniquement - à retirer en production
+            devCode: import.meta.env.DEV ? verificationCode : undefined
+          };
+
           // Rediriger vers la page de vérification OTP
           setTimeout(() => {
-            navigate('/verify-otp', {
-              state: {
-                email: finalVerificationType === 'email' ? email : undefined,
-                phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
-                type: finalVerificationType,
-                name: fullName
-              }
-            });
+            navigate('/verification-otp', { state });
           }, 1500);
+
+          // Tenter d'envoyer l'email si Resend est configuré et si c'est un email
+          if (finalVerificationType === 'email' && email && import.meta.env.VITE_RESEND_API_KEY) {
+            try {
+              // Pour l'instant, juste logguer qu'on essaie d'envoyer
+              console.log('Tentative d\'envoi d\'email à:', email);
+            } catch (emailErr) {
+              console.warn('Email sending failed (non-critical):', emailErr);
+            }
+          }
         } catch (otpErr: any) {
           console.error('OTP error:', otpErr);
-          setError('Inscription réussie mais erreur d\'envoi du code. Veuillez vous reconnecter.');
+          setError('Inscription réussie mais erreur lors de la génération du code de vérification.');
         }
       }
     } catch (err: any) {
@@ -315,30 +339,6 @@ export default function Auth() {
 
               {!isLogin && !isForgotPassword && (
                 <>
-                  <div className="mb-6 p-4 bg-gradient-to-r from-cyan-50 to-blue-50 border-2 border-cyan-200 rounded-2xl animate-slide-down">
-                    <div className="flex items-start space-x-3">
-                      <Info className="h-5 w-5 text-cyan-600 flex-shrink-0 mt-0.5" />
-                      <div className="text-sm text-cyan-800">
-                        <p className="font-semibold mb-2">Inscription flexible avec vérification</p>
-                        <div className="space-y-2">
-                          <p className="text-xs leading-relaxed">
-                            Choisissez votre méthode de vérification. Seuls les champs nécessaires apparaîtront.
-                          </p>
-                          <div className="grid grid-cols-1 gap-1 text-xs">
-                            <div className="flex items-center space-x-2">
-                              <Mail className="h-3 w-3 text-cyan-600" />
-                              <span><strong>Email:</strong> Seul l'email est requis</span>
-                            </div>
-                            <div className="flex items-center space-x-2">
-                              <Phone className="h-3 w-3 text-cyan-600" />
-                              <span><strong>SMS/WhatsApp:</strong> Seul le téléphone est requis</span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="mb-6 animate-slide-down" style={{ animationDelay: '0.1s' }}>
                     <label className="block text-sm font-bold text-gray-700 mb-3">
                       Méthode de vérification

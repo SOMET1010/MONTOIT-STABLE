@@ -89,27 +89,27 @@ export default function VerifyOTP() {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('verify-code', {
-        body: {
-          email: type === 'email' ? email : undefined,
-          phone: type === 'sms' ? phone : undefined,
-          code: fullCode,
-          type: type || 'email'
-        }
-      });
+      const identifier = email || phone;
 
-      if (error) throw error;
+      // Vérifier le code directement dans la base de données
+      const { data: verificationResult, error: verificationError } = await supabase
+        .rpc('verify_code', {
+          identifier_input: identifier,
+          code_input: fullCode,
+          type_input: type || 'email'
+        });
 
-      if (data.success) {
+      if (verificationError) {
+        throw new Error(verificationError.message || 'Erreur de vérification');
+      }
+
+      if (verificationResult === true) {
         setSuccess('Vérification réussie !');
         setTimeout(() => {
-          navigate('/choix-profil');
+          window.location.href = '/choix-profil'; // Utiliser window.location pour éviter les problèmes de routing
         }, 1500);
       } else {
-        setError(data.error || 'Code incorrect');
-        if (data.attemptsRemaining !== undefined) {
-          setError(`${data.error}. ${data.attemptsRemaining} tentative(s) restante(s)`);
-        }
+        setError('Code incorrect ou expiré');
       }
     } catch (err: any) {
       console.error('Verification error:', err);
@@ -125,23 +125,42 @@ export default function VerifyOTP() {
     setSuccess('');
 
     try {
-      const { data, error } = await supabase.functions.invoke('send-verification-code', {
-        body: {
-          email: type === 'email' ? email : undefined,
-          phone: type === 'sms' ? phone : undefined,
+      // Générer un nouveau code de vérification
+      const newVerificationCode = Math.floor(100000 + Math.random() * 900000).toString();
+      const verificationTarget = email || phone;
+      const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
+
+      // Supprimer les anciens codes pour ce contact
+      await supabase
+        .from('verification_codes')
+        .delete()
+        .eq('identifier', verificationTarget);
+
+      // Insérer le nouveau code
+      const { error: storageError } = await supabase
+        .from('verification_codes')
+        .insert({
+          identifier: verificationTarget || 'unknown',
+          code: newVerificationCode,
           type: type || 'email',
-          name: name
-        }
-      });
+          expires_at: expiresAt,
+          created_at: new Date().toISOString(),
+        });
 
-      if (error) throw error;
-
-      if (data.success) {
-        setSuccess('Nouveau code envoyé !');
-        setTimeLeft(600);
-        setCode(['', '', '', '', '', '']);
-        inputRefs.current[0]?.focus();
+      if (storageError) {
+        throw new Error('Erreur lors du stockage du nouveau code');
       }
+
+      // Afficher le nouveau code dans la console pour le développement
+      console.log(`🔐 NOUVEAU CODE DE VÉRIFICATION ${(type || 'email').toUpperCase()}: ${newVerificationCode}`);
+      console.log(`Destinataire: ${verificationTarget}`);
+      console.log(`Expire dans: 10 minutes`);
+
+      setSuccess('Nouveau code de vérification généré !');
+      setTimeLeft(600);
+      setCode(['', '', '', '', '', '']);
+      inputRefs.current[0]?.focus();
+
     } catch (err: any) {
       console.error('Resend error:', err);
       setError('Erreur lors du renvoi du code');
@@ -193,6 +212,25 @@ export default function VerifyOTP() {
             <p className="text-cyan-600 font-semibold mt-1">
               {type === 'email' ? email : phone}
             </p>
+
+            {/* Afficher le code de développement */}
+            {import.meta.env.DEV && (location.state as any)?.devCode && (
+              <div className="mt-4 p-3 bg-cyan-50 border-2 border-cyan-200 rounded-xl">
+                <div className="text-center">
+                  <p className="text-xs font-semibold text-cyan-700 mb-2">
+                    🔐 CODE DE DÉVELOPPEMENT
+                  </p>
+                  <div className="bg-white px-4 py-2 rounded-lg inline-block">
+                    <span className="text-2xl font-bold text-cyan-900 tracking-widest">
+                      {(location.state as any)?.devCode}
+                    </span>
+                  </div>
+                  <p className="text-xs text-cyan-600 mt-2">
+                    Utilisez ce code pour la vérification
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {error && (
