@@ -56,7 +56,7 @@ const quickActions: QuickAction[] = [
     icon: FileText,
     label: 'Contrats & Baux',
     message: 'J\'ai des questions sur les contrats de location',
-    color: 'from-purple-500 to-purple-600',
+    color: 'from-terracotta-500 to-terracotta-600',
   },
   {
     icon: HelpCircle,

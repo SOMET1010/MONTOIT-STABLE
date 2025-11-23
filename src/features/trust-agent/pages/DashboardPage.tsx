@@ -131,7 +131,7 @@ export default function TrustAgentDashboard() {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="mb-8">
           <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center">
+            <div className="w-12 h-12 bg-gradient-to-r from-blue-600 to-orange-600 rounded-full flex items-center justify-center">
               <Shield className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -264,7 +264,7 @@ function StatCard({
     yellow: 'from-yellow-500 to-orange-500',
     blue: 'from-blue-500 to-indigo-500',
     green: 'from-green-500 to-emerald-500',
-    purple: 'from-purple-500 to-pink-500'
+    purple: 'from-terracotta-500 to-pink-500'
   };
 
   return (
@@ -421,7 +421,7 @@ function ValidationRequestDetail({ request, onBack }: { request: any; onBack: ()
         </button>
 
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-6 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-orange-600 p-6 text-white">
             <h1 className="text-2xl font-bold mb-2">
               Validation Manuelle - {profile?.first_name} {profile?.last_name}
             </h1>

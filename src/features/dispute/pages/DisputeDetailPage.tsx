@@ -335,7 +335,7 @@ export default function DisputeDetail() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col h-[calc(100vh-200px)]">
               {/* Chat Header */}
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 text-white">
+              <div className="bg-gradient-to-r from-blue-600 to-orange-600 p-4 text-white">
                 <h3 className="font-semibold flex items-center gap-2">
                   <MessageSquare className="w-5 h-5" />
                   Chat de médiation

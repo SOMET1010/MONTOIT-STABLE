@@ -172,7 +172,7 @@ export default function AgencyProperties() {
           </div>
 
           <div className="card-scrapbook p-6">
-            <Eye className="w-8 h-8 text-purple-600 mb-2" />
+            <Eye className="w-8 h-8 text-terracotta-600 mb-2" />
             <p className="text-3xl font-bold text-gray-900">{availableProperties.length}</p>
             <p className="text-sm text-gray-600">Propriétés disponibles</p>
           </div>

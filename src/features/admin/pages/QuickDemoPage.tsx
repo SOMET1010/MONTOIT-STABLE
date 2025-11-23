@@ -216,10 +216,10 @@ export default function AdminQuickDemo() {
                 <p className="text-xs text-blue-700">Profil Locataire</p>
               </div>
 
-              <div className="bg-purple-50 p-4 rounded-xl text-center">
-                <Users className="w-8 h-8 text-purple-600 mx-auto mb-2" />
+              <div className="bg-orange-50 p-4 rounded-xl text-center">
+                <Users className="w-8 h-8 text-terracotta-600 mx-auto mb-2" />
                 <p className="text-sm font-medium text-purple-900">{results.landlord}</p>
-                <p className="text-xs text-purple-700">Profil Propriétaire</p>
+                <p className="text-xs text-terracotta-700">Profil Propriétaire</p>
               </div>
             </div>
           </div>

@@ -63,7 +63,7 @@ export default function TenantMaintenance() {
     const configs: Record<string, any> = {
       en_attente: { color: 'bg-yellow-100 text-yellow-800', icon: Clock, label: 'En attente' },
       acceptee: { color: 'bg-blue-100 text-blue-800', icon: CheckCircle, label: 'Acceptée' },
-      en_cours: { color: 'bg-purple-100 text-purple-800', icon: Wrench, label: 'En cours' },
+      en_cours: { color: 'bg-orange-100 text-terracotta-800', icon: Wrench, label: 'En cours' },
       planifiee: { color: 'bg-cyan-100 text-cyan-800', icon: Calendar, label: 'Planifiée' },
       resolue: { color: 'bg-green-100 text-green-800', icon: CheckCircle, label: 'Résolue' },
       refusee: { color: 'bg-red-100 text-red-800', icon: XCircle, label: 'Refusée' }
@@ -147,7 +147,7 @@ export default function TenantMaintenance() {
           <button
             onClick={() => setFilter('en_cours')}
             className={`px-4 py-2 rounded-lg font-medium ${
-              filter === 'en_cours' ? 'bg-purple-600 text-white' : 'bg-white text-gray-600'
+              filter === 'en_cours' ? 'bg-terracotta-600 text-white' : 'bg-white text-gray-600'
             }`}
           >
             En cours

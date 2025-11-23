@@ -347,7 +347,7 @@ export default function AdminUserRoles() {
                   <Crown className="w-6 h-6 text-blue-600" />
                 </label>
 
-                <label className="flex items-center gap-3 p-4 bg-purple-50 border-2 border-purple-200 rounded-xl cursor-pointer hover:bg-purple-100 transition-colors">
+                <label className="flex items-center gap-3 p-4 bg-orange-50 border-2 border-purple-200 rounded-xl cursor-pointer hover:bg-orange-100 transition-colors">
                   <input
                     type="checkbox"
                     checked={makeTrustAgent}
@@ -356,9 +356,9 @@ export default function AdminUserRoles() {
                   />
                   <div className="flex-1">
                     <p className="font-bold text-purple-900">Trust Agent</p>
-                    <p className="text-sm text-purple-700">Validation, médiation et modération</p>
+                    <p className="text-sm text-terracotta-700">Validation, médiation et modération</p>
                   </div>
-                  <UserCheck className="w-6 h-6 text-purple-600" />
+                  <UserCheck className="w-6 h-6 text-terracotta-600" />
                 </label>
               </div>
             </div>
@@ -368,7 +368,7 @@ export default function AdminUserRoles() {
               <button
                 onClick={saveRoles}
                 disabled={saving}
-                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
+                className="px-8 py-4 bg-gradient-to-r from-blue-500 to-orange-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-3 shadow-lg hover:shadow-xl transform hover:scale-105"
               >
                 <Save className="w-5 h-5" />
                 {saving ? 'Sauvegarde...' : 'Sauvegarder les Rôles'}

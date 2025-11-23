@@ -194,7 +194,7 @@ export default function TrustAgentAnalytics() {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center">
+              <div className="w-12 h-12 bg-gradient-to-r from-terracotta-600 to-pink-600 rounded-full flex items-center justify-center">
                 <BarChart3 className="w-7 h-7 text-white" />
               </div>
               <div>
@@ -344,7 +344,7 @@ function PeriodButton({ label, active, onClick }: any) {
       onClick={onClick}
       className={`px-4 py-2 rounded-lg font-medium transition-colors ${
         active
-          ? 'bg-purple-600 text-white'
+          ? 'bg-terracotta-600 text-white'
           : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-200'
       }`}
     >
@@ -358,7 +358,7 @@ function MetricCard({ icon: Icon, label, value, subtitle, color }: any) {
     blue: 'from-blue-500 to-blue-600',
     green: 'from-green-500 to-green-600',
     orange: 'from-orange-500 to-orange-600',
-    purple: 'from-purple-500 to-purple-600'
+    purple: 'from-terracotta-500 to-terracotta-600'
   };
 
   return (

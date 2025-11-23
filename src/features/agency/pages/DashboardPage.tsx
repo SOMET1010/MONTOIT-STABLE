@@ -149,8 +149,8 @@ export default function AgencyDashboard() {
   const getLeadStatusColor = (status: string) => {
     const colors: Record<string, string> = {
       nouveau: 'bg-blue-100 text-blue-800',
-      contacte: 'bg-purple-100 text-purple-800',
-      qualifie: 'bg-indigo-100 text-indigo-800',
+      contacte: 'bg-orange-100 text-terracotta-800',
+      qualifie: 'bg-orange-100 text-indigo-800',
       visite_planifiee: 'bg-cyan-100 text-cyan-800',
       offre_envoyee: 'bg-orange-100 text-orange-800',
       negociation: 'bg-yellow-100 text-yellow-800',
@@ -215,7 +215,7 @@ export default function AgencyDashboard() {
 
           <div className="card-scrapbook p-6">
             <div className="flex items-center justify-between mb-4">
-              <UserPlus className="w-8 h-8 text-purple-600" />
+              <UserPlus className="w-8 h-8 text-terracotta-600" />
             </div>
             <p className="text-3xl font-bold text-gray-900">{stats.activeLeads}</p>
             <p className="text-sm text-gray-600">Leads actifs</p>

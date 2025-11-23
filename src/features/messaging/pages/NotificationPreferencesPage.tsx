@@ -160,7 +160,7 @@ export default function NotificationPreferences() {
 
               <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <MessageSquare className="w-6 h-6 text-purple-600" />
+                  <MessageSquare className="w-6 h-6 text-terracotta-600" />
                   <div>
                     <p className="font-bold text-gray-900">SMS</p>
                     <p className="text-sm text-gray-600">Notifications par SMS</p>
@@ -173,7 +173,7 @@ export default function NotificationPreferences() {
                     onChange={() => handleToggle('sms_enabled')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-terracotta-600"></div>
                 </label>
               </div>
 
@@ -240,7 +240,7 @@ export default function NotificationPreferences() {
 
           <div className="card-scrapbook p-6">
             <h2 className="text-2xl font-bold text-gray-900 mb-4 flex items-center space-x-2">
-              <Clock className="w-6 h-6 text-purple-600" />
+              <Clock className="w-6 h-6 text-terracotta-600" />
               <span>Heures silencieuses</span>
             </h2>
 
@@ -257,7 +257,7 @@ export default function NotificationPreferences() {
                     onChange={() => handleToggle('quiet_hours_enabled')}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-terracotta-600"></div>
                 </label>
               </div>
 

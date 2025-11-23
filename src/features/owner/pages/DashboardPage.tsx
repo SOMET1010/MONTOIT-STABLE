@@ -360,7 +360,7 @@ export default function OwnerDashboard() {
                           </a>
                           <a
                             href={`/dashboard/propriete/${property.id}/stats`}
-                            className="flex items-center space-x-1 text-purple-600 hover:text-purple-700 text-sm font-bold transition-all duration-300 transform hover:scale-105"
+                            className="flex items-center space-x-1 text-terracotta-600 hover:text-terracotta-700 text-sm font-bold transition-all duration-300 transform hover:scale-105"
                           >
                             <BarChart3 className="h-4 w-4" />
                             <span>Stats</span>

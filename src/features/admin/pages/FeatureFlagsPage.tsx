@@ -76,11 +76,11 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 const CATEGORY_COLORS: Record<string, string> = {
   verification: "bg-blue-100 text-blue-800",
-  signature: "bg-purple-100 text-purple-800",
+  signature: "bg-orange-100 text-terracotta-800",
   payment: "bg-green-100 text-green-800",
   notification: "bg-yellow-100 text-yellow-800",
   ai: "bg-pink-100 text-pink-800",
-  map: "bg-indigo-100 text-indigo-800",
+  map: "bg-orange-100 text-indigo-800",
   agency: "bg-orange-100 text-orange-800",
   maintenance: "bg-teal-100 text-teal-800",
   analytics: "bg-cyan-100 text-cyan-800",

@@ -58,8 +58,8 @@ export default function MyDisputes() {
         return {
           icon: MessageSquare,
           label: 'En médiation',
-          color: 'text-indigo-600',
-          bg: 'bg-indigo-50',
+          color: 'text-orange-600',
+          bg: 'bg-orange-50',
           border: 'border-indigo-200'
         };
       case 'awaiting_response':

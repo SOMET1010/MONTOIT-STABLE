@@ -198,7 +198,7 @@ export default function TenantCalendar() {
       case 'maintenance':
         return 'bg-orange-500 text-white';
       case 'lease_end':
-        return 'bg-purple-500 text-white';
+        return 'bg-orange-500 text-white';
       default:
         return 'bg-gray-500 text-white';
     }
@@ -389,7 +389,7 @@ export default function TenantCalendar() {
               <span className="text-sm text-gray-700">Maintenance</span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 rounded bg-purple-500"></div>
+              <div className="w-4 h-4 rounded bg-orange-500"></div>
               <span className="text-sm text-gray-700">Fin de bail</span>
             </div>
           </div>

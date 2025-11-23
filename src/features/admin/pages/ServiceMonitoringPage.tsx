@@ -240,7 +240,7 @@ export default function AdminServiceMonitoring() {
                 <div className="bg-white rounded-xl shadow-lg p-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-gray-600">Temps Réponse Moy.</span>
-                    <Clock className="w-6 h-6 text-purple-600" />
+                    <Clock className="w-6 h-6 text-terracotta-600" />
                   </div>
                   <p className="text-3xl font-bold text-gray-900">
                     {avgResponseTime.toFixed(0)}ms

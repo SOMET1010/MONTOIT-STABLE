@@ -133,7 +133,7 @@ export default function Recommendations() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 text-white py-12">
+      <div className="bg-gradient-to-r from-cyan-500 via-blue-500 to-terracotta-600 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-3 mb-4">
             <Sparkles className="h-10 w-10" />
