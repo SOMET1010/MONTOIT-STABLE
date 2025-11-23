@@ -13,10 +13,10 @@ export default function HeroSpectacular({ onSearch }: HeroSpectacularProps) {
   const [titleVisible, setTitleVisible] = useState(false);
 
   const heroImages = [
-    '/images/hero-residence-securisee.jpg',
-    '/images/hero-logements-sociaux.jpg',
-    '/images/hero-residence-moderne.jpg',
-    '/images/hero-immeubles-parking.jpg',
+    '/images/hero/hero1.jpg',
+    '/images/hero/hero2.jpg',
+    '/images/hero/hero3.jpg',
+    '/images/hero/hero4.jpg',
   ];
 
   const title = "Trouvez votre logement en toute confiance";
