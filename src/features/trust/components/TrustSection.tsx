@@ -79,11 +79,11 @@ export default function TrustSection() {
           />
 
           <TrustCard
-            icon={<Headphones className="h-12 w-12 text-purple-600" />}
+            icon={<Headphones className="h-12 w-12 text-terracotta-600" />}
             title="Support SUTA 24/7"
             description="Notre chatbot intelligent SUTA vous protège des arnaques en temps réel et répond à vos questions 24h/24."
             badge="Disponible 24/7"
-            bgColor="bg-purple-50"
+            bgColor="bg-orange-50"
           />
         </div>
 
@@ -164,7 +164,7 @@ export default function TrustSection() {
             <Stat
               number="5,000+"
               label="Contrats signés"
-              icon={<CheckCircle className="h-8 w-8 text-purple-600" />}
+              icon={<CheckCircle className="h-8 w-8 text-terracotta-600" />}
             />
           </div>
         </div>

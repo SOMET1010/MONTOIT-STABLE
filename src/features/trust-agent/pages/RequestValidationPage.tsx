@@ -63,7 +63,7 @@ export default function RequestTrustValidation() {
       <div className="min-h-screen bg-gray-50 py-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="bg-white rounded-lg shadow-lg p-8 text-center">
-            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-6">
               <Shield className="w-12 h-12 text-white" />
             </div>
 
@@ -129,7 +129,7 @@ export default function RequestTrustValidation() {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
+          <div className="bg-gradient-to-r from-blue-600 to-orange-600 p-8 text-white">
             <div className="flex items-center gap-4 mb-4">
               <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                 <Shield className="w-10 h-10" />
@@ -291,7 +291,7 @@ export default function RequestTrustValidation() {
                   transition-all transform hover:scale-105
                   ${
                     profile?.ansut_verified && !submitting
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:shadow-xl'
+                      ? 'bg-gradient-to-r from-blue-600 to-orange-600 text-white shadow-lg hover:shadow-xl'
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   }
                 `}

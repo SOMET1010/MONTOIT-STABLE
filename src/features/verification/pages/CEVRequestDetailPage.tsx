@@ -89,7 +89,7 @@ export default function CEVRequestDetail() {
       case 'under_review':
         return {
           label: 'En révision',
-          color: 'bg-purple-100 text-purple-800',
+          color: 'bg-orange-100 text-terracotta-800',
           icon: Clock,
           description: 'L\'ONECI examine actuellement votre demande.',
         };

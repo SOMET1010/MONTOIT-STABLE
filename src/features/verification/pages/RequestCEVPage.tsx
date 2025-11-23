@@ -207,7 +207,7 @@ export default function RequestCEV() {
               <span className={`px-3 py-1 rounded-full text-sm font-medium ${
                 step === 'check' ? 'bg-blue-100 text-blue-800' :
                 step === 'upload' ? 'bg-yellow-100 text-yellow-800' :
-                step === 'review' ? 'bg-purple-100 text-purple-800' :
+                step === 'review' ? 'bg-orange-100 text-terracotta-800' :
                 'bg-green-100 text-green-800'
               }`}>
                 {step === 'check' ? 'Vérification des prérequis' :

@@ -158,7 +158,7 @@ export default function TrustAgentMediation() {
 function StatCard({ icon: Icon, label, value, color }: any) {
   const colors = {
     blue: 'from-blue-500 to-blue-600',
-    indigo: 'from-indigo-500 to-indigo-600',
+    indigo: 'from-orange-500 to-orange-600',
     orange: 'from-orange-500 to-orange-600',
     green: 'from-green-500 to-green-600'
   };
@@ -321,9 +321,9 @@ function MediationDetail({ dispute, messages, onBack, onUpdate }: any) {
                     {dispute.opener?.first_name} {dispute.opener?.last_name}
                   </p>
                 </div>
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                <div className="bg-orange-50 border border-purple-200 rounded-lg p-4">
                   <h4 className="font-semibold text-purple-900 mb-2">Contre</h4>
-                  <p className="text-purple-800">
+                  <p className="text-terracotta-800">
                     {dispute.opponent?.first_name} {dispute.opponent?.last_name}
                   </p>
                 </div>

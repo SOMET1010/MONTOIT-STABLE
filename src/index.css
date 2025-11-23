@@ -7,7 +7,7 @@
 @layer base {
   body {
     @apply font-sans bg-gradient-to-br from-amber-50 via-terracotta-50 to-coral-50;
-    @apply dark:from-gray-900 dark:via-gray-900 dark:to-gray-800;
+    @apply dark:from-terracotta-950 dark:via-gray-900 dark:to-gray-900;
   }
 
   * {
