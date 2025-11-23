@@ -61,7 +61,7 @@ export default function Header() {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-extrabold tracking-tight" style={{ color: '#2563eb' }}>
-                Mon Toit
+                MON TOIT
               </span>
               <span className="text-xs text-gray-500 font-medium">Plateforme Immobilière</span>
             </div>

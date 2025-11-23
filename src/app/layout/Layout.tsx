@@ -27,6 +27,8 @@ const noHeaderFooterRoutes = [
   '/mes-certificats',
   '/admin/api-keys',
   '/admin/service-providers',
+  '/favoris',
+  '/mes-contrats',
 ];
 
 export default function Layout() {
