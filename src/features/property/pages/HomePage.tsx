@@ -186,61 +186,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Comment ça marche */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-              Comment ça marche ?
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Trouvez votre logement idéal en 3 étapes simples
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
-            {/* Étape 1 */}
-            <div className="relative text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-terracotta-500 to-coral-500 text-white text-3xl font-bold rounded-2xl mb-6 shadow-xl hover:scale-110 transition-transform">
-                1
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Cherchez
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Parcourez des milliers d'annonces vérifiées dans toute la Côte d'Ivoire.
-              </p>
-            </div>
-
-            {/* Étape 2 */}
-            <div className="relative text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-coral-500 to-amber-500 text-white text-3xl font-bold rounded-2xl mb-6 shadow-xl hover:scale-110 transition-transform">
-                2
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Postulez
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Créez votre dossier locataire avec vérification ANSUT en quelques minutes.
-              </p>
-            </div>
-
-            {/* Étape 3 */}
-            <div className="relative text-center">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-amber-500 to-terracotta-500 text-white text-3xl font-bold rounded-2xl mb-6 shadow-xl hover:scale-110 transition-transform">
-                3
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Emménagez
-              </h3>
-              <p className="text-gray-600 leading-relaxed">
-                Signez électroniquement, payez en Mobile Money et récupérez vos clés !
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Final */}
       <section className="py-20 sm:py-24 bg-gradient-to-br from-terracotta-900 via-terracotta-800 to-coral-700 relative overflow-hidden">
         {/* Pattern background */}
