@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { MapPin, Bed, Bath, Maximize, Heart, Share2, Calendar, MessageCircle, ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
+import Breadcrumb from '@/shared/components/navigation/Breadcrumb';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -99,9 +100,13 @@ export default function PropertyDetailPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Back Button */}
+      {/* Breadcrumb & Back */}
       <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3">
+          <Breadcrumb items={[
+            { label: 'Recherche', href: '/recherche' },
+            { label: property.title || 'Propriété' }
+          ]} />
           <button
             onClick={() => navigate(-1)}
             className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
