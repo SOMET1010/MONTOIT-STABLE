@@ -392,6 +392,7 @@ export default function Auth() {
                           onChange={(e) => setFullName(e.target.value)}
                           className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
                           placeholder="Votre nom complet"
+                          autoComplete="name"
                         />
                       </div>
                     </div>
@@ -411,6 +412,7 @@ export default function Auth() {
                           placeholder="+225 XX XX XX XX XX"
                           pattern="[+]?[0-9\s]+"
                           title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
+                          autoComplete="tel"
                         />
                       </div>
                       <p className="mt-1 text-xs text-gray-600">
@@ -436,6 +438,7 @@ export default function Auth() {
                       onChange={(e) => setEmail(e.target.value)}
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
                       placeholder="votre@email.com"
+                      autoComplete="email"
                     />
                   </div>
                 </div>
@@ -460,6 +463,7 @@ export default function Auth() {
                         className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
                         placeholder="••••••••"
                         minLength={8}
+                        autoComplete={isLogin ? 'current-password' : 'new-password'}
                       />
                     </div>
                     {!isLogin && password && (

@@ -221,6 +221,7 @@ export default function ResetPassword() {
                       className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-cyan-200 focus:border-cyan-500 transition-all bg-white/70"
                       placeholder="••••••••"
                       minLength={8}
+                      autoComplete="new-password"
                       disabled={loading}
                     />
                     <button
@@ -288,6 +289,7 @@ export default function ResetPassword() {
                       className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-cyan-200 focus:border-cyan-500 transition-all bg-white/70"
                       placeholder="••••••••"
                       minLength={8}
+                      autoComplete="new-password"
                       disabled={loading}
                     />
                     <button

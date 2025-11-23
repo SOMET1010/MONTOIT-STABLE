@@ -19,7 +19,11 @@ interface AuthContextType {
   loading: boolean;
   profileError: ProfileError | null;
   signIn: (email: string, password: string) => Promise<{ error: AuthError | null }>;
-  signUp: (email: string, password: string, userData: { full_name: string; user_type?: string; phone?: string }) => Promise<{ error: AuthError | null }>;
+  signUp: (
+    email: string,
+    password: string,
+    userData: { full_name: string; user_type?: string; phone?: string }
+  ) => Promise<{ error: AuthError | null }>;
   signInWithProvider: (provider: Provider) => Promise<{ error: AuthError | null }>;
   signOut: () => Promise<void>;
   updateProfile: (updates: Partial<Profile>) => Promise<void>;
@@ -48,7 +52,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       (async () => {
         setSession(session);
         setUser(session?.user ?? null);
@@ -69,7 +75,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const RETRY_DELAY = 1500;
 
     try {
-      console.log(`[AuthContext] Loading profile for user ${userId} (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`);
+      console.log(
+        `[AuthContext] Loading profile for user ${userId} (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`
+      );
 
       if (retryCount === 0) {
         const healthCheck = await testDatabaseConnection();
@@ -78,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfileError({
             type: 'network',
             message: 'Problème de connexion à la base de données',
-            details: healthCheck.message
+            details: healthCheck.message,
           });
           setLoading(false);
           return;
@@ -94,12 +102,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (error) {
         console.error('[AuthContext] Error from Supabase:', error);
 
-        if (error.message.includes('schema cache') || error.message.includes('Could not find the table')) {
+        if (
+          error.message.includes('schema cache') ||
+          error.message.includes('Could not find the table')
+        ) {
           console.error('[AuthContext] Schema cache error - profiles table not accessible');
           setProfileError({
             type: 'database',
             message: 'Connexion à la base de données impossible',
-            details: 'Could not find the table \'public.profiles\' in the schema cache\n\nLa table des profils n\'existe pas ou n\'est pas accessible. Veuillez contacter le support.'
+            details:
+              "Could not find the table 'public.profiles' in the schema cache\n\nLa table des profils n'existe pas ou n'est pas accessible. Veuillez contacter le support.",
           });
           setLoading(false);
           return;
@@ -115,27 +127,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfileError({
             type: 'not_found',
             message: 'Profil introuvable',
-            details: 'Votre profil n\'a pas été créé correctement. Tentative de récupération échouée.'
+            details:
+              "Votre profil n'a pas été créé correctement. Tentative de récupération échouée.",
           });
         } else if (error.message.includes('permission') || error.message.includes('denied')) {
           console.warn('[AuthContext] Permission error detected');
 
           if (retryCount < MAX_RETRIES) {
             console.log('[AuthContext] Retrying after permission error...');
-            await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
+            await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
             return loadProfile(userId, retryCount + 1);
           }
 
           setProfileError({
             type: 'permission',
             message: 'Connexion à la base de données impossible',
-            details: 'permission denied for table profiles\n\nVérifiez votre connexion Internet et réessayez dans quelques instants.'
+            details:
+              'permission denied for table profiles\n\nVérifiez votre connexion Internet et réessayez dans quelques instants.',
           });
         } else {
           setProfileError({
             type: 'database',
             message: 'Erreur de base de données',
-            details: error.message
+            details: error.message,
           });
         }
 
@@ -155,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         if (retryCount < MAX_RETRIES) {
           console.log(`[AuthContext] Retrying in ${RETRY_DELAY}ms...`);
-          await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
+          await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
           return loadProfile(userId, retryCount + 1);
         }
 
@@ -163,7 +177,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setProfileError({
           type: 'not_found',
           message: 'Profil introuvable',
-          details: 'Impossible de trouver votre profil après plusieurs tentatives. Veuillez contacter le support.'
+          details:
+            'Impossible de trouver votre profil après plusieurs tentatives. Veuillez contacter le support.',
         });
         setLoading(false);
         return;
@@ -177,7 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (retryCount < MAX_RETRIES) {
         console.log(`[AuthContext] Retrying after error in ${RETRY_DELAY * (retryCount + 1)}ms...`);
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)));
         return loadProfile(userId, retryCount + 1);
       }
 
@@ -185,7 +200,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setProfileError({
           type: 'unknown',
           message: 'Erreur inconnue',
-          details: error.message || 'Une erreur inattendue s\'est produite.'
+          details: error.message || "Une erreur inattendue s'est produite.",
         });
       }
     } finally {
@@ -220,7 +235,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error };
   };
 
-  const signUp = async (email: string, password: string, userData: { full_name: string; user_type?: string; phone?: string }) => {
+  const signUp = async (
+    email: string,
+    password: string,
+    userData: { full_name: string; user_type?: string; phone?: string }
+  ) => {
     try {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -286,18 +305,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const resetPassword = async (email: string) => {
     try {
-      const { data, error: functionError } = await supabase.functions.invoke('send-password-reset', {
-        body: { email }
-      });
+      const { data, error: functionError } = await supabase.functions.invoke(
+        'send-password-reset',
+        {
+          body: { email },
+        }
+      );
 
       if (functionError) {
         console.error('[AuthContext] Error calling send-password-reset:', functionError);
         return {
           error: {
-            message: functionError.message || 'Erreur lors de l\'envoi de l\'email de réinitialisation',
+            message:
+              functionError.message || "Erreur lors de l'envoi de l'email de réinitialisation",
             status: 500,
-            name: 'AuthError'
-          } as AuthError
+            name: 'AuthError',
+          } as AuthError,
         };
       }
 
@@ -306,8 +329,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           error: {
             message: 'Aucun compte associé à cette adresse email',
             status: 404,
-            name: 'AuthError'
-          } as AuthError
+            name: 'AuthError',
+          } as AuthError,
         };
       }
 
@@ -316,8 +339,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           error: {
             message: data.error,
             status: 500,
-            name: 'AuthError'
-          } as AuthError
+            name: 'AuthError',
+          } as AuthError,
         };
       }
 
@@ -326,10 +349,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.error('[AuthContext] Password reset exception:', err);
       return {
         error: {
-          message: 'Erreur lors de l\'envoi de l\'email de réinitialisation. Veuillez réessayer.',
+          message: "Erreur lors de l'envoi de l'email de réinitialisation. Veuillez réessayer.",
           status: 500,
-          name: 'AuthError'
-        } as AuthError
+          name: 'AuthError',
+        } as AuthError,
       };
     }
   };
@@ -347,21 +370,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{
-      user,
-      profile,
-      session,
-      loading,
-      profileError,
-      signIn,
-      signUp,
-      signInWithProvider,
-      signOut,
-      updateProfile,
-      resetPassword,
-      refreshProfile,
-      clearProfileError,
-    }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        profile,
+        session,
+        loading,
+        profileError,
+        signIn,
+        signUp,
+        signInWithProvider,
+        signOut,
+        updateProfile,
+        resetPassword,
+        refreshProfile,
+        clearProfileError,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
