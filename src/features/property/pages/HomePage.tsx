@@ -4,6 +4,7 @@ import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
 import PropertyCard from '@/shared/components/PropertyCard';
 import HeroSpectacular from '../components/HeroSpectacular';
+import { TrustSection } from '@/shared/components/premium';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -185,6 +186,9 @@ export default function Home() {
           )}
         </div>
       </section>
+
+      {/* Trust Section */}
+      <TrustSection showBadges={true} showTestimonials={true} variant="full" />
 
       {/* CTA Final */}
       <section className="py-20 sm:py-24 bg-gradient-to-br from-terracotta-900 via-terracotta-800 to-coral-700 relative overflow-hidden">

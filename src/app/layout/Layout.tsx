@@ -4,7 +4,7 @@ import HeaderPremium from './HeaderPremium';
 import FooterPremium from './FooterPremium';
 import Chatbot from '@/features/messaging/components/Chatbot';
 import { ErrorBoundary } from '@/shared/ui/ErrorBoundary';
-import { ToastContainer } from '@/shared/hooks/useToast';
+import { ToastContainer } from '@/shared/components/premium';
 
 const noLayoutRoutes = ['/connexion', '/inscription', '/messages', '/auth/callback'];
 const noHeaderFooterRoutes = [

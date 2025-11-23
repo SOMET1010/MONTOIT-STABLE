@@ -63,3 +63,19 @@ export {
   ImageGalleryPremium,
   type ImageGalleryPremiumProps,
 } from './organisms/ImageGalleryPremium';
+
+export {
+  TrustBadges,
+  type TrustBadgesProps,
+} from './organisms/TrustBadges';
+
+export {
+  TestimonialsCarousel,
+  type TestimonialsCarouselProps,
+  type Testimonial,
+} from './organisms/TestimonialsCarousel';
+
+export {
+  TrustSection,
+  type TrustSectionProps,
+} from './organisms/TrustSection';
