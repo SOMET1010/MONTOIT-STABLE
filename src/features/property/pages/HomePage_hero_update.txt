@@ -1,0 +1,129 @@
+      {/* Hero Section - 2 Colonnes avec Carrousel */}
+      <section className="relative min-h-[600px] md:h-[700px] bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23FF6B35' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v6h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          }}></div>
+        </div>
+
+        {/* Content - 2 Colonnes */}
+        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full items-center py-12">
+            
+            {/* Colonne Gauche - Contenu */}
+            <div className="max-w-2xl">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-lg mb-6 animate-fade-in">
+                <Shield className="h-4 w-4 text-orange-500" />
+                <span className="text-sm font-semibold text-gray-900">Plateforme certifiée ANSUT</span>
+              </div>
+
+              {/* Title */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-slide-up">
+                Trouvez votre{' '}
+                <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                  logement idéal
+                </span>
+                {' '}en Côte d'Ivoire
+              </h1>
+
+              <p className="text-lg md:text-xl text-gray-600 mb-8 animate-slide-up stagger-1">
+                Location sécurisée • Identité vérifiée • Paiement mobile
+              </p>
+
+              {/* Search Bar */}
+              <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-2 animate-slide-up stagger-2">
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Où cherchez-vous ?"
+                    value={searchCity}
+                    onChange={(e) => setSearchCity(e.target.value)}
+                    className="flex-1 outline-none text-gray-900 placeholder-gray-400"
+                  />
+                </div>
+
+                <div className="hidden md:block w-px bg-gray-200"></div>
+
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <HomeIcon className="h-5 w-5 text-gray-400" />
+                  <select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                    className="flex-1 outline-none text-gray-900 bg-transparent cursor-pointer"
+                  >
+                    <option value="">Type de bien</option>
+                    <option value="appartement">Appartement</option>
+                    <option value="maison">Maison</option>
+                    <option value="villa">Villa</option>
+                    <option value="studio">Studio</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                >
+                  <Search className="h-5 w-5" />
+                  <span>Rechercher</span>
+                </button>
+              </form>
+
+              {/* Quick stats */}
+              <div className="flex flex-wrap gap-6 mt-8 animate-fade-in stagger-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">1000+ propriétés</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">5000+ locataires</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">15+ villes</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Colonne Droite - Carrousel Vertical */}
+            <div className="hidden lg:block relative h-[600px]">
+              <div className="vertical-carousel-container h-full overflow-hidden rounded-3xl">
+                <div className="vertical-carousel-track">
+                  {/* Dupliquer les propriétés pour un défilement infini */}
+                  {[...properties, ...properties].map((property, index) => (
+                    <div
+                      key={`${property.id}-${index}`}
+                      className="vertical-carousel-item mb-6"
+                    >
+                      <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                        <img
+                          src={property.images?.[0] || '/images/placeholder-property.jpg'}
+                          alt={property.title || ''}
+                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                          <div className="text-2xl font-bold text-white mb-1">
+                            {property.monthly_rent?.toLocaleString() || 'N/A'} FCFA
+                          </div>
+                          <div className="text-white/90 text-sm flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            {property.city || 'Non spécifié'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        {/* Decorative elements */}
+        <div className="absolute top-20 right-10 w-72 h-72 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
+        <div className="absolute bottom-20 left-10 w-72 h-72 bg-red-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+      </section>

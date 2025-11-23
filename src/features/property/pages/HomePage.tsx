@@ -84,8 +84,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Style Airbnb/Booking */}
-      <section className="relative h-[600px] md:h-[700px] bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden">
+      {/* Hero Section - 2 Colonnes avec Carrousel */}
+      <section className="relative min-h-[600px] md:h-[700px] bg-gradient-to-br from-orange-50 via-white to-red-50 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute inset-0" style={{
@@ -93,82 +93,119 @@ export default function Home() {
           }}></div>
         </div>
 
-        {/* Content */}
-        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-center">
-          <div className="max-w-3xl">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-lg mb-6 animate-fade-in">
-              <Shield className="h-4 w-4 text-orange-500" />
-              <span className="text-sm font-semibold text-gray-900">Plateforme certifiée ANSUT</span>
-            </div>
-
-            {/* Title */}
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight animate-slide-up">
-              Trouvez votre{' '}
-              <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
-                logement idéal
-              </span>
-              {' '}en Côte d'Ivoire
-            </h1>
-
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 animate-slide-up stagger-1">
-              Location sécurisée • Identité vérifiée • Paiement mobile
-            </p>
-
-            {/* Search Bar - Style moderne */}
-            <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-2 animate-slide-up stagger-2">
-              <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
-                <MapPin className="h-5 w-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Où cherchez-vous ?"
-                  value={searchCity}
-                  onChange={(e) => setSearchCity(e.target.value)}
-                  className="flex-1 outline-none text-gray-900 placeholder-gray-400"
-                />
+        {/* Content - 2 Colonnes */}
+        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 h-full items-center py-12">
+            
+            {/* Colonne Gauche - Contenu */}
+            <div className="max-w-2xl">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-lg mb-6 animate-fade-in">
+                <Shield className="h-4 w-4 text-orange-500" />
+                <span className="text-sm font-semibold text-gray-900">Plateforme certifiée ANSUT</span>
               </div>
 
-              <div className="hidden md:block w-px bg-gray-200"></div>
+              {/* Title */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-slide-up">
+                Trouvez votre{' '}
+                <span className="bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">
+                  logement idéal
+                </span>
+                {' '}en Côte d'Ivoire
+              </h1>
 
-              <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
-                <HomeIcon className="h-5 w-5 text-gray-400" />
-                <select
-                  value={propertyType}
-                  onChange={(e) => setPropertyType(e.target.value)}
-                  className="flex-1 outline-none text-gray-900 bg-transparent cursor-pointer"
+              <p className="text-lg md:text-xl text-gray-600 mb-8 animate-slide-up stagger-1">
+                Location sécurisée • Identité vérifiée • Paiement mobile
+              </p>
+
+              {/* Search Bar */}
+              <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-2 animate-slide-up stagger-2">
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <MapPin className="h-5 w-5 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Où cherchez-vous ?"
+                    value={searchCity}
+                    onChange={(e) => setSearchCity(e.target.value)}
+                    className="flex-1 outline-none text-gray-900 placeholder-gray-400"
+                  />
+                </div>
+
+                <div className="hidden md:block w-px bg-gray-200"></div>
+
+                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
+                  <HomeIcon className="h-5 w-5 text-gray-400" />
+                  <select
+                    value={propertyType}
+                    onChange={(e) => setPropertyType(e.target.value)}
+                    className="flex-1 outline-none text-gray-900 bg-transparent cursor-pointer"
+                  >
+                    <option value="">Type de bien</option>
+                    <option value="appartement">Appartement</option>
+                    <option value="maison">Maison</option>
+                    <option value="villa">Villa</option>
+                    <option value="studio">Studio</option>
+                  </select>
+                </div>
+
+                <button
+                  type="submit"
+                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  <option value="">Type de bien</option>
-                  <option value="appartement">Appartement</option>
-                  <option value="maison">Maison</option>
-                  <option value="villa">Villa</option>
-                  <option value="studio">Studio</option>
-                </select>
-              </div>
+                  <Search className="h-5 w-5" />
+                  <span>Rechercher</span>
+                </button>
+              </form>
 
-              <button
-                type="submit"
-                className="px-8 py-4 bg-gradient-to-r from-orange-500 to-red-500 text-white font-semibold rounded-xl hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
-              >
-                <Search className="h-5 w-5" />
-                <span>Rechercher</span>
-              </button>
-            </form>
-
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-6 mt-8 animate-fade-in stagger-3">
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <span className="text-gray-700">1000+ propriétés</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <span className="text-gray-700">5000+ locataires</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <span className="text-gray-700">15+ villes</span>
+              {/* Quick stats */}
+              <div className="flex flex-wrap gap-6 mt-8 animate-fade-in stagger-3">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">1000+ propriétés</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">5000+ locataires</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-gray-700">15+ villes</span>
+                </div>
               </div>
             </div>
+
+            {/* Colonne Droite - Carrousel Vertical */}
+            <div className="hidden lg:block relative h-[600px]">
+              <div className="vertical-carousel-container h-full overflow-hidden rounded-3xl">
+                <div className="vertical-carousel-track">
+                  {/* Dupliquer les propriétés pour un défilement infini */}
+                  {[...properties, ...properties].map((property, index) => (
+                    <div
+                      key={`${property.id}-${index}`}
+                      className="vertical-carousel-item mb-6"
+                    >
+                      <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                        <img
+                          src={property.images?.[0] || '/images/placeholder-property.jpg'}
+                          alt={property.title || ''}
+                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                          <div className="text-2xl font-bold text-white mb-1">
+                            {property.monthly_rent?.toLocaleString() || 'N/A'} FCFA
+                          </div>
+                          <div className="text-white/90 text-sm flex items-center gap-2">
+                            <MapPin className="h-4 w-4" />
+                            {property.city || 'Non spécifié'}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -332,11 +369,6 @@ export default function Home() {
                       alt={property.title || ''}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    {/* Badge ANSUT */}
-                    <div className="absolute top-4 left-4 px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full flex items-center gap-1">
-                      <CheckCircle className="h-3 w-3" />
-                      <span>Vérifié ANSUT</span>
-                    </div>
                     {/* Badge Nouveau */}
                     <div className="absolute top-4 right-4 px-3 py-1 bg-orange-500 text-white text-xs font-bold rounded-full">
                       NOUVEAU
@@ -401,95 +433,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Comment ça marche ?
-            </h2>
-            <p className="text-xl text-gray-600">Trouvez votre logement en 3 étapes simples</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {[
-              {
-                step: 1,
-                icon: "🔍",
-                title: "Recherchez",
-                description: "Parcourez des milliers d'annonces vérifiées ANSUT dans toute la Côte d'Ivoire"
-              },
-              {
-                step: 2,
-                icon: "📝",
-                title: "Postulez",
-                description: "Créez votre dossier locataire avec vérification d'identité et documents certifiés"
-              },
-              {
-                step: 3,
-                icon: "🏠",
-                title: "Emménagez",
-                description: "Signez électroniquement, payez en Mobile Money et recevez vos clés"
-              }
-            ].map((item) => (
-              <div key={item.step} className="relative text-center">
-                {/* Connector line */}
-                {item.step < 3 && (
-                  <div className="hidden md:block absolute top-16 left-1/2 w-full h-0.5 bg-gradient-to-r from-orange-500 to-red-500 opacity-20"></div>
-                )}
-                
-                {/* Step number */}
-                <div className="relative w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-500 rounded-full flex items-center justify-center text-white text-6xl font-bold shadow-2xl">
-                  {item.step}
-                </div>
-
-                {/* Icon */}
-                <div className="text-6xl mb-4">{item.icon}</div>
-
-                {/* Content */}
-                <h3 className="text-2xl font-bold text-gray-900 mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Popular Cities */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Explorez par ville
-            </h2>
-            <p className="text-xl text-gray-600">Trouvez votre logement dans les principales villes</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {[
-              { name: "Abidjan", count: 850 },
-              { name: "Yamoussoukro", count: 120 },
-              { name: "Bouaké", count: 95 },
-              { name: "San-Pédro", count: 75 },
-              { name: "Korhogo", count: 60 },
-              { name: "Daloa", count: 55 },
-            ].map((city) => (
-              <a
-                key={city.name}
-                href={`/recherche?city=${city.name}`}
-                className="group bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center"
-              >
-                <div className="text-4xl mb-3">🏙️</div>
-                <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-orange-500 transition-colors">
-                  {city.name}
-                </h3>
-                <p className="text-sm text-gray-500">{city.count} propriétés</p>
-              </a>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-br from-orange-500 to-red-500 relative overflow-hidden">
         {/* Decorative elements */}
@@ -529,7 +472,7 @@ export default function Home() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" />
-              <span>Vérifié ANSUT</span>
+
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5" />
