@@ -33,7 +33,7 @@ export default function PropertyCard({ property, showBadge, badgeText }: Propert
         
         {/* Price Badge */}
         <div className="absolute top-3 right-3 px-3 py-1.5 bg-white/95 dark:bg-gray-800/95 backdrop-blur-sm rounded-lg text-sm font-bold text-terracotta-600 dark:text-terracotta-400 shadow-lg">
-          {FormatService.formatPrice(property.price)}
+          {FormatService.formatCurrency(property.monthly_rent || 0)}/mois
         </div>
 
         {/* Optional Badge (Nouveau, etc.) */}
