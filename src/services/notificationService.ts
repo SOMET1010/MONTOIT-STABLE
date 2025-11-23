@@ -59,7 +59,7 @@ export const notificationService = {
 
   async markAsRead(notificationId: string): Promise<boolean> {
     const { data, error } = await supabase.rpc('mark_notification_read', {
-      p_notification_id: notificationId
+      p_notification_id: notificationId,
     });
 
     if (error) throw error;
@@ -93,7 +93,7 @@ export const notificationService = {
       p_action_url: params.actionUrl,
       p_action_label: params.actionLabel,
       p_metadata: params.metadata || {},
-      p_priority: params.priority || 'normal'
+      p_priority: params.priority || 'normal',
     });
 
     if (error) throw error;
@@ -101,26 +101,21 @@ export const notificationService = {
   },
 
   async getPreferences(): Promise<NotificationPreferences | null> {
-    const { data, error } = await supabase
-      .from('notification_preferences')
-      .select('*')
-      .single();
+    const { data, error } = await supabase.from('notification_preferences').select('*').single();
 
     if (error && error.code !== 'PGRST116') throw error;
     return data;
   },
 
   async updatePreferences(preferences: Partial<NotificationPreferences>): Promise<void> {
-    const { error } = await supabase
-      .from('notification_preferences')
-      .upsert(preferences);
+    const { error } = await supabase.from('notification_preferences').upsert(preferences);
 
     if (error) throw error;
   },
 
   async sendEmail(to: string, template: string, data: Record<string, any>): Promise<void> {
     const { error } = await supabase.functions.invoke('send-email', {
-      body: { to, template, data }
+      body: { to, template, data },
     });
 
     if (error) throw error;
@@ -128,15 +123,19 @@ export const notificationService = {
 
   async sendSMS(phoneNumber: string, message: string, type: string = 'general'): Promise<void> {
     const { error } = await supabase.functions.invoke('intouch-sms', {
-      body: { phoneNumber, message, type }
+      body: { phoneNumber, message, type },
     });
 
     if (error) throw error;
   },
 
-  async sendWhatsApp(phoneNumber: string, message: string, type: string = 'general'): Promise<void> {
+  async sendWhatsApp(
+    phoneNumber: string,
+    message: string,
+    type: string = 'general'
+  ): Promise<void> {
     const { error } = await supabase.functions.invoke('send-whatsapp', {
-      body: { phoneNumber, message, type }
+      body: { phoneNumber, message, type },
     });
 
     if (error) throw error;
@@ -154,7 +153,7 @@ export const notificationService = {
           event: 'INSERT',
           schema: 'public',
           table: 'notifications',
-          filter: `user_id=eq.${userId}`
+          filter: `user_id=eq.${userId}`,
         },
         (payload) => {
           callback(payload.new as Notification);
@@ -165,5 +164,5 @@ export const notificationService = {
     return () => {
       subscription.unsubscribe();
     };
-  }
+  },
 };
