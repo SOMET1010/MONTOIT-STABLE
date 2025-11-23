@@ -172,47 +172,38 @@
 }
 
 
-/* Vertical Carousel Animations */
-.vertical-carousel-container {
-  position: relative;
-  mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to bottom,
-    transparent 0%,
-    black 10%,
-    black 90%,
-    transparent 100%
-  );
-}
-
-.vertical-carousel-track {
-  animation: scrollVertical 30s linear infinite;
-}
-
-.vertical-carousel-container:hover .vertical-carousel-track {
-  animation-play-state: paused;
-}
-
-@keyframes scrollVertical {
-  0% {
-    transform: translateY(0);
+/* Slideshow Animations */
+@keyframes slideshow-fade-in {
+  from {
+    opacity: 0;
+    transform: scale(1.05);
   }
-  100% {
-    transform: translateY(-50%);
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-.vertical-carousel-item {
-  width: 100%;
+.slideshow-fade-enter {
+  animation: slideshow-fade-in 1s ease-out;
 }
 
-/* Smooth scroll behavior */
-.vertical-carousel-track {
-  will-change: transform;
+/* Animation delay utilities */
+.animation-delay-200 {
+  animation-delay: 0.2s;
+  animation-fill-mode: backwards;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+  animation-fill-mode: backwards;
+}
+
+/* Smooth image transitions */
+.slideshow-image {
+  transition: transform 0.3s ease-out;
+}
+
+.slideshow-image:hover {
+  transform: scale(1.02);
 }

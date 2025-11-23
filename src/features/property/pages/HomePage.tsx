@@ -3,6 +3,7 @@ import '../styles/homepage-modern.css';
 import { Search, MapPin, Star, Shield, TrendingUp, Users, CheckCircle, ArrowRight, Sparkles, Home as HomeIcon } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import type { Database } from '@/shared/lib/database.types';
+import HeroSlideshow from '../components/HeroSlideshow';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -174,36 +175,9 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Colonne Droite - Carrousel Vertical */}
+            {/* Colonne Droite - Diaporama Lifestyle */}
             <div className="hidden lg:block relative h-[600px]">
-              <div className="vertical-carousel-container h-full overflow-hidden rounded-3xl">
-                <div className="vertical-carousel-track">
-                  {/* Dupliquer les propriétés pour un défilement infini */}
-                  {[...properties, ...properties].map((property, index) => (
-                    <div
-                      key={`${property.id}-${index}`}
-                      className="vertical-carousel-item mb-6"
-                    >
-                      <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 group">
-                        <img
-                          src={property.images?.[0] || '/images/placeholder-property.jpg'}
-                          alt={property.title || ''}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
-                          <div className="text-2xl font-bold text-white mb-1">
-                            {property.monthly_rent?.toLocaleString() || 'N/A'} FCFA
-                          </div>
-                          <div className="text-white/90 text-sm flex items-center gap-2">
-                            <MapPin className="h-4 w-4" />
-                            {property.city || 'Non spécifié'}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <HeroSlideshow />
             </div>
 
           </div>
