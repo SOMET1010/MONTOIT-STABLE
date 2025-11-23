@@ -176,7 +176,7 @@ export default function Home() {
             </div>
 
             {/* Colonne Droite - Diaporama Lifestyle */}
-            <div className="hidden lg:block relative h-[600px]">
+            <div className="relative h-[400px] lg:h-[600px] mt-8 lg:mt-0">
               <HeroSlideshow />
             </div>
 
