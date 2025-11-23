@@ -103,14 +103,18 @@ export default function Auth() {
           window.location.href = '/';
         }
       } else {
-        if (!validateEmail(email)) {
-          setError('Adresse email invalide. Veuillez entrer une adresse email valide.');
-          return;
-        }
-
-        if (phone && !validatePhone(phone)) {
-          setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
-          return;
+        // Validation selon la méthode de vérification choisie
+        if (verificationType === 'email') {
+          if (!email || !validateEmail(email)) {
+            setError('Adresse email invalide. Veuillez entrer une adresse email valide.');
+            return;
+          }
+        } else {
+          // Pour SMS et WhatsApp
+          if (!phone || !validatePhone(phone)) {
+            setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
+            return;
+          }
         }
 
         const pwdValidation = validatePassword(password);
@@ -119,7 +123,15 @@ export default function Auth() {
           return;
         }
 
-        const { error } = await signUp(email, password, { full_name: fullName, phone: phone || '' });
+        const { error } = await signUp(
+          verificationType === 'email' ? email : `${verificationType.toLowerCase()}-${phone}@placeholder.local`,
+          password,
+          {
+            full_name: fullName,
+            phone: phone || '',
+            user_type: 'locataire'
+          }
+        );
         if (error) {
           console.error('Signup error:', error);
           if (error.message?.includes('already registered') || error.message?.includes('User already registered')) {
@@ -307,11 +319,22 @@ export default function Auth() {
                     <div className="flex items-start space-x-3">
                       <Info className="h-5 w-5 text-cyan-600 flex-shrink-0 mt-0.5" />
                       <div className="text-sm text-cyan-800">
-                        <p className="font-semibold mb-1">Inscription flexible avec vérification</p>
-                        <p className="text-xs leading-relaxed">
-                          Choisissez votre méthode de vérification : <span className="font-semibold">Email, SMS ou WhatsApp</span>.
-                          Un code de vérification sera envoyé pour valider votre compte.
-                        </p>
+                        <p className="font-semibold mb-2">Inscription flexible avec vérification</p>
+                        <div className="space-y-2">
+                          <p className="text-xs leading-relaxed">
+                            Choisissez votre méthode de vérification. Seuls les champs nécessaires apparaîtront.
+                          </p>
+                          <div className="grid grid-cols-1 gap-1 text-xs">
+                            <div className="flex items-center space-x-2">
+                              <Mail className="h-3 w-3 text-cyan-600" />
+                              <span><strong>Email:</strong> Seul l'email est requis</span>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Phone className="h-3 w-3 text-cyan-600" />
+                              <span><strong>SMS/WhatsApp:</strong> Seul le téléphone est requis</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -397,51 +420,104 @@ export default function Auth() {
                       </div>
                     </div>
 
-                    <div className="animate-slide-down" style={{ animationDelay: '0.05s' }}>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">
-                        Numéro de téléphone {(verificationType === 'sms' || verificationType === 'whatsapp') ? '' : <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                        <input
-                          type="tel"
-                          required={verificationType === 'sms' || verificationType === 'whatsapp'}
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
-                          className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                          placeholder="+225 XX XX XX XX XX"
-                          pattern="[+]?[0-9\s]+"
-                          title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
-                          autoComplete="tel"
-                        />
+                    {/* Champ téléphone - seulement si SMS ou WhatsApp */}
+                    {(verificationType === 'sms' || verificationType === 'whatsapp') && (
+                      <div className="animate-slide-down" style={{ animationDelay: '0.05s' }}>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                          Numéro de téléphone <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                          <input
+                            type="tel"
+                            required
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                            placeholder="+225 XX XX XX XX XX"
+                            pattern="[+]?[0-9\s]+"
+                            title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
+                            autoComplete="tel"
+                          />
+                        </div>
+                        <p className="mt-1 text-xs text-amber-600 font-medium">
+                          Requis pour la vérification par {verificationType === 'whatsapp' ? 'WhatsApp' : 'SMS'}
+                        </p>
                       </div>
-                      <p className="mt-1 text-xs text-gray-600">
-                        {(verificationType === 'sms' || verificationType === 'whatsapp') 
-                          ? 'Obligatoire pour la vérification - Format: +225 XX XX XX XX XX'
-                          : 'Optionnel - Format: +225 XX XX XX XX XX'
-                        }
-                      </p>
-                    </div>
+                    )}
+
+                    {/* Champ email - seulement si Email ou pour connexion */}
+                    {(verificationType === 'email' || isLogin) && (
+                      <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0s' : '0.1s' }}>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                          Email <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                          <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                            placeholder="votre@email.com"
+                            autoComplete="email"
+                          />
+                        </div>
+                        {!isLogin && verificationType === 'email' && (
+                          <p className="mt-1 text-xs text-amber-600 font-medium">
+                            Requis pour la vérification par email
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </>
                 )}
 
-                <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0s' : '0.15s' }}>
-                  <label className="block text-sm font-bold text-gray-700 mb-2">
-                    Email {!isLogin && verificationType !== 'email' && <span className="text-gray-500 text-xs font-normal">(optionnel)</span>}
-                  </label>
-                  <div className="relative">
-                    <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                    <input
-                      type="email"
-                      required={isLogin || verificationType === 'email'}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                      placeholder="votre@email.com"
-                      autoComplete="email"
-                    />
+                {/* Email pour connexion ou mot de passe oublié */}
+                {isLogin && (
+                  <div className="animate-slide-down">
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                        placeholder="votre@email.com"
+                        autoComplete="email"
+                      />
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Email pour mot de passe oublié */}
+                {isForgotPassword && (
+                  <div className="animate-slide-down">
+                    <label className="block text-sm font-bold text-gray-700 mb-2">
+                      Email <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                      <input
+                        type="email"
+                        required
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                        placeholder="votre@email.com"
+                        autoComplete="email"
+                      />
+                    </div>
+                    <p className="mt-1 text-xs text-amber-600 font-medium">
+                      Le lien de réinitialisation sera envoyé à cette adresse
+                    </p>
+                  </div>
+                )}
 
                 {!isForgotPassword && (
                   <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0.1s' : '0.2s' }}>
