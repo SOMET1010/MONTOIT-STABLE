@@ -15,7 +15,11 @@ import {
   ChevronDown,
   Clock,
 } from 'lucide-react';
-import { chatbotService, ChatMessage as ChatMessageType, ChatConversation } from '@/services/chatbotService';
+import {
+  chatbotService,
+  ChatMessage as ChatMessageType,
+  ChatConversation,
+} from '@/services/chatbotService';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import ChatMessage from './ChatMessage';
@@ -31,7 +35,7 @@ const quickActions: QuickAction[] = [
   {
     icon: Home,
     label: 'Rechercher un logement',
-    message: 'Je cherche un logement sécurisé. Peux-tu m\'aider ?',
+    message: "Je cherche un logement sécurisé. Peux-tu m'aider ?",
     color: 'from-blue-500 to-blue-600',
   },
   {
@@ -55,19 +59,19 @@ const quickActions: QuickAction[] = [
   {
     icon: FileText,
     label: 'Contrats & Baux',
-    message: 'J\'ai des questions sur les contrats de location',
+    message: "J'ai des questions sur les contrats de location",
     color: 'from-purple-500 to-purple-600',
   },
   {
     icon: HelpCircle,
     label: 'Aide générale',
-    message: 'J\'ai besoin d\'aide avec la plateforme',
+    message: "J'ai besoin d'aide avec la plateforme",
     color: 'from-gray-500 to-gray-600',
   },
 ];
 
 const suggestionPrompts = [
-  'Comment fonctionne la vérification d\'identité ?',
+  "Comment fonctionne la vérification d'identité ?",
   'Quels sont les prix moyens à Abidjan ?',
   'Comment améliorer mon score locataire ?',
   'Que faire en cas de problème de maintenance ?',
@@ -96,9 +100,11 @@ export default function Chatbot() {
   }, [messages]);
 
   useEffect(() => {
-    if (isOpen && user && !conversation) {
+    if (isOpen && !conversation) {
       loadConversation();
-      loadConversations();
+      if (user) {
+        loadConversations();
+      }
     }
   }, [isOpen, user]);
 
@@ -109,20 +115,20 @@ export default function Chatbot() {
   };
 
   const loadConversation = async () => {
-    if (!user) return;
+    if (user) {
+      // Utilisateur connecté : charger la conversation depuis la base de données
+      const conv = await chatbotService.getOrCreateConversation(user.id);
+      if (conv) {
+        setConversation(conv);
+        const msgs = await chatbotService.getConversationMessages(conv.id);
+        setMessages(msgs);
 
-    const conv = await chatbotService.getOrCreateConversation(user.id);
-    if (conv) {
-      setConversation(conv);
-      const msgs = await chatbotService.getConversationMessages(conv.id);
-      setMessages(msgs);
-
-      if (msgs.length === 0) {
-        const welcomeMessage: ChatMessageType = {
-          id: 'welcome',
-          conversation_id: conv.id,
-          role: 'assistant',
-          content: `🛡️ **Bonjour ! Je suis SUTA, votre assistant protecteur Mon Toit.**
+        if (msgs.length === 0) {
+          const welcomeMessage: ChatMessageType = {
+            id: 'welcome',
+            conversation_id: conv.id,
+            role: 'assistant',
+            content: `🛡️ **Bonjour ! Je suis SUTA, votre assistant protecteur Mon Toit.**
 
 Je suis là pour vous aider à :
 • 🏠 Trouver un logement **SÉCURISÉ**
@@ -134,54 +140,120 @@ Je suis là pour vous aider à :
 **⚠️ Règle n°1 : Ne payez JAMAIS avant d'avoir visité !**
 
 Comment puis-je vous aider aujourd'hui ? 😊`,
-          created_at: new Date().toISOString(),
-        };
-        setMessages([welcomeMessage]);
-        setShowQuickActions(true);
-      } else {
-        setShowQuickActions(false);
+            created_at: new Date().toISOString(),
+          };
+          setMessages([welcomeMessage]);
+          setShowQuickActions(true);
+        } else {
+          setShowQuickActions(false);
+        }
       }
+    } else {
+      // Utilisateur non connecté : créer une conversation temporaire
+      const tempConv: ChatConversation = {
+        id: 'temp-guest-conversation',
+        user_id: 'guest',
+        title: 'Conversation invité',
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+      setConversation(tempConv);
+      
+      const welcomeMessage: ChatMessageType = {
+        id: 'welcome-guest',
+        conversation_id: tempConv.id,
+        role: 'assistant',
+        content: `🛡️ **Bonjour ! Je suis SUTA, votre assistant protecteur Mon Toit.**
+
+Je suis là pour vous aider à :
+• 🏠 Trouver un logement **SÉCURISÉ**
+• 🚨 Vous **PROTÉGER** des arnaques
+• 💰 Gérer vos paiements en toute sécurité
+• 📝 Comprendre vos contrats et baux
+• ⭐ Améliorer votre score locataire
+
+**⚠️ Règle n°1 : Ne payez JAMAIS avant d'avoir visité !**
+
+*Vous utilisez actuellement le mode invité. Pour enregistrer vos conversations et accéder à plus de fonctionnalités, [connectez-vous](/connexion).*
+
+Comment puis-je vous aider aujourd'hui ? 😊`,
+        created_at: new Date().toISOString(),
+      };
+      setMessages([welcomeMessage]);
+      setShowQuickActions(true);
     }
   };
 
   const handleSendMessage = async (messageText?: string) => {
     const textToSend = messageText || inputMessage.trim();
-    if (!textToSend || !conversation || !user) return;
+    if (!textToSend || !conversation) return;
 
     setInputMessage('');
     setIsLoading(true);
     setShowQuickActions(false);
 
-    const userMessage = await chatbotService.sendMessage(
-      conversation.id,
-      textToSend,
-      'user'
-    );
+    if (user) {
+      // Utilisateur connecté : enregistrer le message dans la base de données
+      const userMessage = await chatbotService.sendMessage(conversation.id, textToSend, 'user');
 
-    if (userMessage) {
-      setMessages((prev) => [...prev, userMessage]);
-    }
-
-    try {
-      const aiResponse = await chatbotService.getAIResponse(textToSend, messages, user.id);
-
-      const assistantMessage = await chatbotService.sendMessage(
-        conversation.id,
-        aiResponse,
-        'assistant'
-      );
-
-      if (assistantMessage) {
-        setMessages((prev) => [...prev, assistantMessage]);
+      if (userMessage) {
+        setMessages((prev) => [...prev, userMessage]);
       }
-    } catch (error) {
-      console.error('Error getting AI response:', error);
-      const errorMessage = await chatbotService.sendMessage(
-        conversation.id,
-        '❌ Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter le support à support@montoit.ci',
-        'assistant'
-      );
-      if (errorMessage) {
+
+      try {
+        const aiResponse = await chatbotService.getAIResponse(textToSend, messages, user.id);
+
+        const assistantMessage = await chatbotService.sendMessage(
+          conversation.id,
+          aiResponse,
+          'assistant'
+        );
+
+        if (assistantMessage) {
+          setMessages((prev) => [...prev, assistantMessage]);
+        }
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        const errorMessage = await chatbotService.sendMessage(
+          conversation.id,
+          '❌ Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter le support à support@montoit.ci',
+          'assistant'
+        );
+        if (errorMessage) {
+          setMessages((prev) => [...prev, errorMessage]);
+        }
+      }
+    } else {
+      // Utilisateur non connecté : ajouter les messages localement
+      const userMessage: ChatMessageType = {
+        id: `user-${Date.now()}`,
+        conversation_id: conversation.id,
+        role: 'user',
+        content: textToSend,
+        created_at: new Date().toISOString(),
+      };
+      setMessages((prev) => [...prev, userMessage]);
+
+      try {
+        const aiResponse = await chatbotService.getAIResponse(textToSend, messages, 'guest');
+
+        const assistantMessage: ChatMessageType = {
+          id: `assistant-${Date.now()}`,
+          conversation_id: conversation.id,
+          role: 'assistant',
+          content: aiResponse,
+          created_at: new Date().toISOString(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+      } catch (error) {
+        console.error('Error getting AI response:', error);
+        const errorMessage: ChatMessageType = {
+          id: `error-${Date.now()}`,
+          conversation_id: conversation.id,
+          role: 'assistant',
+          content: '❌ Désolé, je rencontre des difficultés techniques. Veuillez réessayer dans quelques instants ou contacter le support à support@montoit.ci',
+          created_at: new Date().toISOString(),
+        };
         setMessages((prev) => [...prev, errorMessage]);
       }
     }
@@ -206,14 +278,20 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
   };
 
   const handleNewConversation = async () => {
-    if (!user || !conversation) return;
+    if (!conversation) return;
 
-    await chatbotService.archiveConversation(conversation.id);
+    if (user) {
+      // Utilisateur connecté : archiver l'ancienne conversation
+      await chatbotService.archiveConversation(conversation.id);
+    }
+    
     setConversation(null);
     setMessages([]);
     setShowQuickActions(true);
     await loadConversation();
-    await loadConversations();
+    if (user) {
+      await loadConversations();
+    }
   };
 
   const switchConversation = async (conv: ChatConversation) => {
@@ -223,8 +301,6 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
     setShowHistory(false);
     setShowQuickActions(false);
   };
-
-  if (!user) return null;
 
   return (
     <>
@@ -261,18 +337,20 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
             </div>
 
             <div className="flex items-center gap-1 relative z-10">
-              <button
-                onClick={() => setShowHistory(!showHistory)}
-                className="p-2 hover:bg-white/20 rounded-lg transition-colors relative"
-                title="Historique"
-              >
-                <Clock className="h-5 w-5" />
-                {conversations.length > 1 && (
-                  <span className="absolute -top-1 -right-1 bg-yellow-400 text-terracotta-800 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
-                    {conversations.length}
-                  </span>
-                )}
-              </button>
+              {user && (
+                <button
+                  onClick={() => setShowHistory(!showHistory)}
+                  className="p-2 hover:bg-white/20 rounded-lg transition-colors relative"
+                  title="Historique"
+                >
+                  <Clock className="h-5 w-5" />
+                  {conversations.length > 1 && (
+                    <span className="absolute -top-1 -right-1 bg-yellow-400 text-terracotta-800 text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                      {conversations.length}
+                    </span>
+                  )}
+                </button>
+              )}
               <button
                 onClick={handleNewConversation}
                 className="p-2 hover:bg-white/20 rounded-lg transition-colors"
@@ -290,7 +368,7 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
             </div>
           </div>
 
-          {showHistory && (
+          {showHistory && user && (
             <div className="bg-gray-50 border-b border-gray-200 p-3 max-h-48 overflow-y-auto">
               <h4 className="text-sm font-semibold text-gray-700 mb-2">Conversations récentes</h4>
               <div className="space-y-2">
@@ -342,9 +420,7 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
             {showQuickActions && messages.length <= 1 && (
               <div className="animate-fade-in">
                 <div className="text-center mb-4">
-                  <h4 className="text-sm font-semibold text-gray-700 mb-2">
-                    💬 Actions rapides
-                  </h4>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">💬 Actions rapides</h4>
                   <p className="text-xs text-gray-500">
                     Choisissez une option ou posez votre question
                   </p>
@@ -356,7 +432,9 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
                       onClick={() => handleQuickAction(action)}
                       className="flex flex-col items-center gap-2 p-3 bg-white rounded-xl border-2 border-gray-200 hover:border-terracotta-400 hover:shadow-md transition-all group"
                     >
-                      <div className={`bg-gradient-to-br ${action.color} p-2 rounded-lg group-hover:scale-110 transition-transform`}>
+                      <div
+                        className={`bg-gradient-to-br ${action.color} p-2 rounded-lg group-hover:scale-110 transition-transform`}
+                      >
                         <action.icon className="h-5 w-5 text-white" />
                       </div>
                       <span className="text-xs font-medium text-gray-700 text-center leading-tight">
@@ -367,9 +445,7 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
                 </div>
 
                 <div className="mt-4">
-                  <h4 className="text-xs font-semibold text-gray-600 mb-2">
-                    💡 Suggestions
-                  </h4>
+                  <h4 className="text-xs font-semibold text-gray-600 mb-2">💡 Suggestions</h4>
                   <div className="space-y-2">
                     {suggestionPrompts.map((prompt, index) => (
                       <button
@@ -410,12 +486,8 @@ Comment puis-je vous aider aujourd'hui ? 😊`,
               </button>
             </div>
             <div className="flex items-center justify-between mt-2">
-              <p className="text-xs text-gray-400">
-                🛡️ Assistance sécurisée 24/7 par IA
-              </p>
-              <p className="text-xs text-gray-400">
-                Alimenté par Azure AI
-              </p>
+              <p className="text-xs text-gray-400">🛡️ Assistance sécurisée 24/7 par IA</p>
+              <p className="text-xs text-gray-400">Alimenté par Azure AI</p>
             </div>
           </div>
         </div>
