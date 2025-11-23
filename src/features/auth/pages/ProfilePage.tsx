@@ -238,6 +238,20 @@ export default function Profile() {
                     Voir mon score locataire →
                   </a>
                 )}
+                {profile?.user_type === 'locataire' && (
+                  <a
+                    href="/effectuer-paiement"
+                    className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                  >
+                    Payer mon loyer →
+                  </a>
+                )}
+                <a
+                  href="/ansut-verification"
+                  className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
+                >
+                  Vérifier mon identité →
+                </a>
                 <a
                   href="/verification/parametres"
                   className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"

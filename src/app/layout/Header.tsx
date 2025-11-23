@@ -1,4 +1,28 @@
-import { Home, Search, User, LogOut, Building2, MessageCircle, Calendar, FileText, Heart, Key, Award, Wrench, Users, BarChart, ChevronDown, Settings, Menu, X, Shield, Database, Activity, Cog, TestTube, Zap, UserCheck, CheckCircle, FileCheck } from 'lucide-react';
+import {
+  Home,
+  Search,
+  User,
+  LogOut,
+  Building2,
+  MessageCircle,
+  Calendar,
+  FileText,
+  Heart,
+  Key,
+  Award,
+  Wrench,
+  Users,
+  BarChart,
+  ChevronDown,
+  Settings,
+  Menu,
+  X,
+  Shield,
+  Activity,
+  Zap,
+
+  FileCheck,
+} from 'lucide-react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { useMessageNotifications } from '@/features/messaging';
 import LanguageSelector from '@/shared/ui/LanguageSelector';
@@ -12,7 +36,7 @@ export default function Header() {
   const [verificationStatus, setVerificationStatus] = useState({
     oneciVerified: false,
     faceVerified: false,
-    identityVerified: false
+    identityVerified: false,
   });
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -20,7 +44,12 @@ export default function Header() {
   const closeAllMenus = () => {
     setShowUserMenu(false);
   };
- 
+  const isOwnerRole =
+    profile?.active_role === 'proprietaire' ||
+    profile?.active_role === 'agence' ||
+    profile?.user_type === 'proprietaire' ||
+    profile?.user_type === 'agence';
+
   useEffect(() => {
     if (user && profile) {
       loadVerificationStatus();
@@ -39,7 +68,8 @@ export default function Header() {
         setVerificationStatus({
           oneciVerified: data.oneci_status === 'verifie',
           faceVerified: data.face_verification_status === 'verifie',
-          identityVerified: data.oneci_status === 'verifie' && data.face_verification_status === 'verifie'
+          identityVerified:
+            data.oneci_status === 'verifie' && data.face_verification_status === 'verifie',
         });
       }
     } catch (error) {
@@ -85,6 +115,33 @@ export default function Header() {
               <Search className="h-4 w-4" />
               <span>Rechercher</span>
             </a>
+            {user && isOwnerRole && (
+              <>
+                <a
+                  href="/dashboard/proprietaire"
+                  className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gradient-to-r hover:from-terracotta-50 hover:to-coral-50 hover:text-terracotta-700 transition-all duration-200 font-semibold whitespace-nowrap"
+                >
+                  <Home className="h-4 w-4" />
+                  <span>Tableau de bord</span>
+                </a>
+                <a
+                  href="/dashboard/ajouter-propriete"
+                  className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gradient-to-r hover:from-green-50 hover:to-green-100 hover:text-green-700 transition-all duration-200 font-semibold whitespace-nowrap"
+                >
+                  <Building2 className="h-4 w-4" />
+                  <span>Ajouter une propriété</span>
+                </a>
+              </>
+            )}
+            {user && profile?.user_type === 'locataire' && (
+              <a
+                href="/dashboard/locataire"
+                className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-blue-100 hover:text-blue-700 transition-all duration-200 font-semibold whitespace-nowrap"
+              >
+                <Home className="h-4 w-4" />
+                <span>Tableau de bord</span>
+              </a>
+            )}
             {user && (
               <>
                 <a
@@ -120,9 +177,6 @@ export default function Header() {
           <div className="flex items-center space-x-2 flex-shrink-0">
             {user ? (
               <>
-                <div className="hidden lg:block">
-                  <RoleSwitcher />
-                </div>
                 <div className="relative hidden md:block">
                   <button
                     onClick={() => {
@@ -156,6 +210,45 @@ export default function Header() {
 
                   {showUserMenu && (
                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-2xl border border-gray-100 py-2 z-50">
+                      <div className="px-4 py-2 border-b border-gray-100">
+                        <p className="text-xs uppercase font-semibold text-gray-500 mb-1">
+                          Changer de rôle
+                        </p>
+                        <RoleSwitcher />
+                      </div>
+                      {(profile?.active_role === 'proprietaire' ||
+                        profile?.active_role === 'agence' ||
+                        profile?.user_type === 'proprietaire' ||
+                        profile?.user_type === 'agence') && (
+                        <div className="px-4 py-2 border-b border-gray-100">
+                          <p className="text-xs uppercase font-semibold text-gray-500 mb-1">
+                            Espace propriétaire
+                          </p>
+                          <div className="space-y-1">
+                            <a
+                              href="/dashboard/proprietaire"
+                              className="flex items-center px-2 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
+                            >
+                              <Home className="h-4 w-4 mr-2" />
+                              Tableau de bord
+                            </a>
+                            <a
+                              href="/dashboard/ajouter-propriete"
+                              className="flex items-center px-2 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
+                            >
+                              <Building2 className="h-4 w-4 mr-2" />
+                              Ajouter une propriété
+                            </a>
+                            <a
+                              href="/maintenance/proprietaire"
+                              className="flex items-center px-2 py-2 rounded-lg hover:bg-gray-50 text-gray-700 font-medium"
+                            >
+                              <Wrench className="h-4 w-4 mr-2" />
+                              Maintenance
+                            </a>
+                          </div>
+                        </div>
+                      )}
                       <a
                         href="/profil"
                         className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium"
@@ -193,9 +286,14 @@ export default function Header() {
                           Mon Score
                         </a>
                       )}
-                      {(profile?.user_type === 'locataire' || profile?.user_type === 'proprietaire') && (
+                      {(profile?.user_type === 'locataire' ||
+                        profile?.user_type === 'proprietaire') && (
                         <a
-                          href={profile?.user_type === 'locataire' ? '/maintenance/locataire' : '/maintenance/proprietaire'}
+                          href={
+                            profile?.user_type === 'locataire'
+                              ? '/maintenance/locataire'
+                              : '/maintenance/proprietaire'
+                          }
                           className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-50 font-medium"
                         >
                           <Wrench className="h-4 w-4 mr-2" />
@@ -234,10 +332,7 @@ export default function Header() {
                 >
                   Connexion
                 </a>
-                <a
-                  href="/inscription"
-                  className="btn-primary"
-                >
+                <a href="/inscription" className="btn-primary">
                   Inscription
                 </a>
               </>
@@ -255,11 +350,35 @@ export default function Header() {
                 <Home className="h-4 w-4 inline mr-2" />
                 Accueil
               </a>
-              <a href="/recherche" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+              <a
+                href="/recherche"
+                className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+              >
                 <Search className="h-4 w-4 inline mr-2" />
                 Rechercher
               </a>
-              <a href="/messages" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium relative">
+              {isOwnerRole && (
+                <>
+                  <a
+                    href="/dashboard/proprietaire"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
+                    <Home className="h-4 w-4 inline mr-2" />
+                    Tableau de bord
+                  </a>
+                  <a
+                    href="/dashboard/ajouter-propriete"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
+                    <Building2 className="h-4 w-4 inline mr-2" />
+                    Ajouter une propriété
+                  </a>
+                </>
+              )}
+              <a
+                href="/messages"
+                className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium relative"
+              >
                 <MessageCircle className="h-4 w-4 inline mr-2" />
                 Messages
                 {unreadCount > 0 && (
@@ -268,26 +387,41 @@ export default function Header() {
                   </span>
                 )}
               </a>
-              <a href="/mes-visites" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+              <a
+                href="/mes-visites"
+                className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+              >
                 <Calendar className="h-4 w-4 inline mr-2" />
                 Mes visites
               </a>
-              <a href="/favoris" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+              <a
+                href="/favoris"
+                className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+              >
                 <Heart className="h-4 w-4 inline mr-2" />
                 Favoris
               </a>
-              <a href="/mes-contrats" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+              <a
+                href="/mes-contrats"
+                className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+              >
                 <FileText className="h-4 w-4 inline mr-2" />
                 Contrats
               </a>
 
               {profile?.user_type === 'locataire' && (
                 <>
-                  <a href="/score-locataire" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/score-locataire"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Award className="h-4 w-4 inline mr-2" />
                     Mon Score
                   </a>
-                  <a href="/maintenance/locataire" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/maintenance/locataire"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Wrench className="h-4 w-4 inline mr-2" />
                     Mes demandes
                   </a>
@@ -295,7 +429,10 @@ export default function Header() {
               )}
 
               {profile?.user_type === 'proprietaire' && (
-                <a href="/maintenance/proprietaire" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                <a
+                  href="/maintenance/proprietaire"
+                  className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                >
                   <Wrench className="h-4 w-4 inline mr-2" />
                   Demandes de maintenance
                 </a>
@@ -303,78 +440,125 @@ export default function Header() {
 
               {profile?.user_type === 'agence' && (
                 <>
-                  <a href="/agence/tableau-de-bord" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/agence/tableau-de-bord"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <BarChart className="h-4 w-4 inline mr-2" />
                     Tableau de bord
                   </a>
-                  <a href="/agence/equipe" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/agence/equipe"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Users className="h-4 w-4 inline mr-2" />
                     Mon équipe
                   </a>
-                  <a href="/agence/proprietes" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/agence/proprietes"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Building2 className="h-4 w-4 inline mr-2" />
                     Propriétés
                   </a>
                 </>
               )}
 
-              {(profile?.user_type === 'admin' || (Array.isArray(profile?.available_roles) && profile.available_roles.includes('admin')) || profile?.active_role === 'admin') && (
+              {(profile?.user_type === 'admin' ||
+                (Array.isArray(profile?.available_roles) &&
+                  profile.available_roles.includes('admin')) ||
+                profile?.active_role === 'admin') && (
                 <>
                   <div className="py-2 px-4 border-b border-gray-200">
                     <p className="text-xs font-bold text-blue-600 uppercase">Administration</p>
                   </div>
-                  <a href="/admin/tableau-de-bord" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/tableau-de-bord"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <BarChart className="h-4 w-4 inline mr-2" />
                     Dashboard
                   </a>
-                  <a href="/admin/utilisateurs" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/utilisateurs"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Users className="h-4 w-4 inline mr-2" />
                     Utilisateurs
                   </a>
-                  <a href="/admin/gestion-roles" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/gestion-roles"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Shield className="h-4 w-4 inline mr-2" />
                     Attribuer Rôles
                   </a>
-                  <a href="/admin/api-keys" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/api-keys"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Key className="h-4 w-4 inline mr-2" />
                     Clés API
                   </a>
-                  <a href="/admin/service-monitoring" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/service-monitoring"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Activity className="h-4 w-4 inline mr-2" />
                     Monitoring
                   </a>
-                  <a href="/admin/demo-rapide" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/demo-rapide"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Zap className="h-4 w-4 inline mr-2" />
                     Démo Rapide
                   </a>
-                  <a href="/admin/cev-management" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/admin/cev-management"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <FileCheck className="h-4 w-4 inline mr-2" />
                     CEV/ONECI
                   </a>
                 </>
               )}
 
-              {((Array.isArray(profile?.available_roles) && profile.available_roles.includes('trust_agent')) || profile?.active_role === 'trust_agent') && (
+              {((Array.isArray(profile?.available_roles) &&
+                profile.available_roles.includes('trust_agent')) ||
+                profile?.active_role === 'trust_agent') && (
                 <>
                   <div className="py-2 px-4 border-b border-t border-gray-200 mt-2">
                     <p className="text-xs font-bold text-green-600 uppercase">Trust Agent</p>
                   </div>
-                  <a href="/trust-agent/dashboard" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/trust-agent/dashboard"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <BarChart className="h-4 w-4 inline mr-2" />
                     Dashboard Agent
                   </a>
-                  <a href="/trust-agent/moderation" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/trust-agent/moderation"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Shield className="h-4 w-4 inline mr-2" />
                     Modération
                   </a>
-                  <a href="/trust-agent/mediation" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+                  <a
+                    href="/trust-agent/mediation"
+                    className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+                  >
                     <Users className="h-4 w-4 inline mr-2" />
                     Médiation
                   </a>
                 </>
               )}
 
-              <a href="/notifications/preferences" className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium">
+              <a
+                href="/notifications/preferences"
+                className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
+              >
                 <Settings className="h-4 w-4 inline mr-2" />
                 Préférences
               </a>
@@ -386,7 +570,9 @@ export default function Header() {
               <div className="border-t border-gray-200 my-2"></div>
 
               <div className="py-2 px-4">
-                <p className="text-sm font-bold text-gray-700 mb-1">{profile?.full_name || 'Utilisateur'}</p>
+                <p className="text-sm font-bold text-gray-700 mb-1">
+                  {profile?.full_name || 'Utilisateur'}
+                </p>
                 <p className="text-xs text-gray-500">{profile?.email}</p>
               </div>
 

@@ -1,13 +1,13 @@
 import { useState, useEffect, useRef } from 'react';
+import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
 import { Shield, Upload, CheckCircle, AlertCircle, FileText, Camera, Loader, X } from 'lucide-react';
-import Header from '@/app/layout/Header';
-import Footer from '@/app/layout/Footer';
 import VerificationBadge from '@/shared/ui/VerificationBadge';
 import AnsutBadge from '@/features/verification/components/AnsutBadge';
 import SmilelessVerification from '@/shared/ui/SmilelessVerification';
 import { FEATURES } from '@/shared/config/features.config';
+import Footer from '@/app/layout/Footer';
 
 interface VerificationData {
   id: string;
@@ -141,6 +141,18 @@ export default function IdentityVerification() {
     return urlData.publicUrl;
   };
 
+  const invokeFunction = async (functionName: string, payload: Record<string, any>) => {
+    const { data, error } = await supabase.functions.invoke(functionName, {
+      body: payload,
+    });
+
+    if (error) {
+      throw new Error(error.message || `${functionName} non disponible`);
+    }
+
+    return data;
+  };
+
   const verifyONECI = async () => {
     if (!oneciNumber || !firstName || !lastName || !dateOfBirth || !oneciFile) {
       setError('Veuillez remplir tous les champs et télécharger votre CNI pour la vérification ONECI');
@@ -179,26 +191,13 @@ export default function IdentityVerification() {
         if (updateError) throw updateError;
       }
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/oneci-verification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-        },
-        body: JSON.stringify({
-          cniNumber: oneciNumber,
-          firstName,
-          lastName,
-          dateOfBirth,
-          userId: user?.id
-        })
+      const result: any = await invokeFunction('oneci-verification', {
+        cniNumber: oneciNumber,
+        firstName,
+        lastName,
+        dateOfBirth,
+        userId: user?.id,
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erreur de vérification ONECI');
-      }
 
       if (result.verified) {
         setSuccess('✅ CNI vérifiée avec succès par ONECI');
@@ -238,25 +237,12 @@ export default function IdentityVerification() {
 
       if (updateError) throw updateError;
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/cnam-verification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-        },
-        body: JSON.stringify({
-          cnamNumber,
-          firstName,
-          lastName,
-          userId: user?.id
-        })
+      const result: any = await invokeFunction('cnam-verification', {
+        cnamNumber,
+        firstName,
+        lastName,
+        userId: user?.id,
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erreur de vérification CNAM');
-      }
 
       if (result.verified) {
         setSuccess('✅ CNAM vérifié avec succès');
@@ -338,26 +324,13 @@ export default function IdentityVerification() {
 
       if (updateError) throw updateError;
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/smile-id-verification`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
-        },
-        body: JSON.stringify({
-          userId: user?.id,
-          idNumber: oneciNumber,
-          idType: 'NATIONAL_ID',
-          country: 'CI',
-          selfieImage: selfieCapture.split(',')[1]
-        })
+      const result: any = await invokeFunction('smile-id-verification', {
+        userId: user?.id,
+        idNumber: oneciNumber,
+        idType: 'NATIONAL_ID',
+        country: 'CI',
+        selfieImage: selfieCapture.split(',')[1],
       });
-
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || 'Erreur de vérification faciale');
-      }
 
       if (result.verified) {
         setSuccess(`✅ Vérification faciale réussie! Score de confiance: ${result.confidenceScore}%`);
@@ -391,57 +364,41 @@ export default function IdentityVerification() {
   };
 
   if (!user) {
-    return (
-      <>
-        <Header />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <Shield className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Connexion requise
-            </h2>
-            <p className="text-gray-600">
-              Veuillez vous connecter pour accéder à la vérification Mon Toit
-            </p>
-          </div>
-        </div>
-        <Footer />
-      </>
-    );
+    return <Navigate to="/connexion" replace />;
   }
 
   return (
     <>
-      <Header />
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-coral-50 pt-20 pb-12">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <Shield className="w-10 h-10 text-terracotta-600" />
-                <h1 className="text-4xl font-bold text-gradient">Vérification Mon Toit</h1>
-              </div>
-              {verification?.identity_verified && (
-                <AnsutBadge certified={true} size="large" />
-              )}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <Shield className="w-10 h-10 text-terracotta-600" />
+              <h1 className="text-4xl font-bold text-gradient">Vérification Mon Toit</h1>
             </div>
-            <p className="text-gray-600 text-lg">              Complétez la vérification de votre identité en trois étapes simples
-            </p>
+            {verification?.identity_verified && (
+              <AnsutBadge certified={true} size="large" />
+            )}
           </div>
+          <p className="text-gray-600 text-lg">
+            Complétez la vérification de votre identité en trois étapes simples
+          </p>
+        </div>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start space-x-3 mb-6">
-              <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
-              <p className="text-red-700">{error}</p>
-            </div>
-          )}
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-start space-x-3 mb-6">
+            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
 
-          {success && (
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start space-x-3 mb-6">
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
-              <p className="text-green-700">{success}</p>
-            </div>
-          )}
+        {success && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start space-x-3 mb-6">
+            <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+            <p className="text-green-700">{success}</p>
+          </div>
+        )}
 
           {loading ? (
             <div className="text-center py-12">

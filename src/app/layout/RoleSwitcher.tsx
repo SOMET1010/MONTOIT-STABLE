@@ -5,8 +5,8 @@ import { User, Building2, Briefcase, RefreshCw, CheckCircle, Info } from 'lucide
 
 interface AvailableRolesResponse {
   roles: string[];
-  active_role: string;
-  primary_role: string;
+  active_role: string | null;
+  primary_role: string | null;
 }
 
 export default function RoleSwitcher() {
@@ -15,6 +15,7 @@ export default function RoleSwitcher() {
   const [switching, setSwitching] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
+  const allowedRoles = ['locataire', 'proprietaire', 'agence'];
 
   useEffect(() => {
     if (!user || !profile) return;
@@ -25,8 +26,10 @@ export default function RoleSwitcher() {
 
         if (error) throw error;
 
-        const response = data as AvailableRolesResponse;
-        setAvailableRoles(response.roles || [profile.user_type]);
+        const response = (Array.isArray(data) ? data[0] : data) as AvailableRolesResponse | null;
+        const roles = response?.roles || [profile.user_type];
+        const filtered = roles.filter((role) => allowedRoles.includes(role));
+        setAvailableRoles(filtered.length > 0 ? filtered : [profile.user_type]);
       } catch (err) {
         console.error('Erreur chargement rôles:', err);
         setAvailableRoles([profile.user_type]);
@@ -41,6 +44,10 @@ export default function RoleSwitcher() {
   const switchRole = async (newRole: string) => {
     setSwitching(true);
     try {
+      if (!allowedRoles.includes(newRole)) {
+        alert('Ce rôle ne peut pas être activé.');
+        return;
+      }
       const { data, error } = await supabase.rpc('switch_active_role', {
         new_role: newRole
       });
@@ -112,10 +119,22 @@ export default function RoleSwitcher() {
 
   if (loading || !profile) return null;
 
-  // Ne rien afficher si un seul rôle
-  if (availableRoles.length <= 1) return null;
-
   const activeRole = profile.active_role || profile.user_type;
+  const rolesToDisplay = availableRoles.length > 0 ? availableRoles : [activeRole];
+
+  // Affiche simplement le rôle courant si pas d'autres rôles disponibles
+  if (rolesToDisplay.length <= 1) {
+    const Icon = getRoleIcon(activeRole);
+    return (
+      <div className="bg-white rounded-xl shadow-lg border-2 border-gray-100 p-3">
+        <div className="text-xs text-gray-600 font-medium mb-2">Profil actif</div>
+        <div className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 text-gray-800 font-semibold">
+          <Icon className="h-4 w-4" />
+          <span>{getRoleLabel(activeRole)}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative">
@@ -134,7 +153,7 @@ export default function RoleSwitcher() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {availableRoles.map((role) => {
+          {rolesToDisplay.map((role) => {
             const Icon = getRoleIcon(role);
             const isActive = activeRole === role;
 

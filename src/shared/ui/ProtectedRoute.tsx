@@ -34,9 +34,14 @@ export default function ProtectedRoute({
     return <Navigate to={fallbackPath} state={{ from: location }} replace />;
   }
 
+  // Forcer la complétion du profil avant d'accéder aux pages protégées (hors page de choix)
+  if (profile && !profile.profile_setup_completed && location.pathname !== '/choix-profil') {
+    return <Navigate to="/choix-profil" state={{ from: location }} replace />;
+  }
+
   // Vérifier les rôles si des rôles spécifiques sont requis
   if (allowedRoles.length > 0) {
-    const userRole = profile?.active_role;
+    const userRole = profile?.active_role || profile?.user_type;
     
     if (!userRole || !allowedRoles.includes(userRole)) {
       return (

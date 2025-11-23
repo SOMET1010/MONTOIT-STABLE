@@ -33,7 +33,7 @@ export default function ProfileQuickActions() {
     {
       icon: CreditCard,
       label: 'Payer mon loyer',
-      href: '/paiement',
+      href: '/effectuer-paiement',
       color: 'from-coral-400 to-pink-500',
       description: 'Paiement sécurisé Mobile Money'
     },

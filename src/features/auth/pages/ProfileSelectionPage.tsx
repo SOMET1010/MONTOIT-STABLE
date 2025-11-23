@@ -77,6 +77,7 @@ export default function ProfileSelection() {
         .from('profiles')
         .update({
           user_type: selectedType,
+          active_role: selectedType,
           profile_setup_completed: true,
           updated_at: new Date().toISOString()
         })

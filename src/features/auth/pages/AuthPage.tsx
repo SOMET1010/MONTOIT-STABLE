@@ -323,6 +323,33 @@ export default function Auth() {
                     : 'Rejoignez la communauté Mon Toit'
                   }
                 </p>
+                <div className="mt-4">
+                  {isLogin ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsLogin(false);
+                        setIsForgotPassword(false);
+                        navigate('/inscription');
+                      }}
+                      className="text-sm text-terracotta-600 hover:text-terracotta-700 underline font-semibold"
+                    >
+                      Je n'ai pas de compte ? Créer un compte
+                    </button>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsLogin(true);
+                        setIsForgotPassword(false);
+                        navigate('/connexion');
+                      }}
+                      className="text-sm text-terracotta-600 hover:text-terracotta-700 underline font-semibold"
+                    >
+                      J'ai déjà un compte ? Me connecter
+                    </button>
+                  )}
+                </div>
               </div>
 
               {error && (

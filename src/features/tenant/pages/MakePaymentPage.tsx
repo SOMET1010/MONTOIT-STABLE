@@ -1,10 +1,19 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
-import { CreditCard, Smartphone, Building, Coins, AlertCircle, CheckCircle, ArrowLeft, Loader } from 'lucide-react';
+import {
+  CreditCard,
+  Smartphone,
+  Building,
+  Coins,
+  AlertCircle,
+  CheckCircle,
+  ArrowLeft,
+} from 'lucide-react';
 import Header from '@/app/layout/Header';
 import Footer from '@/app/layout/Footer';
 import { apiKeyService } from '@/services/apiKeyService';
+import { notificationService } from '@/services/notificationService';
 
 interface PaymentFormData {
   property_id: string;
@@ -63,7 +72,8 @@ export default function MakePayment() {
     try {
       const { data, error } = await supabase
         .from('lease_contracts')
-        .select(`
+        .select(
+          `
           id,
           property_id,
           monthly_rent,
@@ -72,7 +82,8 @@ export default function MakePayment() {
           owner_id,
           properties!inner(title, address, city, main_image),
           owner:profiles!lease_contracts_owner_id_fkey(full_name)
-        `)
+        `
+        )
         .eq('tenant_id', user?.id)
         .eq('status', 'actif')
         .order('created_at', { ascending: false });
@@ -87,7 +98,7 @@ export default function MakePayment() {
         charges_amount: contract.charges_amount,
         owner_id: contract.owner_id,
         property: contract.properties,
-        owner: contract.owner
+        owner: contract.owner,
       }));
 
       setContracts(formattedContracts);
@@ -158,7 +169,11 @@ export default function MakePayment() {
 
       if (paymentError) throw paymentError;
 
-      if (formData.payment_method === 'mobile_money' && formData.mobile_money_provider && formData.mobile_money_number) {
+      if (
+        formData.payment_method === 'mobile_money' &&
+        formData.mobile_money_provider &&
+        formData.mobile_money_number
+      ) {
         const mobileMoneyResult = await apiKeyService.processMobileMoneyPayment(
           formData.mobile_money_provider,
           formData.mobile_money_number,
@@ -167,10 +182,7 @@ export default function MakePayment() {
         );
 
         if (!mobileMoneyResult.success) {
-          await supabase
-            .from('payments')
-            .update({ status: 'echoue' })
-            .eq('id', payment.id);
+          await supabase.from('payments').update({ status: 'echoue' }).eq('id', payment.id);
 
           throw new Error(mobileMoneyResult.error || 'Échec du paiement Mobile Money');
         }
@@ -191,7 +203,7 @@ export default function MakePayment() {
           .from('payments')
           .update({
             status: 'en_cours',
-            transaction_reference: mobileMoneyResult.transactionId
+            transaction_reference: mobileMoneyResult.transactionId,
           })
           .eq('id', payment.id);
 
@@ -200,17 +212,28 @@ export default function MakePayment() {
           `Paiement de ${formData.amount} FCFA initié. Ref: ${payment.id.substring(0, 8)}. Validez sur votre téléphone.`
         );
 
-        await apiKeyService.sendEmail(
-          user.email!,
-          'payment-confirmation',
-          {
-            amount: formData.amount,
-            reference: payment.id.substring(0, 8),
-            type: formData.payment_type,
-            date: new Date().toLocaleDateString('fr-FR'),
-            method: `${formData.mobile_money_provider} - ${formData.mobile_money_number}`
-          }
-        );
+        await apiKeyService.sendEmail(user.email!, 'payment-confirmation', {
+          amount: formData.amount,
+          reference: payment.id.substring(0, 8),
+          type: formData.payment_type,
+          date: new Date().toLocaleDateString('fr-FR'),
+          method: `${formData.mobile_money_provider} - ${formData.mobile_money_number}`,
+        });
+      }
+
+      // Notifier le propriétaire qu'un paiement a été initié
+      try {
+        await notificationService.createNotification({
+          userId: formData.receiver_id,
+          type: 'payment_pending',
+          title: 'Nouveau paiement en attente',
+          message: `Un paiement de ${formData.amount.toLocaleString()} FCFA a été initié pour votre bien.`,
+          actionUrl: '/mes-contrats',
+          actionLabel: 'Voir le détail',
+          priority: 'normal',
+        });
+      } catch (notifyErr) {
+        console.warn('Notification owner failed:', notifyErr);
       }
 
       setSuccess(true);
@@ -228,26 +251,19 @@ export default function MakePayment() {
   if (!user) {
     return (
       <>
-        <Header />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
             <Coins className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">
-              Connexion requise
-            </h2>
-            <p className="text-gray-600">
-              Veuillez vous connecter pour effectuer un paiement
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Connexion requise</h2>
+            <p className="text-gray-600">Veuillez vous connecter pour effectuer un paiement</p>
           </div>
         </div>
-        <Footer />
       </>
     );
   }
 
   return (
     <>
-      <Header />
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-coral-50 pt-20 pb-12">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <button
@@ -260,7 +276,9 @@ export default function MakePayment() {
 
           <div className="mb-8">
             <h1 className="text-4xl font-bold text-gradient mb-2">Effectuer un paiement</h1>
-            <p className="text-gray-600 text-lg">Payez votre loyer et vos charges en toute sécurité</p>
+            <p className="text-gray-600 text-lg">
+              Payez votre loyer et vos charges en toute sécurité
+            </p>
           </div>
 
           {success ? (
@@ -272,13 +290,17 @@ export default function MakePayment() {
               <p className="text-gray-600 mb-4">
                 Votre paiement est en cours de traitement. Vous recevrez une confirmation par email.
               </p>
-              <p className="text-sm text-gray-500">Redirection vers l'historique des paiements...</p>
+              <p className="text-sm text-gray-500">
+                Redirection vers l'historique des paiements...
+              </p>
             </div>
           ) : (
             <>
               {!selectedContract ? (
                 <div className="bg-white rounded-2xl shadow-lg p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Sélectionnez une propriété</h2>
+                  <h2 className="text-2xl font-bold text-gray-900 mb-6">
+                    Sélectionnez une propriété
+                  </h2>
 
                   {loading ? (
                     <div className="text-center py-12">
@@ -304,7 +326,9 @@ export default function MakePayment() {
                         >
                           <div className="flex items-start space-x-4">
                             <img
-                              src={contract.property.main_image || 'https://via.placeholder.com/100'}
+                              src={
+                                contract.property.main_image || 'https://via.placeholder.com/100'
+                              }
                               alt={contract.property.title}
                               className="w-20 h-20 rounded-lg object-cover"
                             />
@@ -345,14 +369,22 @@ export default function MakePayment() {
                     <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
                       <div className="flex items-start space-x-3">
                         <img
-                          src={selectedContract.property.main_image || 'https://via.placeholder.com/80'}
+                          src={
+                            selectedContract.property.main_image || 'https://via.placeholder.com/80'
+                          }
                           alt={selectedContract.property.title}
                           className="w-16 h-16 rounded-lg object-cover"
                         />
                         <div>
-                          <h3 className="font-bold text-gray-900">{selectedContract.property.title}</h3>
-                          <p className="text-sm text-gray-600">{selectedContract.property.address}</p>
-                          <p className="text-sm text-gray-500">À: {selectedContract.owner.full_name}</p>
+                          <h3 className="font-bold text-gray-900">
+                            {selectedContract.property.title}
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {selectedContract.property.address}
+                          </p>
+                          <p className="text-sm text-gray-500">
+                            À: {selectedContract.owner.full_name}
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -364,10 +396,22 @@ export default function MakePayment() {
                         </label>
                         <div className="grid grid-cols-2 gap-4">
                           {[
-                            { value: 'loyer', label: 'Loyer mensuel', amount: selectedContract.monthly_rent },
-                            { value: 'depot_garantie', label: 'Dépôt de garantie', amount: selectedContract.deposit_amount },
-                            { value: 'charges', label: 'Charges', amount: selectedContract.charges_amount },
-                            { value: 'frais_agence', label: 'Frais d\'agence', amount: 0 },
+                            {
+                              value: 'loyer',
+                              label: 'Loyer mensuel',
+                              amount: selectedContract.monthly_rent,
+                            },
+                            {
+                              value: 'depot_garantie',
+                              label: 'Dépôt de garantie',
+                              amount: selectedContract.deposit_amount,
+                            },
+                            {
+                              value: 'charges',
+                              label: 'Charges',
+                              amount: selectedContract.charges_amount,
+                            },
+                            { value: 'frais_agence', label: "Frais d'agence", amount: 0 },
                           ].map((type) => (
                             <button
                               key={type.value}
@@ -397,7 +441,9 @@ export default function MakePayment() {
                         <input
                           type="number"
                           value={formData.amount}
-                          onChange={(e) => setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, amount: parseFloat(e.target.value) || 0 })
+                          }
                           className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 font-bold text-lg"
                           required
                         />
@@ -410,7 +456,9 @@ export default function MakePayment() {
                         <div className="grid grid-cols-2 gap-4">
                           <button
                             type="button"
-                            onClick={() => setFormData({ ...formData, payment_method: 'mobile_money' })}
+                            onClick={() =>
+                              setFormData({ ...formData, payment_method: 'mobile_money' })
+                            }
                             className={`p-4 border-2 rounded-xl flex items-center space-x-3 transition-all ${
                               formData.payment_method === 'mobile_money'
                                 ? 'border-terracotta-500 bg-terracotta-50'
@@ -422,7 +470,9 @@ export default function MakePayment() {
                           </button>
                           <button
                             type="button"
-                            onClick={() => setFormData({ ...formData, payment_method: 'carte_bancaire' })}
+                            onClick={() =>
+                              setFormData({ ...formData, payment_method: 'carte_bancaire' })
+                            }
                             className={`p-4 border-2 rounded-xl flex items-center space-x-3 transition-all ${
                               formData.payment_method === 'carte_bancaire'
                                 ? 'border-terracotta-500 bg-terracotta-50'
@@ -443,7 +493,12 @@ export default function MakePayment() {
                             </label>
                             <select
                               value={formData.mobile_money_provider}
-                              onChange={(e) => setFormData({ ...formData, mobile_money_provider: e.target.value as any })}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  mobile_money_provider: e.target.value as any,
+                                })
+                              }
                               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500"
                               required
                             >
@@ -462,12 +517,15 @@ export default function MakePayment() {
                               type="tel"
                               placeholder="+225 XX XX XX XX XX"
                               value={formData.mobile_money_number}
-                              onChange={(e) => setFormData({ ...formData, mobile_money_number: e.target.value })}
+                              onChange={(e) =>
+                                setFormData({ ...formData, mobile_money_number: e.target.value })
+                              }
                               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500"
                               required
                             />
                             <p className="text-xs text-gray-500 mt-2">
-                              Vous recevrez une notification sur votre téléphone pour confirmer le paiement
+                              Vous recevrez une notification sur votre téléphone pour confirmer le
+                              paiement
                             </p>
                           </div>
                         </div>
@@ -506,7 +564,6 @@ export default function MakePayment() {
           )}
         </div>
       </div>
-      <Footer />
     </>
   );
 }

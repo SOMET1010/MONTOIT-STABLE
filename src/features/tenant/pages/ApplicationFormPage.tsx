@@ -200,7 +200,7 @@ export default function ApplicationForm() {
                 <div className="flex-1">
                   <p className="font-bold text-red-900 text-lg mb-2">🚫 Vérification d'identité OBLIGATOIRE</p>
                   <p className="text-red-800 mb-3 font-semibold">
-                    Vous devez compléter la vérification de votre identité avant de postuler. Les candidatures non vérifiées ne sont pas acceptées par les propriétaires.
+                    Vous devez compléter la vérification ONECI et la vérification faciale avant de postuler. Les candidatures non vérifiées ne sont pas acceptées par les propriétaires.
                   </p>
                   <p className="text-red-700 text-sm mb-4">
                     <strong>Étapes de vérification requises:</strong>
@@ -208,13 +208,13 @@ export default function ApplicationForm() {
                   <ul className="text-red-700 text-sm space-y-1 mb-4 ml-4 list-disc">
                     <li>✓ Vérification CNI via ONECI (obligatoire)</li>
                     <li>✓ Reconnaissance faciale biométrique (obligatoire)</li>
-                    <li>✓ Validation de vos informations personnelles</li>
+                    <li>• Vérification CNAM (optionnelle)</li>
                   </ul>
                   <a
-                    href="/profil"
+                    href="/ansut-verification"
                     className="inline-block px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-bold shadow-lg"
                   >
-                    Compléter ma vérification maintenant →
+                    Compléter ma vérification ONECI →
                   </a>
                 </div>
               </div>
@@ -294,13 +294,13 @@ export default function ApplicationForm() {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-700 font-medium">Vérification CNAM</span>
+                  <span className="text-gray-700 font-medium">Vérification CNAM (optionnelle)</span>
                   <span className={`font-bold px-4 py-2 rounded-full ${
                     profile?.cnam_verified
                       ? 'bg-gradient-to-r from-olive-100 to-green-100 text-olive-800 border border-olive-300'
                       : 'bg-gray-100 text-gray-500 border border-gray-300'
                   }`}>
-                    {profile?.cnam_verified ? '✓ Vérifié' : '✗ Non vérifié'}
+                    {profile?.cnam_verified ? '✓ Vérifié' : 'Optionnel'}
                   </span>
                 </div>
               </div>
