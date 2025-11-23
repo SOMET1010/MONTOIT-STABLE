@@ -263,10 +263,10 @@
    FOOTER PREMIUM
    ======================================== */
 
-/* Fond Spectaculaire */
+/* Fond Spectaculaire - Harmonisé Terracotta */
 .footer-premium {
   position: relative;
-  background: linear-gradient(180deg, #111827 0%, #000000 100%);
+  background: linear-gradient(180deg, #7c2d12 0%, #451a03 100%);
   overflow: hidden;
 }
 
