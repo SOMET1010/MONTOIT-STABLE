@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
+import { PaymentRepository } from '@/api/repositories/paymentRepository';
+import { logger } from '@/shared/lib/logger';
 import type {
   Payment,
   PaymentRequest,
@@ -9,6 +11,8 @@ import type {
   PaymentCalculation,
   PaymentError,
 } from '@/shared/types/payment.types';
+
+const paymentRepo = new PaymentRepository();
 
 interface PaymentState {
   // Current payment flow
@@ -114,28 +118,16 @@ export const usePaymentStore = create<PaymentState>()(
           set({ paymentInProgress: true, paymentError: null });
 
           try {
-            // TODO: Call payment repository to initiate payment
-            // For now, simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            logger.info('Initiating payment', { provider: request.provider, amount: request.amount });
 
-            const response: PaymentResponse = {
-              paymentId: crypto.randomUUID(),
-              transactionReference: `TXN${Date.now()}`,
-              status: 'initiated',
-              amount: request.amount,
-              fees:
-                (request.amount * PROVIDER_FEES[request.provider]) / 100,
-              totalAmount:
-                request.amount +
-                (request.amount * PROVIDER_FEES[request.provider]) / 100,
-              provider: request.provider,
-              message:
-                'Paiement initié. Veuillez valider sur votre téléphone.',
-            };
+            const response = await paymentRepo.initiatePayment(request);
 
             set({ currentPayment: response, paymentInProgress: false });
+            logger.info('Payment initiated successfully', { paymentId: response.paymentId });
             return response;
           } catch (error) {
+            logger.error('Payment initiation failed', error);
+
             const paymentError: PaymentError = {
               code: 'UNKNOWN_ERROR',
               message:
@@ -153,10 +145,9 @@ export const usePaymentStore = create<PaymentState>()(
         // Check payment status
         checkPaymentStatus: async (paymentId: string) => {
           try {
-            // TODO: Call payment repository to check status
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            logger.info('Checking payment status', { paymentId });
 
-            const status: PaymentStatus = 'processing';
+            const status = await paymentRepo.checkPaymentStatus(paymentId);
 
             if (get().currentPayment?.paymentId === paymentId) {
               set({
@@ -169,7 +160,7 @@ export const usePaymentStore = create<PaymentState>()(
 
             return status;
           } catch (error) {
-            console.error('Error checking payment status:', error);
+            logger.error('Error checking payment status', error, { paymentId });
             return 'failed';
           }
         },
@@ -177,8 +168,9 @@ export const usePaymentStore = create<PaymentState>()(
         // Cancel payment
         cancelPayment: async (paymentId: string) => {
           try {
-            // TODO: Call payment repository to cancel
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            logger.info('Cancelling payment', { paymentId });
+
+            await paymentRepo.cancelPayment(paymentId);
 
             if (get().currentPayment?.paymentId === paymentId) {
               set({
@@ -189,8 +181,10 @@ export const usePaymentStore = create<PaymentState>()(
                 paymentInProgress: false,
               });
             }
+
+            logger.info('Payment cancelled successfully', { paymentId });
           } catch (error) {
-            console.error('Error cancelling payment:', error);
+            logger.error('Error cancelling payment', error, { paymentId });
             throw error;
           }
         },
@@ -200,14 +194,14 @@ export const usePaymentStore = create<PaymentState>()(
           set({ paymentsFetching: true });
 
           try {
-            // TODO: Call payment repository to fetch history
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            logger.info('Fetching payment history', { tenantId });
 
-            const payments: Payment[] = [];
+            const payments = await paymentRepo.getPaymentsByTenant(tenantId);
 
             set({ payments, paymentsFetching: false });
+            logger.info('Payment history fetched', { count: payments.length });
           } catch (error) {
-            console.error('Error fetching payment history:', error);
+            logger.error('Error fetching payment history', error, { tenantId });
             set({ paymentsFetching: false });
           }
         },
