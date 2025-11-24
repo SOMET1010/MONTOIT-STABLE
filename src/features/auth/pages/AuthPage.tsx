@@ -39,6 +39,7 @@ export default function Auth() {
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, message: '', color: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
+  const [resetType, setResetType] = useState<'email' | 'phone'>('email');
 
   const { signIn, signUp, signInWithProvider, resetPassword } = useAuth();
 
@@ -80,28 +81,45 @@ export default function Auth() {
 
     try {
       if (isForgotPassword) {
-        if (!email) {
-          setError('Veuillez entrer votre adresse email');
-          setLoading(false);
-          return;
+        // Validation selon le type de réinitialisation
+        if (resetType === 'email') {
+          if (!email || !validateEmail(email)) {
+            setError('Adresse email invalide. Veuillez entrer une adresse email valide.');
+            setLoading(false);
+            return;
+          }
+        } else {
+          // Réinitialisation par téléphone
+          if (!phone || !validatePhone(phone)) {
+            setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
+            setLoading(false);
+            return;
+          }
         }
 
         await new Promise((resolve) => setTimeout(resolve, 800));
 
-        const { error } = await resetPassword(email);
+        // Pour la réinitialisation par téléphone, utiliser un email formaté
+        const resetIdentifier = resetType === 'email' ? email : `${phone}@phone.montoit.local`;
+
+        const { error } = await resetPassword(resetIdentifier);
         if (error) {
           if (error.message?.includes('Aucun compte')) {
+            const methodText = resetType === 'email' ? 'cette adresse email' : 'ce numéro de téléphone';
             setError(
-              'Aucun compte associé à cette adresse email. Veuillez vérifier votre email ou créer un compte.'
+              `Aucun compte associé à ${methodText}. Veuillez vérifier vos informations ou créer un compte.`
             );
           } else {
             setError(error.message || "Erreur lors de l'envoi du lien de réinitialisation");
           }
           return;
         }
-        setSuccess(
-          'Email de réinitialisation envoyé ! Vérifiez votre boîte de réception (et vos spams).'
-        );
+
+        const successMessage = resetType === 'email'
+          ? 'Email de réinitialisation envoyé ! Vérifiez votre boîte de réception (et vos spams).'
+          : 'Code de réinitialisation envoyé par SMS ! Vérifiez vos messages.';
+
+        setSuccess(successMessage);
         setTimeout(() => {
           setIsForgotPassword(false);
           setIsLogin(true);
@@ -598,7 +616,7 @@ export default function Auth() {
                 )}
 
                 {/* Champs pour connexion */}
-                {isLogin && (
+                {isLogin && !isForgotPassword && (
                   <>
                     {/* Sélecteur de type de connexion */}
                     <div className="animate-slide-down">
@@ -703,28 +721,113 @@ export default function Auth() {
                   </>
                 )}
 
-                {/* Email pour mot de passe oublié */}
+                {/* Champs pour réinitialisation de mot de passe */}
                 {isForgotPassword && (
-                  <div className="animate-slide-down">
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                        placeholder="votre@email.com"
-                        autoComplete="email"
-                      />
+                  <>
+                    {/* Sélecteur de type de réinitialisation */}
+                    <div className="animate-slide-down">
+                      <label className="block text-sm font-bold text-gray-700 mb-3">
+                        Méthode de réinitialisation
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setResetType('email')}
+                          className={`p-4 rounded-2xl border-2 transition-all ${
+                            resetType === 'email'
+                              ? 'border-terracotta-500 bg-terracotta-50'
+                              : 'border-gray-200 bg-white hover:border-terracotta-300'
+                          }`}
+                        >
+                          <Mail
+                            className={`h-6 w-6 mx-auto mb-2 ${
+                              resetType === 'email' ? 'text-terracotta-600' : 'text-gray-400'
+                            }`}
+                          />
+                          <p
+                            className={`text-xs font-semibold ${
+                              resetType === 'email' ? 'text-terracotta-700' : 'text-gray-600'
+                            }`}
+                          >
+                            Email
+                          </p>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setResetType('phone')}
+                          className={`p-4 rounded-2xl border-2 transition-all ${
+                            resetType === 'phone'
+                              ? 'border-terracotta-500 bg-terracotta-50'
+                              : 'border-gray-200 bg-white hover:border-terracotta-300'
+                          }`}
+                        >
+                          <Phone
+                            className={`h-6 w-6 mx-auto mb-2 ${
+                              resetType === 'phone' ? 'text-terracotta-600' : 'text-gray-400'
+                            }`}
+                          />
+                          <p
+                            className={`text-xs font-semibold ${
+                              resetType === 'phone' ? 'text-terracotta-700' : 'text-gray-600'
+                            }`}
+                          >
+                            SMS
+                          </p>
+                        </button>
+                      </div>
                     </div>
-                    <p className="mt-1 text-xs text-amber-600 font-medium">
-                      Le lien de réinitialisation sera envoyé à cette adresse
-                    </p>
-                  </div>
+
+                    {/* Champ email - seulement si réinitialisation par email */}
+                    {resetType === 'email' && (
+                      <div className="animate-slide-down" style={{ animationDelay: '0.1s' }}>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                          Email <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                          <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                            placeholder="votre@email.com"
+                            autoComplete="email"
+                          />
+                        </div>
+                        <p className="mt-1 text-xs text-amber-600 font-medium">
+                          Le lien de réinitialisation sera envoyé à cette adresse email
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Champ téléphone - seulement si réinitialisation par téléphone */}
+                    {resetType === 'phone' && (
+                      <div className="animate-slide-down" style={{ animationDelay: '0.1s' }}>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                          Numéro de téléphone <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                          <input
+                            type="tel"
+                            required
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                            placeholder="+225 XX XX XX XX XX"
+                            pattern="[+]?[0-9\s]+"
+                            title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
+                            autoComplete="tel"
+                          />
+                        </div>
+                        <p className="mt-1 text-xs text-amber-600 font-medium">
+                          Un code de réinitialisation sera envoyé par SMS à ce numéro
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {!isForgotPassword && (
