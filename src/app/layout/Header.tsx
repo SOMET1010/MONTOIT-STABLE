@@ -20,7 +20,9 @@ import {
   Shield,
   Activity,
   Zap,
-
+  Sun,
+  Moon,
+  Monitor,
   FileCheck,
 } from 'lucide-react';
 import { useAuth } from '@/app/providers/AuthProvider';
@@ -29,6 +31,7 @@ import LanguageSelector from '@/shared/ui/LanguageSelector';
 import RoleSwitcher from './RoleSwitcher';
 import { useState, useEffect } from 'react';
 import { supabase } from '@/services/supabase/client';
+import { useTheme } from '@/app/providers/ThemeProvider';
 
 export default function Header() {
   const { user, profile, signOut } = useAuth();
@@ -40,6 +43,7 @@ export default function Header() {
   });
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const { theme, resolvedTheme, setTheme } = useTheme();
 
   const closeAllMenus = () => {
     setShowUserMenu(false);
@@ -49,6 +53,11 @@ export default function Header() {
     profile?.active_role === 'agence' ||
     profile?.user_type === 'proprietaire' ||
     profile?.user_type === 'agence';
+  const cycleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
+  };
 
   useEffect(() => {
     if (user && profile) {
@@ -78,7 +87,7 @@ export default function Header() {
   };
 
   return (
-    <header className="bg-white/80 backdrop-blur-xl shadow-lg border-b-2 border-terracotta-100 sticky top-0 z-50">
+    <header className="bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl shadow-lg dark:shadow-gray-900/50 border-b-2 border-terracotta-100 dark:border-terracotta-900 sticky top-0 z-50">
       <div className="w-full max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <a href="/" className="flex items-center space-x-3 group flex-shrink-0">
@@ -93,7 +102,7 @@ export default function Header() {
               <span className="text-xl font-extrabold tracking-tight" style={{ color: '#2563eb' }}>
                 MON TOIT
               </span>
-              <span className="text-xs text-gray-500 font-medium">Plateforme Immobilière</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Plateforme Immobilière</span>
             </div>
           </a>
 
@@ -103,14 +112,14 @@ export default function Header() {
           >
             <a
               href="/"
-              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gradient-to-r hover:from-terracotta-50 hover:to-coral-50 hover:text-terracotta-700 transition-all duration-200 font-semibold whitespace-nowrap"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-terracotta-50 hover:to-coral-50 dark:hover:from-terracotta-900/30 dark:hover:to-coral-900/30 hover:text-terracotta-700 dark:hover:text-terracotta-400 transition-all duration-200 font-semibold whitespace-nowrap"
             >
               <Home className="h-4 w-4" />
               <span>Accueil</span>
             </a>
             <a
               href="/recherche"
-              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-cyan-100 hover:text-cyan-700 transition-all duration-200 font-semibold whitespace-nowrap"
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-cyan-50 hover:to-cyan-100 dark:hover:from-cyan-900/30 dark:hover:to-cyan-900/30 hover:text-cyan-700 dark:hover:text-cyan-400 transition-all duration-200 font-semibold whitespace-nowrap"
             >
               <Search className="h-4 w-4" />
               <span>Rechercher</span>
@@ -119,7 +128,7 @@ export default function Header() {
               <>
                 <a
                   href="/dashboard/proprietaire"
-                  className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-gradient-to-r hover:from-terracotta-50 hover:to-coral-50 hover:text-terracotta-700 transition-all duration-200 font-semibold whitespace-nowrap"
+                  className="flex items-center space-x-1.5 px-3 py-2 rounded-xl text-sm text-gray-700 dark:text-gray-200 hover:bg-gradient-to-r hover:from-terracotta-50 hover:to-coral-50 dark:hover:from-terracotta-900/30 dark:hover:to-coral-900/30 hover:text-terracotta-700 dark:hover:text-terracotta-400 transition-all duration-200 font-semibold whitespace-nowrap"
                 >
                   <Home className="h-4 w-4" />
                   <span>Tableau de bord</span>
@@ -175,6 +184,19 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-2 flex-shrink-0">
+            <button
+              onClick={cycleTheme}
+              className="p-2 rounded-lg border border-gray-200 hover:border-terracotta-300 hover:bg-terracotta-50 transition-all flex items-center space-x-1 text-gray-700"
+              title="Changer de thème"
+            >
+              {theme === 'system' ? (
+                <Monitor className="h-5 w-5" />
+              ) : resolvedTheme === 'dark' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
             {user ? (
               <>
                 <div className="relative hidden md:block">
@@ -301,6 +323,44 @@ export default function Header() {
                         </a>
                       )}
                       <div className="px-4 py-3 border-t border-b border-gray-100">
+                        <p className="text-xs uppercase font-semibold text-gray-500 mb-2">Apparence</p>
+                        <div className="flex items-center space-x-2">
+                          <button
+                            onClick={() => setTheme('light')}
+                            className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg border text-sm font-semibold ${
+                              resolvedTheme === 'light'
+                                ? 'border-terracotta-300 text-terracotta-700 bg-terracotta-50'
+                                : 'border-gray-200 text-gray-700 hover:border-terracotta-200'
+                            }`}
+                          >
+                            <Sun className="h-4 w-4 mr-1" />
+                            Clair
+                          </button>
+                          <button
+                            onClick={() => setTheme('dark')}
+                            className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg border text-sm font-semibold ${
+                              resolvedTheme === 'dark'
+                                ? 'border-terracotta-300 text-terracotta-700 bg-terracotta-50'
+                                : 'border-gray-200 text-gray-700 hover:border-terracotta-200'
+                            }`}
+                          >
+                            <Moon className="h-4 w-4 mr-1" />
+                            Sombre
+                          </button>
+                          <button
+                            onClick={() => setTheme('system')}
+                            className={`flex-1 flex items-center justify-center px-3 py-2 rounded-lg border text-sm font-semibold ${
+                              theme === 'system'
+                                ? 'border-terracotta-300 text-terracotta-700 bg-terracotta-50'
+                                : 'border-gray-200 text-gray-700 hover:border-terracotta-200'
+                            }`}
+                          >
+                            <Monitor className="h-4 w-4 mr-1" />
+                            Système
+                          </button>
+                        </div>
+                      </div>
+                      <div className="px-4 py-3 border-t border-b border-gray-100">
                         <p className="text-xs uppercase font-semibold text-gray-500 mb-2">Langue</p>
                         <LanguageSelector />
                       </div>
@@ -318,11 +378,24 @@ export default function Header() {
                   )}
                 </div>
                 <button
-                  onClick={() => setShowMobileMenu(!showMobileMenu)}
-                  className="md:hidden p-2 rounded-lg hover:bg-gray-100"
-                >
-                  {showMobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                </button>
+                    onClick={() => setShowMobileMenu(!showMobileMenu)}
+                    className="md:hidden p-2 rounded-lg hover:bg-gray-100"
+                  >
+                    {showMobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                  </button>
+                  <button
+                    onClick={cycleTheme}
+                    className="md:hidden p-2 rounded-lg hover:bg-gray-100 border border-gray-200"
+                    aria-label="Changer de thème"
+                  >
+                    {theme === 'system' ? (
+                      <Monitor className="h-5 w-5" />
+                    ) : resolvedTheme === 'dark' ? (
+                      <Moon className="h-5 w-5" />
+                    ) : (
+                      <Sun className="h-5 w-5" />
+                    )}
+                  </button>
               </>
             ) : (
               <>

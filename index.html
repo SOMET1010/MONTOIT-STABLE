@@ -12,23 +12,39 @@
     <meta name="referrer" content="strict-origin-when-cross-origin" />
 
     <!-- SEO Meta Tags -->
-    <meta name="description" content="Mon Toit - Plateforme de location immobilière certifiée ANSUT en Côte d'Ivoire. Trouvez votre logement idéal en toute sécurité." />
+    <meta name="description" content="MON TOIT - Plateforme de location immobilière certifiée ANSUT en Côte d'Ivoire. Trouvez votre logement idéal en toute sécurité." />
     <meta name="keywords" content="location, immobilier, Côte d'Ivoire, ANSUT, logement, appartement, maison" />
     <meta name="author" content="ANSUT - Agence Nationale du Service Universel des Télécommunications" />
 
     <!-- Open Graph / Social Media -->
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Mon Toit - Plateforme de Location Immobilière" />
+    <meta property="og:title" content="MON TOIT - Plateforme de Location Immobilière" />
     <meta property="og:description" content="Trouvez votre logement idéal en Côte d'Ivoire. Plateforme sécurisée et certifiée ANSUT." />
     <meta property="og:image" content="/logo-montoit.png" />
-    <meta property="og:site_name" content="Mon Toit" />
+    <meta property="og:site_name" content="MON TOIT" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Mon Toit - Plateforme de Location Immobilière" />
+    <meta name="twitter:title" content="MON TOIT - Plateforme de Location Immobilière" />
     <meta name="twitter:description" content="Trouvez votre logement idéal en Côte d'Ivoire." />
 
-    <title>Mon Toit - Plateforme de Location Immobilière en Côte d'Ivoire</title>
+    <title>MON TOIT - Plateforme de Location Immobilière en Côte d'Ivoire</title>
+
+    <!-- Script pour éviter le flash de thème au chargement -->
+    <script>
+      (function() {
+        const STORAGE_KEY = 'mt-theme';
+        const theme = localStorage.getItem(STORAGE_KEY) || 'system';
+        const resolvedTheme = theme === 'system'
+          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+          : theme;
+
+        if (resolvedTheme === 'dark') {
+          document.documentElement.classList.add('dark', 'dark-mode');
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

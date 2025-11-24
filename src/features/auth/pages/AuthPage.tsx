@@ -2,7 +2,26 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
-import { Building2, Mail, Lock, User, UserCircle, Sparkles, Shield, CheckCircle, Chrome, Facebook, KeyRound, ArrowLeft, Phone, AlertTriangle, Info, MessageCircle } from 'lucide-react';
+import {
+  Building2,
+  Mail,
+  Lock,
+  User,
+  UserCircle,
+  Sparkles,
+  Shield,
+  CheckCircle,
+  Chrome,
+  Facebook,
+  KeyRound,
+  ArrowLeft,
+  Phone,
+  AlertTriangle,
+  Info,
+  MessageCircle,
+  Eye,
+  EyeOff,
+} from 'lucide-react';
 
 export default function Auth() {
   const navigate = useNavigate();
@@ -18,6 +37,8 @@ export default function Auth() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, message: '', color: '' });
+  const [showPassword, setShowPassword] = useState(false);
+  const [loginType, setLoginType] = useState<'email' | 'phone'>('email');
 
   const { signIn, signUp, signInWithProvider, resetPassword } = useAuth();
 
@@ -28,7 +49,9 @@ export default function Auth() {
     const hasNumber = /[0-9]/.test(pwd);
     const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(pwd);
 
-    const score = [hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecial].filter(Boolean).length;
+    const score = [hasMinLength, hasUpperCase, hasLowerCase, hasNumber, hasSpecial].filter(
+      Boolean
+    ).length;
 
     if (score <= 2) {
       return { score, message: 'Mot de passe faible', color: 'text-red-600', valid: false };
@@ -63,25 +86,48 @@ export default function Auth() {
           return;
         }
 
-        await new Promise(resolve => setTimeout(resolve, 800));
+        await new Promise((resolve) => setTimeout(resolve, 800));
 
         const { error } = await resetPassword(email);
         if (error) {
           if (error.message?.includes('Aucun compte')) {
-            setError('Aucun compte associé à cette adresse email. Veuillez vérifier votre email ou créer un compte.');
+            setError(
+              'Aucun compte associé à cette adresse email. Veuillez vérifier votre email ou créer un compte.'
+            );
           } else {
-            setError(error.message || 'Erreur lors de l\'envoi du lien de réinitialisation');
+            setError(error.message || "Erreur lors de l'envoi du lien de réinitialisation");
           }
           return;
         }
-        setSuccess('Email de réinitialisation envoyé ! Vérifiez votre boîte de réception (et vos spams).');
+        setSuccess(
+          'Email de réinitialisation envoyé ! Vérifiez votre boîte de réception (et vos spams).'
+        );
         setTimeout(() => {
           setIsForgotPassword(false);
           setIsLogin(true);
           setSuccess('');
         }, 5000);
       } else if (isLogin) {
-        const { error } = await signIn(email, password);
+        // Validation selon le type de connexion
+        if (loginType === 'email') {
+          if (!email || !validateEmail(email)) {
+            setError('Adresse email invalide. Veuillez entrer une adresse email valide.');
+            setLoading(false);
+            return;
+          }
+        } else {
+          // Connexion par téléphone
+          if (!phone || !validatePhone(phone)) {
+            setError('Numéro de téléphone invalide. Format: +225 XX XX XX XX XX');
+            setLoading(false);
+            return;
+          }
+        }
+
+        // Pour la connexion par téléphone, utiliser un email formaté
+        const loginIdentifier = loginType === 'email' ? email : `${phone}@phone.montoit.local`;
+
+        const { error } = await signIn(loginIdentifier, password);
         if (error) throw error;
 
         const pendingAction = sessionStorage.getItem('pendingAction');
@@ -119,33 +165,40 @@ export default function Auth() {
 
         const pwdValidation = validatePassword(password);
         if (!pwdValidation.valid) {
-          setError('Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.');
+          setError(
+            'Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.'
+          );
           return;
         }
 
         const { error } = await signUp(
-          verificationType === 'email' ? email : `${verificationType.toLowerCase()}-${phone}@placeholder.local`,
+          verificationType === 'email'
+            ? email
+            : `${verificationType.toLowerCase()}-${phone}@placeholder.local`,
           password,
           {
             full_name: fullName,
             phone: phone || '',
-            user_type: 'locataire'
+            user_type: 'locataire',
           }
         );
         if (error) {
           console.error('Signup error:', error);
-          if (error.message?.includes('already registered') || error.message?.includes('User already registered')) {
+          if (
+            error.message?.includes('already registered') ||
+            error.message?.includes('User already registered')
+          ) {
             setError('Cet email est déjà utilisé. Connectez-vous.');
           } else if (error.message?.includes('Database error')) {
             setError('Erreur de base de données. Veuillez réessayer ou contacter le support.');
           } else {
-            setError(error.message || 'Erreur lors de l\'inscription');
+            setError(error.message || "Erreur lors de l'inscription");
           }
           return;
         }
         // Générer et stocker le code de vérification
         const finalVerificationType = verificationType;
-        const verificationTarget = (verificationType === 'email') ? email : phone;
+        const verificationTarget = verificationType === 'email' ? email : phone;
 
         try {
           // Générer un code de vérification à 6 chiffres
@@ -154,15 +207,13 @@ export default function Auth() {
           // Stocker le code dans la base de données
           const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString(); // 10 minutes
 
-          const { error: storageError } = await supabase
-            .from('verification_codes')
-            .insert({
-              identifier: verificationTarget || 'unknown',
-              code: verificationCode,
-              type: finalVerificationType,
-              expires_at: expiresAt,
-              created_at: new Date().toISOString(),
-            });
+          const { error: storageError } = await supabase.from('verification_codes').insert({
+            identifier: verificationTarget || 'unknown',
+            code: verificationCode,
+            type: finalVerificationType,
+            expires_at: expiresAt,
+            created_at: new Date().toISOString(),
+          });
 
           if (storageError) {
             console.error('Error storing verification code:', storageError);
@@ -171,21 +222,31 @@ export default function Auth() {
           }
 
           // En développement, afficher le code dans la console pour faciliter les tests
-          console.log(`🔐 CODE DE VÉRIFICATION ${finalVerificationType.toUpperCase()}: ${verificationCode}`);
+          console.log(
+            `🔐 CODE DE VÉRIFICATION ${finalVerificationType.toUpperCase()}: ${verificationCode}`
+          );
           console.log(`Destinataire: ${verificationTarget}`);
           console.log(`Expire dans: 10 minutes`);
 
-          const methodName = finalVerificationType === 'email' ? 'email' : finalVerificationType === 'whatsapp' ? 'WhatsApp' : 'SMS';
+          const methodName =
+            finalVerificationType === 'email'
+              ? 'email'
+              : finalVerificationType === 'whatsapp'
+                ? 'WhatsApp'
+                : 'SMS';
           setSuccess(`Inscription réussie ! Code de vérification généré`);
 
           // En développement, inclure le code dans l'état pour faciliter les tests
           const state = {
             email: finalVerificationType === 'email' ? email : undefined,
-            phone: (finalVerificationType === 'sms' || finalVerificationType === 'whatsapp') ? phone : undefined,
+            phone:
+              finalVerificationType === 'sms' || finalVerificationType === 'whatsapp'
+                ? phone
+                : undefined,
             type: finalVerificationType,
             name: fullName,
             // En développement uniquement - à retirer en production
-            devCode: import.meta.env.DEV ? verificationCode : undefined
+            devCode: import.meta.env.DEV ? verificationCode : undefined,
           };
 
           // Rediriger vers la page de vérification OTP
@@ -197,14 +258,16 @@ export default function Auth() {
           if (finalVerificationType === 'email' && email && import.meta.env.VITE_RESEND_API_KEY) {
             try {
               // Pour l'instant, juste logguer qu'on essaie d'envoyer
-              console.log('Tentative d\'envoi d\'email à:', email);
+              console.log("Tentative d'envoi d'email à:", email);
             } catch (emailErr) {
               console.warn('Email sending failed (non-critical):', emailErr);
             }
           }
         } catch (otpErr: any) {
           console.error('OTP error:', otpErr);
-          setError('Inscription réussie mais erreur lors de la génération du code de vérification.');
+          setError(
+            'Inscription réussie mais erreur lors de la génération du code de vérification.'
+          );
         }
       }
     } catch (err: any) {
@@ -233,12 +296,22 @@ export default function Auth() {
 
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-20 w-64 h-64 bg-cyan-300 rounded-full blur-3xl animate-float" />
-        <div className="absolute bottom-20 right-20 w-80 h-80 bg-olive-300 rounded-full blur-3xl animate-float" style={{ animationDelay: '1.5s' }} />
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-200 rounded-full blur-3xl animate-float" style={{ animationDelay: '0.5s' }} />
+        <div
+          className="absolute bottom-20 right-20 w-80 h-80 bg-olive-300 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: '1.5s' }}
+        />
+        <div
+          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-200 rounded-full blur-3xl animate-float"
+          style={{ animationDelay: '0.5s' }}
+        />
       </div>
 
-      <div className="absolute top-10 right-10 text-white/30 transform rotate-12 text-9xl font-bold animate-float">★</div>
-      <div className="absolute bottom-20 left-20 text-white/30 transform -rotate-12 text-7xl font-bold animate-bounce-subtle">♥</div>
+      <div className="absolute top-10 right-10 text-white/30 transform rotate-12 text-9xl font-bold animate-float">
+        ★
+      </div>
+      <div className="absolute bottom-20 left-20 text-white/30 transform -rotate-12 text-7xl font-bold animate-bounce-subtle">
+        ♥
+      </div>
 
       <div className="max-w-6xl w-full relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
@@ -252,9 +325,7 @@ export default function Auth() {
               <span className="text-5xl font-bold">MON TOIT</span>
             </div>
 
-            <h1 className="text-5xl font-bold leading-tight">
-              Votre logement idéal vous attend
-            </h1>
+            <h1 className="text-5xl font-bold leading-tight">Votre logement idéal vous attend</h1>
 
             <p className="text-2xl text-amber-100">
               Rejoignez des milliers d'utilisateurs qui ont trouvé leur chez-soi
@@ -297,31 +368,34 @@ export default function Auth() {
             <div className="glass-card rounded-3xl p-8 md:p-10 shadow-2xl transform hover:scale-105 transition-all duration-300">
               <div className="lg:hidden flex justify-center mb-6">
                 <div className="flex items-center space-x-3">
-                  <img
-                    src="/logo.png"
-                    alt="Mon Toit Logo"
-                    className="h-14 w-14 object-contain"
-                  />
-                  <span className="text-3xl font-bold" style={{ color: '#1e3a8a' }}>MON TOIT</span>
+                  <img src="/logo.png" alt="Mon Toit Logo" className="h-14 w-14 object-contain" />
+                  <span className="text-3xl font-bold" style={{ color: '#1e3a8a' }}>
+                    MON TOIT
+                  </span>
                 </div>
               </div>
 
               <div className="text-center mb-8">
                 <div className="inline-flex items-center space-x-2 mb-4 bg-gradient-to-r from-terracotta-100 to-coral-100 px-4 py-2 rounded-full">
                   <Sparkles className="h-4 w-4 text-terracotta-600" />
-                  <span className="text-sm font-semibold text-terracotta-700">Plateforme immobilière</span>
+                  <span className="text-sm font-semibold text-terracotta-700">
+                    Plateforme immobilière
+                  </span>
                 </div>
 
                 <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">
-                  {isForgotPassword ? 'Récupération' : isLogin ? 'Bienvenue !' : 'Créez votre compte'}
+                  {isForgotPassword
+                    ? 'Récupération'
+                    : isLogin
+                      ? 'Bienvenue !'
+                      : 'Créez votre compte'}
                 </h2>
                 <p className="text-gray-600">
                   {isForgotPassword
                     ? 'Recevez un lien de réinitialisation par email'
                     : isLogin
-                    ? 'Connectez-vous pour continuer'
-                    : 'Rejoignez la communauté Mon Toit'
-                  }
+                      ? 'Connectez-vous pour continuer'
+                      : 'Rejoignez la communauté Mon Toit'}
                 </p>
                 <div className="mt-4">
                   {isLogin ? (
@@ -380,12 +454,18 @@ export default function Auth() {
                             : 'border-gray-200 bg-white hover:border-cyan-300'
                         }`}
                       >
-                        <Mail className={`h-6 w-6 mx-auto mb-2 ${
-                          verificationType === 'email' ? 'text-cyan-600' : 'text-gray-400'
-                        }`} />
-                        <p className={`text-xs font-semibold ${
-                          verificationType === 'email' ? 'text-cyan-700' : 'text-gray-600'
-                        }`}>Email</p>
+                        <Mail
+                          className={`h-6 w-6 mx-auto mb-2 ${
+                            verificationType === 'email' ? 'text-cyan-600' : 'text-gray-400'
+                          }`}
+                        />
+                        <p
+                          className={`text-xs font-semibold ${
+                            verificationType === 'email' ? 'text-cyan-700' : 'text-gray-600'
+                          }`}
+                        >
+                          Email
+                        </p>
                       </button>
 
                       <button
@@ -397,12 +477,18 @@ export default function Auth() {
                             : 'border-gray-200 bg-white hover:border-cyan-300'
                         }`}
                       >
-                        <Phone className={`h-6 w-6 mx-auto mb-2 ${
-                          verificationType === 'sms' ? 'text-cyan-600' : 'text-gray-400'
-                        }`} />
-                        <p className={`text-xs font-semibold ${
-                          verificationType === 'sms' ? 'text-cyan-700' : 'text-gray-600'
-                        }`}>SMS</p>
+                        <Phone
+                          className={`h-6 w-6 mx-auto mb-2 ${
+                            verificationType === 'sms' ? 'text-cyan-600' : 'text-gray-400'
+                          }`}
+                        />
+                        <p
+                          className={`text-xs font-semibold ${
+                            verificationType === 'sms' ? 'text-cyan-700' : 'text-gray-600'
+                          }`}
+                        >
+                          SMS
+                        </p>
                       </button>
 
                       <button
@@ -414,12 +500,18 @@ export default function Auth() {
                             : 'border-gray-200 bg-white hover:border-cyan-300'
                         }`}
                       >
-                        <MessageCircle className={`h-6 w-6 mx-auto mb-2 ${
-                          verificationType === 'whatsapp' ? 'text-cyan-600' : 'text-gray-400'
-                        }`} />
-                        <p className={`text-xs font-semibold ${
-                          verificationType === 'whatsapp' ? 'text-cyan-700' : 'text-gray-600'
-                        }`}>WhatsApp</p>
+                        <MessageCircle
+                          className={`h-6 w-6 mx-auto mb-2 ${
+                            verificationType === 'whatsapp' ? 'text-cyan-600' : 'text-gray-400'
+                          }`}
+                        />
+                        <p
+                          className={`text-xs font-semibold ${
+                            verificationType === 'whatsapp' ? 'text-cyan-700' : 'text-gray-600'
+                          }`}
+                        >
+                          WhatsApp
+                        </p>
                       </button>
                     </div>
                   </div>
@@ -468,14 +560,18 @@ export default function Auth() {
                           />
                         </div>
                         <p className="mt-1 text-xs text-amber-600 font-medium">
-                          Requis pour la vérification par {verificationType === 'whatsapp' ? 'WhatsApp' : 'SMS'}
+                          Requis pour la vérification par{' '}
+                          {verificationType === 'whatsapp' ? 'WhatsApp' : 'SMS'}
                         </p>
                       </div>
                     )}
 
                     {/* Champ email - seulement si Email ou pour connexion */}
                     {(verificationType === 'email' || isLogin) && (
-                      <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0s' : '0.1s' }}>
+                      <div
+                        className="animate-slide-down"
+                        style={{ animationDelay: isLogin ? '0s' : '0.1s' }}
+                      >
                         <label className="block text-sm font-bold text-gray-700 mb-2">
                           Email <span className="text-red-500">*</span>
                         </label>
@@ -501,25 +597,110 @@ export default function Auth() {
                   </>
                 )}
 
-                {/* Email pour connexion ou mot de passe oublié */}
+                {/* Champs pour connexion */}
                 {isLogin && (
-                  <div className="animate-slide-down">
-                    <label className="block text-sm font-bold text-gray-700 mb-2">
-                      Email <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
-                      <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
-                        placeholder="votre@email.com"
-                        autoComplete="email"
-                      />
+                  <>
+                    {/* Sélecteur de type de connexion */}
+                    <div className="animate-slide-down">
+                      <label className="block text-sm font-bold text-gray-700 mb-3">
+                        Méthode de connexion
+                      </label>
+                      <div className="grid grid-cols-2 gap-3">
+                        <button
+                          type="button"
+                          onClick={() => setLoginType('email')}
+                          className={`p-4 rounded-2xl border-2 transition-all ${
+                            loginType === 'email'
+                              ? 'border-terracotta-500 bg-terracotta-50'
+                              : 'border-gray-200 bg-white hover:border-terracotta-300'
+                          }`}
+                        >
+                          <Mail
+                            className={`h-6 w-6 mx-auto mb-2 ${
+                              loginType === 'email' ? 'text-terracotta-600' : 'text-gray-400'
+                            }`}
+                          />
+                          <p
+                            className={`text-xs font-semibold ${
+                              loginType === 'email' ? 'text-terracotta-700' : 'text-gray-600'
+                            }`}
+                          >
+                            Email
+                          </p>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => setLoginType('phone')}
+                          className={`p-4 rounded-2xl border-2 transition-all ${
+                            loginType === 'phone'
+                              ? 'border-terracotta-500 bg-terracotta-50'
+                              : 'border-gray-200 bg-white hover:border-terracotta-300'
+                          }`}
+                        >
+                          <Phone
+                            className={`h-6 w-6 mx-auto mb-2 ${
+                              loginType === 'phone' ? 'text-terracotta-600' : 'text-gray-400'
+                            }`}
+                          />
+                          <p
+                            className={`text-xs font-semibold ${
+                              loginType === 'phone' ? 'text-terracotta-700' : 'text-gray-600'
+                            }`}
+                          >
+                            Téléphone
+                          </p>
+                        </button>
+                      </div>
                     </div>
-                  </div>
+
+                    {/* Champ email - seulement si connexion par email */}
+                    {loginType === 'email' && (
+                      <div className="animate-slide-down" style={{ animationDelay: '0.1s' }}>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                          Email <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                          <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                            placeholder="votre@email.com"
+                            autoComplete="email"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Champ téléphone - seulement si connexion par téléphone */}
+                    {loginType === 'phone' && (
+                      <div className="animate-slide-down" style={{ animationDelay: '0.1s' }}>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                          Numéro de téléphone <span className="text-red-500">*</span>
+                        </label>
+                        <div className="relative">
+                          <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
+                          <input
+                            type="tel"
+                            required
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                            placeholder="+225 XX XX XX XX XX"
+                            pattern="[+]?[0-9\s]+"
+                            title="Numéro de téléphone valide (format: +225 XX XX XX XX XX)"
+                            autoComplete="tel"
+                          />
+                        </div>
+                        <p className="mt-1 text-xs text-amber-600 font-medium">
+                          Entrez le numéro utilisé lors de l'inscription
+                        </p>
+                      </div>
+                    )}
+                  </>
                 )}
 
                 {/* Email pour mot de passe oublié */}
@@ -547,14 +728,17 @@ export default function Auth() {
                 )}
 
                 {!isForgotPassword && (
-                  <div className="animate-slide-down" style={{ animationDelay: isLogin ? '0.1s' : '0.2s' }}>
+                  <div
+                    className="animate-slide-down"
+                    style={{ animationDelay: isLogin ? '0.1s' : '0.2s' }}
+                  >
                     <label className="block text-sm font-bold text-gray-700 mb-2">
                       Mot de passe
                     </label>
                     <div className="relative">
                       <Lock className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-terracotta-500" />
                       <input
-                        type="password"
+                        type={showPassword ? 'text' : 'password'}
                         required
                         value={password}
                         onChange={(e) => {
@@ -563,11 +747,25 @@ export default function Auth() {
                             setPasswordStrength(validatePassword(e.target.value));
                           }
                         }}
-                        className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
+                        className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-terracotta-200 focus:border-terracotta-500 transition-all bg-white/70"
                         placeholder="••••••••"
                         minLength={8}
                         autoComplete={isLogin ? 'current-password' : 'new-password'}
                       />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-4 top-1/2 transform -translate-y-1/2 text-terracotta-500 hover:text-terracotta-700 transition-colors"
+                        aria-label={
+                          showPassword ? 'Masquer le mot de passe' : 'Afficher le mot de passe'
+                        }
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-5 w-5" />
+                        ) : (
+                          <Eye className="h-5 w-5" />
+                        )}
+                      </button>
                     </div>
                     {!isLogin && password && (
                       <div className="mt-2 space-y-2">
@@ -575,9 +773,11 @@ export default function Auth() {
                           <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
                             <div
                               className={`h-full transition-all duration-300 ${
-                                passwordStrength.score <= 2 ? 'bg-red-500' :
-                                passwordStrength.score <= 4 ? 'bg-amber-500' :
-                                'bg-olive-500'
+                                passwordStrength.score <= 2
+                                  ? 'bg-red-500'
+                                  : passwordStrength.score <= 4
+                                    ? 'bg-amber-500'
+                                    : 'bg-olive-500'
                               }`}
                               style={{ width: `${(passwordStrength.score / 5) * 100}%` }}
                             />
@@ -588,23 +788,53 @@ export default function Auth() {
                         </div>
                         <div className="text-xs text-gray-600 space-y-1">
                           <div className="flex items-center space-x-1">
-                            <span className={password.length >= 8 ? 'text-olive-600' : 'text-gray-400'}>✓</span>
+                            <span
+                              className={password.length >= 8 ? 'text-olive-600' : 'text-gray-400'}
+                            >
+                              ✓
+                            </span>
                             <span>Au moins 8 caractères</span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <span className={/[A-Z]/.test(password) ? 'text-olive-600' : 'text-gray-400'}>✓</span>
+                            <span
+                              className={
+                                /[A-Z]/.test(password) ? 'text-olive-600' : 'text-gray-400'
+                              }
+                            >
+                              ✓
+                            </span>
                             <span>Une majuscule</span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <span className={/[a-z]/.test(password) ? 'text-olive-600' : 'text-gray-400'}>✓</span>
+                            <span
+                              className={
+                                /[a-z]/.test(password) ? 'text-olive-600' : 'text-gray-400'
+                              }
+                            >
+                              ✓
+                            </span>
                             <span>Une minuscule</span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <span className={/[0-9]/.test(password) ? 'text-olive-600' : 'text-gray-400'}>✓</span>
+                            <span
+                              className={
+                                /[0-9]/.test(password) ? 'text-olive-600' : 'text-gray-400'
+                              }
+                            >
+                              ✓
+                            </span>
                             <span>Un chiffre</span>
                           </div>
                           <div className="flex items-center space-x-1">
-                            <span className={/[!@#$%^&*(),.?":{}|<>]/.test(password) ? 'text-olive-600' : 'text-gray-400'}>✓</span>
+                            <span
+                              className={
+                                /[!@#$%^&*(),.?":{}|<>]/.test(password)
+                                  ? 'text-olive-600'
+                                  : 'text-gray-400'
+                              }
+                            >
+                              ✓
+                            </span>
                             <span>Un caractère spécial</span>
                           </div>
                         </div>
@@ -644,8 +874,10 @@ export default function Auth() {
                       <KeyRound className="w-5 h-5" />
                       <span>Envoyer le lien</span>
                     </span>
+                  ) : isLogin ? (
+                    'Se connecter'
                   ) : (
-                    isLogin ? 'Se connecter' : "S'inscrire"
+                    "S'inscrire"
                   )}
                 </button>
               </form>
@@ -674,7 +906,9 @@ export default function Auth() {
                       <div className="w-full border-t-2 border-gray-200"></div>
                     </div>
                     <div className="relative flex justify-center text-sm">
-                      <span className="px-4 bg-white text-gray-500 font-medium">ou continuer avec</span>
+                      <span className="px-4 bg-white text-gray-500 font-medium">
+                        ou continuer avec
+                      </span>
                     </div>
                   </div>
 
@@ -705,13 +939,14 @@ export default function Auth() {
                       href={isLogin ? '/inscription' : '/connexion'}
                       className="text-terracotta-600 hover:text-terracotta-700 font-bold text-sm transform hover:scale-105 transition-all inline-block"
                     >
-                      {isLogin ? "Pas de compte ? Inscrivez-vous gratuitement" : "Déjà un compte ? Connectez-vous"}
+                      {isLogin
+                        ? 'Pas de compte ? Inscrivez-vous gratuitement'
+                        : 'Déjà un compte ? Connectez-vous'}
                     </a>
                   </div>
                 </div>
               )}
             </div>
-
           </div>
         </div>
       </div>
