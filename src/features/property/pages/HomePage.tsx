@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import '../styles/homepage-modern.css';
 import { Search, MapPin, Star, Shield, TrendingUp, Users, CheckCircle, ArrowRight, Sparkles, Home as HomeIcon } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
@@ -14,10 +14,34 @@ export default function Home() {
   const [propertyType, setPropertyType] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [statsAnimated, setStatsAnimated] = useState(false);
+  const statsRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     loadProperties();
   }, []);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !statsAnimated) {
+            setStatsAnimated(true);
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    if (statsRef.current) {
+      observer.observe(statsRef.current);
+    }
+
+    return () => {
+      if (statsRef.current) {
+        observer.unobserve(statsRef.current);
+      }
+    };
+  }, [statsAnimated]);
 
   const loadProperties = async () => {
     try {
@@ -119,27 +143,29 @@ export default function Home() {
                 Location sécurisée • Identité vérifiée • Paiement mobile
               </p>
 
-              {/* Search Bar */}
-              <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-2 flex flex-col md:flex-row gap-2 animate-slide-up stagger-2">
-                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
-                  <MapPin className="h-5 w-5 text-gray-400" />
+              {/* Search Bar - Optimized with better spacing */}
+              <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-2xl p-3 flex flex-col md:flex-row gap-3 animate-slide-up stagger-2">
+                <div className="flex-1 flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-gray-50 transition-colors">
+                  <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0" />
                   <input
                     type="text"
                     placeholder="Où cherchez-vous ?"
                     value={searchCity}
                     onChange={(e) => setSearchCity(e.target.value)}
                     className="flex-1 outline-none text-gray-900 placeholder-gray-400"
+                    aria-label="Ville ou quartier"
                   />
                 </div>
 
                 <div className="hidden md:block w-px bg-gray-200"></div>
 
-                <div className="flex-1 flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-50 transition-colors">
-                  <HomeIcon className="h-5 w-5 text-gray-400" />
+                <div className="flex-1 flex items-center gap-4 px-5 py-4 rounded-xl hover:bg-gray-50 transition-colors">
+                  <HomeIcon className="h-5 w-5 text-gray-400 flex-shrink-0" />
                   <select
                     value={propertyType}
                     onChange={(e) => setPropertyType(e.target.value)}
                     className="flex-1 outline-none text-gray-900 bg-transparent cursor-pointer"
+                    aria-label="Type de propriété"
                   >
                     <option value="">Type de bien</option>
                     <option value="appartement">Appartement</option>
@@ -270,9 +296,9 @@ export default function Home() {
       </section>
 
       {/* Stats Section with Animation */}
-      <section 
+      <section
+        ref={statsRef}
         className="py-20 bg-gradient-to-br from-gray-900 to-gray-800 text-white"
-        onMouseEnter={() => setStatsAnimated(true)}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">

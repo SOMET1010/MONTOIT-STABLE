@@ -100,33 +100,33 @@ export default function HeroSlideshow() {
         ))}
       </div>
 
-      {/* Navigation Arrows - Visible on Hover */}
+      {/* Navigation Arrows - Improved visibility */}
       <button
         onClick={goToPrevious}
-        className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+        className="absolute left-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/30 hover:bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-lg hover:scale-110"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="h-6 w-6 text-white" />
+        <ChevronLeft className="h-8 w-8 text-white" />
       </button>
 
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100"
+        className="absolute right-4 top-1/2 -translate-y-1/2 w-14 h-14 bg-white/30 hover:bg-white/50 backdrop-blur-md rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 shadow-lg hover:scale-110"
         aria-label="Next slide"
       >
-        <ChevronRight className="h-6 w-6 text-white" />
+        <ChevronRight className="h-8 w-8 text-white" />
       </button>
 
-      {/* Indicators */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+      {/* Indicators - Improved size and spacing */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
         {slides.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
             className={`transition-all duration-300 rounded-full ${
               index === currentSlide
-                ? 'w-8 h-2 bg-gradient-to-r from-terracotta-500 to-coral-500'
-                : 'w-2 h-2 bg-white/50 hover:bg-white/80'
+                ? 'w-10 h-3 bg-gradient-to-r from-orange-500 to-red-500 shadow-lg'
+                : 'w-3 h-3 bg-white/60 hover:bg-white hover:scale-125'
             }`}
             aria-label={`Go to slide ${index + 1}`}
           />

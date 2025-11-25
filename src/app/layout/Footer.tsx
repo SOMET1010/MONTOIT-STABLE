@@ -2,7 +2,7 @@ import { Building2, Mail, Phone, MapPin, Shield, Heart, Sparkles } from 'lucide-
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300 relative overflow-hidden shadow-premium">
+    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden shadow-premium">
       <div className="absolute inset-0 opacity-5">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-500 rounded-full blur-3xl" />
         <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-orange-600 rounded-full blur-3xl" />
@@ -19,7 +19,7 @@ export default function Footer() {
               />
               <span className="text-3xl font-bold text-white">MON TOIT</span>
             </div>
-            <p className="text-sm text-gray-300 leading-relaxed mb-4">
+            <p className="text-sm text-gray-200 leading-relaxed mb-4">
               Plateforme immobilière pour un accès universel au logement en Côte d'Ivoire. Signature électronique certifiée et sécurisée.
             </p>
           </div>
@@ -82,7 +82,7 @@ export default function Footer() {
                 <div className="w-8 h-8 bg-orange-900/50 rounded-lg flex items-center justify-center group-hover:bg-orange-800 transition-colors">
                   <Mail className="h-4 w-4 text-orange-400" />
                 </div>
-                <a href="mailto:contact@mon-toit.ci" className="font-medium text-gray-300 hover:text-orange-400 transition-colors">
+                <a href="mailto:contact@mon-toit.ci" className="font-medium text-white hover:text-orange-400 transition-colors">
                   contact@mon-toit.ci
                 </a>
               </li>
@@ -90,13 +90,13 @@ export default function Footer() {
                 <div className="w-8 h-8 bg-orange-900/50 rounded-lg flex items-center justify-center group-hover:bg-orange-800 transition-colors">
                   <Phone className="h-4 w-4 text-orange-400" />
                 </div>
-                <span className="font-medium text-gray-400 italic">Numéro disponible prochainement</span>
+                <span className="font-medium text-gray-300 italic">Numéro disponible prochainement</span>
               </li>
               <li className="flex items-center space-x-3 group">
                 <div className="w-8 h-8 bg-orange-900/50 rounded-lg flex items-center justify-center group-hover:bg-orange-800 transition-colors">
                   <MapPin className="h-4 w-4 text-orange-400" />
                 </div>
-                <span className="font-medium">Abidjan, Côte d'Ivoire</span>
+                <span className="font-medium text-white">Abidjan, Côte d'Ivoire</span>
               </li>
             </ul>
           </div>
