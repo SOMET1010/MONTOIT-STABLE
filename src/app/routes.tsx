@@ -5,6 +5,7 @@ import ErrorBoundary from '@/shared/ui/ErrorBoundary';
 import ProtectedRoute from '@/shared/ui/ProtectedRoute';
 
 const Home = lazy(() => import('@/features/property/pages/HomePage'));
+const NotFound = lazy(() => import('@/features/property/pages/NotFoundPage'));
 const Auth = lazy(() => import('@/features/auth/pages/AuthPage'));
 const ModernAuth = lazy(() => import('@/features/auth/pages/ModernAuthPage'));
 const AuthCallback = lazy(() => import('@/features/auth/pages/CallbackPage'));
@@ -619,5 +620,9 @@ export const routes: RouteObject[] = [
         ),
       },
     ],
+  },
+  {
+    path: '*',
+    element: <NotFound />,
   },
 ];

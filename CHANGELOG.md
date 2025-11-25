@@ -13,7 +13,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Advanced Maintenance System with contractors
 - Enhanced Dashboards with customizable widgets
 
-## [3.2.0] - 2025-10-31
+## [3.2.2] - 2024-11-24
+
+### Added
+- **Service Worker**: Offline cache support with intelligent caching strategies
+- **Newsletter System**: Complete newsletter subscription with Edge Function
+- **Rate Limiting**: API protection with configurable limits (3-5 req/min)
+- **Signature Status Badge**: Visual component for contract signature states
+- **Unit Tests**: Auth API tests (8) and Payment Store tests (7)
+- **Logger System**: Centralized logging with Sentry integration
+- **SEO Complete**: Meta tags, Open Graph, Twitter Cards, geo tags
+- **404 Page**: Custom error page with navigation suggestions
+- **PWA Support**: manifest.json with shortcuts and icons
+- **SEO Files**: robots.txt and sitemap.xml
+
+### Changed
+- **NeoFace Integration**: Renamed all Smile ID references to NeoFace
+- **Edge Functions**: Renamed verification functions for clarity
+- **Documentation**: Aligned all docs with NeoFace terminology
+- **Version**: Bumped to 3.2.2
+
+### Fixed
+- Logger import issues in FooterPremium
+- Service Worker registration in main.tsx
+- 404 fallback route configuration
+- Build optimization issues
+
+## [3.2.0] - 2024-10-31
 
 ### Added
 
