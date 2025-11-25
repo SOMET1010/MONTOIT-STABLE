@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Camera, CheckCircle, XCircle, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { Button } from './Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './Card';
-import { supabase } from '@/services/supabase/client';
 
 interface NeofaceVerificationProps {
   userId: string;
