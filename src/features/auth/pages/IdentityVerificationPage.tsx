@@ -7,6 +7,7 @@ import Footer from '@/app/layout/Footer';
 import VerificationBadge from '@/shared/ui/VerificationBadge';
 import AnsutBadge from '@/features/verification/components/AnsutBadge';
 import SmilelessVerification from '@/shared/ui/SmilelessVerification';
+import NeofaceVerification from '@/shared/ui/NeofaceVerification';
 import { FEATURES } from '@/shared/config/features.config';
 
 interface VerificationData {
@@ -50,7 +51,8 @@ export default function IdentityVerification() {
 
   const [showWebcam, setShowWebcam] = useState(false);
   const [selfieCapture, setSelfieCapture] = useState<string | null>(null);
-  const [useSmileless, setUseSmileless] = useState(true);
+  const [useNeoface, setUseNeoface] = useState(true);
+  const [useSmileless, setUseSmileless] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
@@ -369,6 +371,23 @@ export default function IdentityVerification() {
     } finally {
       setVerifyingFace(false);
     }
+  };
+
+  const handleNeofaceVerified = async (result: any) => {
+    setSuccess(`✅ Vérification faciale réussie avec NeoFace V2! Score: ${(result.matching_score * 100).toFixed(0)}%`);
+
+    await supabase
+      .from('user_verifications')
+      .update({
+        face_verification_status: 'verifie',
+      })
+      .eq('user_id', user?.id);
+
+    await loadVerificationData();
+  };
+
+  const handleNeofaceFailed = (errorMsg: string) => {
+    setError(`❌ Vérification NeoFace V2 échouée: ${errorMsg}`);
   };
 
   const handleSmilelessVerified = async (result: any) => {
@@ -719,6 +738,15 @@ export default function IdentityVerification() {
 
                     {verification?.face_verification_status !== 'verifie' && (
                       <div className="space-y-6">
+                        {useNeoface && oneciPreview && (
+                          <NeofaceVerification
+                            userId={user?.id || ''}
+                            cniPhotoUrl={oneciPreview}
+                            onVerified={handleNeofaceVerified}
+                            onFailed={handleNeofaceFailed}
+                          />
+                        )}
+
                         {useSmileless && oneciPreview && (
                           <SmilelessVerification
                             userId={user?.id || ''}
@@ -728,7 +756,7 @@ export default function IdentityVerification() {
                           />
                         )}
 
-                        {!useSmileless && (
+                        {!useNeoface && !useSmileless && (
                           <div className="space-y-4">
                             <div className="bg-cyan-50 border border-cyan-200 rounded-xl p-4">
                               <p className="text-sm text-cyan-800">
@@ -813,12 +841,28 @@ export default function IdentityVerification() {
                         )}
 
                         <div className="text-center pt-4 border-t border-gray-200">
-                          <button
-                            onClick={() => setUseSmileless(!useSmileless)}
-                            className="text-sm text-gray-600 hover:text-orange-600 underline"
-                          >
-                            {useSmileless ? 'Utiliser la méthode traditionnelle' : 'Utiliser Smileless (Gratuit)'}
-                          </button>
+                          <div className="flex flex-col sm:flex-row gap-2 justify-center items-center">
+                            <button
+                              onClick={() => { setUseNeoface(true); setUseSmileless(false); }}
+                              className={`text-sm ${useNeoface ? 'text-blue-600 font-semibold' : 'text-gray-600 hover:text-blue-600'} underline`}
+                            >
+                              NeoFace V2 (Gratuit - Recommandé)
+                            </button>
+                            <span className="text-gray-400 hidden sm:inline">|</span>
+                            <button
+                              onClick={() => { setUseNeoface(false); setUseSmileless(true); }}
+                              className={`text-sm ${useSmileless ? 'text-orange-600 font-semibold' : 'text-gray-600 hover:text-orange-600'} underline`}
+                            >
+                              Smileless (Fallback)
+                            </button>
+                            <span className="text-gray-400 hidden sm:inline">|</span>
+                            <button
+                              onClick={() => { setUseNeoface(false); setUseSmileless(false); }}
+                              className={`text-sm ${!useNeoface && !useSmileless ? 'text-gray-900 font-semibold' : 'text-gray-600 hover:text-gray-900'} underline`}
+                            >
+                              Méthode traditionnelle
+                            </button>
+                          </div>
                         </div>
                       </div>
                     )}
