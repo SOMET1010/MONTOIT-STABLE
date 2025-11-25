@@ -338,18 +338,16 @@ export default function IdentityVerification() {
 
       if (updateError) throw updateError;
 
-      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/smile-id-verification`, {
+      const response = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/smileless-face-verify`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`
         },
         body: JSON.stringify({
-          userId: user?.id,
-          idNumber: oneciNumber,
-          idType: 'NATIONAL_ID',
-          country: 'CI',
-          selfieImage: selfieCapture.split(',')[1]
+          action: 'upload_document',
+          cni_photo_url: selfieCapture,
+          user_id: user?.id
         })
       });
 

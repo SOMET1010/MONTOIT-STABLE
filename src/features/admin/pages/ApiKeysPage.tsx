@@ -166,7 +166,8 @@ export default function AdminApiKeys() {
       sentry: '🐛',
       oneci: '🆔',
       cnam: '🏥',
-      smile_id: '😊'
+      neoface: '🤖',
+      smileless: '🤖'
     };
     return icons[serviceName] || '🔑';
   };

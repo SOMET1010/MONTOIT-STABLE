@@ -59,13 +59,6 @@ interface EmailConfig extends ApiConfig {
 
 interface LLMConfig extends ApiConfig {}
 
-interface IdentityVerificationConfig {
-  partnerId: string;
-  apiKey: string;
-  environment: 'sandbox' | 'production';
-  isConfigured: boolean;
-}
-
 class ApiKeysConfig {
   readonly supabase: SupabaseConfig = {
     url: import.meta.env.VITE_SUPABASE_URL || '',
@@ -138,13 +131,6 @@ class ApiKeysConfig {
       apiBase: import.meta.env.SMILELESS_API_BASE || 'https://neoface.aineo.ai/api',
       isConfigured: !!import.meta.env.SMILELESS_TOKEN,
     } as FacialVerificationConfig,
-
-    smileId: {
-      partnerId: import.meta.env.SMILE_ID_PARTNER_ID || '',
-      apiKey: import.meta.env.SMILE_ID_API_KEY || '',
-      environment: (import.meta.env.SMILE_ID_ENVIRONMENT || 'sandbox') as 'sandbox' | 'production',
-      isConfigured: !!(import.meta.env.SMILE_ID_PARTNER_ID && import.meta.env.SMILE_ID_API_KEY),
-    } as IdentityVerificationConfig,
   };
 
   readonly signature = {
@@ -236,7 +222,6 @@ class ApiKeysConfig {
       inTouchPayment: this.payment.inTouch.isConfigured,
       neofaceVerification: this.verification.neoface.isConfigured,
       smilelessVerification: this.verification.smileless.isConfigured,
-      smileIdVerification: this.verification.smileId.isConfigured,
       cryptoneoSignature: this.signature.cryptoneo.isConfigured,
       emailService: this.communication.email.isConfigured,
       smsService: this.communication.sms.isConfigured,
