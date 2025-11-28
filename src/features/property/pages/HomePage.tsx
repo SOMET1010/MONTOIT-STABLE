@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../styles/homepage-modern.css';
 import { Search, MapPin, Star, Shield, TrendingUp, Users, CheckCircle, ArrowRight, Sparkles, Home as HomeIcon } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
@@ -8,6 +9,7 @@ import HeroSlideshow from '../components/HeroSlideshow';
 type Property = Database['public']['Tables']['properties']['Row'];
 
 export default function Home() {
+  const navigate = useNavigate();
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchCity, setSearchCity] = useState('');
@@ -68,8 +70,8 @@ export default function Home() {
     if (searchCity) params.append('city', searchCity);
     if (propertyType) params.append('type', propertyType);
     if (maxPrice) params.append('maxPrice', maxPrice);
-    
-    window.location.href = `/recherche${params.toString() ? '?' + params.toString() : ''}`;
+
+    navigate(`/recherche${params.toString() ? '?' + params.toString() : ''}`);
   };
 
   // Animated counter for stats

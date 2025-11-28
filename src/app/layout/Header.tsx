@@ -386,16 +386,23 @@ export default function Header() {
               <>
                 <a
                   href="/connexion"
-                  className="text-terracotta-600 hover:text-terracotta-700 font-bold transition-colors transform hover:scale-105 transition-all duration-300"
+                  className="hidden sm:block text-terracotta-600 hover:text-terracotta-700 font-bold transition-colors transform hover:scale-105 transition-all duration-300"
                 >
                   Connexion
                 </a>
                 <a
                   href="/inscription"
-                  className="btn-primary"
+                  className="hidden sm:block btn-primary"
                 >
                   Inscription
                 </a>
+                <button
+                  onClick={() => setShowMobileMenu(!showMobileMenu)}
+                  className="sm:hidden p-2 rounded-lg hover:bg-gray-100"
+                  aria-label="Menu"
+                >
+                  {showMobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                </button>
               </>
             )}
           </div>
@@ -556,6 +563,55 @@ export default function Header() {
                 <LogOut className="h-4 w-4 inline mr-2" />
                 Déconnexion
               </button>
+            </div>
+          </div>
+        )}
+
+        {showMobileMenu && !user && (
+          <div className="sm:hidden border-t border-gray-200 py-4 px-4 bg-white">
+            <div className="space-y-2">
+              <a
+                href="/"
+                className="block py-3 px-4 rounded-lg hover:bg-gray-50 font-medium text-gray-700"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <Home className="h-5 w-5 inline mr-3" />
+                Accueil
+              </a>
+              <a
+                href="/recherche"
+                className="block py-3 px-4 rounded-lg hover:bg-gray-50 font-medium text-gray-700"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <Search className="h-5 w-5 inline mr-3" />
+                Rechercher un logement
+              </a>
+              <a
+                href="/a-propos"
+                className="block py-3 px-4 rounded-lg hover:bg-gray-50 font-medium text-gray-700"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <Shield className="h-5 w-5 inline mr-3" />
+                À propos
+              </a>
+
+              <div className="border-t border-gray-200 my-3"></div>
+
+              <a
+                href="/connexion"
+                className="block py-3 px-4 rounded-lg bg-terracotta-50 hover:bg-terracotta-100 font-bold text-terracotta-600"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <User className="h-5 w-5 inline mr-3" />
+                Connexion
+              </a>
+              <a
+                href="/inscription"
+                className="block py-3 px-4 rounded-lg bg-gradient-to-r from-terracotta-500 to-coral-500 hover:from-terracotta-600 hover:to-coral-600 font-bold text-white text-center"
+                onClick={() => setShowMobileMenu(false)}
+              >
+                <span>Créer un compte</span>
+              </a>
             </div>
           </div>
         )}

@@ -607,6 +607,258 @@ export interface Database {
           updated_at?: string;
         };
       };
+      favorites: {
+        Row: {
+          id: string;
+          user_id: string;
+          property_id: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          property_id: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          property_id?: string;
+          created_at?: string;
+        };
+      };
+      property_visits: {
+        Row: {
+          id: string;
+          property_id: string;
+          tenant_id: string;
+          landlord_id: string | null;
+          scheduled_date: string;
+          status: string;
+          visit_type: string | null;
+          notes: string | null;
+          tenant_notes: string | null;
+          landlord_notes: string | null;
+          cancellation_reason: string | null;
+          created_at: string;
+          updated_at: string;
+          confirmed_at: string | null;
+          completed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          property_id: string;
+          tenant_id: string;
+          landlord_id?: string | null;
+          scheduled_date: string;
+          status?: string;
+          visit_type?: string | null;
+          notes?: string | null;
+          tenant_notes?: string | null;
+          landlord_notes?: string | null;
+          cancellation_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          confirmed_at?: string | null;
+          completed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          property_id?: string;
+          tenant_id?: string;
+          landlord_id?: string | null;
+          scheduled_date?: string;
+          status?: string;
+          visit_type?: string | null;
+          notes?: string | null;
+          tenant_notes?: string | null;
+          landlord_notes?: string | null;
+          cancellation_reason?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          confirmed_at?: string | null;
+          completed_at?: string | null;
+        };
+      };
+      reviews: {
+        Row: {
+          id: string;
+          lease_id: string;
+          reviewer_id: string;
+          reviewed_id: string;
+          property_id: string | null;
+          rating: number;
+          comment: string | null;
+          review_type: string;
+          is_public: boolean;
+          is_verified: boolean;
+          response: string | null;
+          response_date: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          lease_id: string;
+          reviewer_id: string;
+          reviewed_id: string;
+          property_id?: string | null;
+          rating: number;
+          comment?: string | null;
+          review_type: string;
+          is_public?: boolean;
+          is_verified?: boolean;
+          response?: string | null;
+          response_date?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          lease_id?: string;
+          reviewer_id?: string;
+          reviewed_id?: string;
+          property_id?: string | null;
+          rating?: number;
+          comment?: string | null;
+          review_type?: string;
+          is_public?: boolean;
+          is_verified?: boolean;
+          response?: string | null;
+          response_date?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      notifications: {
+        Row: {
+          id: string;
+          user_id: string;
+          title: string;
+          message: string;
+          type: string;
+          read: boolean;
+          link: string | null;
+          metadata: Record<string, any>;
+          created_at: string;
+          read_at: string | null;
+          expires_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          title: string;
+          message: string;
+          type?: string;
+          read?: boolean;
+          link?: string | null;
+          metadata?: Record<string, any>;
+          created_at?: string;
+          read_at?: string | null;
+          expires_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          title?: string;
+          message?: string;
+          type?: string;
+          read?: boolean;
+          link?: string | null;
+          metadata?: Record<string, any>;
+          created_at?: string;
+          read_at?: string | null;
+          expires_at?: string | null;
+        };
+      };
+      saved_searches: {
+        Row: {
+          id: string;
+          user_id: string;
+          name: string;
+          filters: Record<string, any>;
+          notify_new_results: boolean;
+          last_checked_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          name: string;
+          filters?: Record<string, any>;
+          notify_new_results?: boolean;
+          last_checked_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          name?: string;
+          filters?: Record<string, any>;
+          notify_new_results?: boolean;
+          last_checked_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      disputes: {
+        Row: {
+          id: string;
+          lease_id: string;
+          complainant_id: string;
+          respondent_id: string;
+          mediator_id: string | null;
+          title: string;
+          description: string;
+          category: string;
+          status: string;
+          priority: string;
+          resolution: string | null;
+          evidence_files: string[];
+          created_at: string;
+          updated_at: string;
+          resolved_at: string | null;
+          closed_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          lease_id: string;
+          complainant_id: string;
+          respondent_id: string;
+          mediator_id?: string | null;
+          title: string;
+          description: string;
+          category?: string;
+          status?: string;
+          priority?: string;
+          resolution?: string | null;
+          evidence_files?: string[];
+          created_at?: string;
+          updated_at?: string;
+          resolved_at?: string | null;
+          closed_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          lease_id?: string;
+          complainant_id?: string;
+          respondent_id?: string;
+          mediator_id?: string | null;
+          title?: string;
+          description?: string;
+          category?: string;
+          status?: string;
+          priority?: string;
+          resolution?: string | null;
+          evidence_files?: string[];
+          created_at?: string;
+          updated_at?: string;
+          resolved_at?: string | null;
+          closed_at?: string | null;
+        };
+      };
     };
   };
 }

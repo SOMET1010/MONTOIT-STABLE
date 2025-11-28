@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
 import { Calendar, Clock, Video, MapPin, ArrowLeft, Check } from 'lucide-react';
@@ -20,6 +21,8 @@ interface TimeSlot {
 }
 
 export default function ScheduleVisit() {
+  const { propertyId } = useParams<{ propertyId: string }>();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,8 +35,6 @@ export default function ScheduleVisit() {
   const [notes, setNotes] = useState('');
   const [availableSlots, setAvailableSlots] = useState<TimeSlot[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
-
-  const propertyId = window.location.pathname.split('/').pop();
 
   useEffect(() => {
     loadProperty();

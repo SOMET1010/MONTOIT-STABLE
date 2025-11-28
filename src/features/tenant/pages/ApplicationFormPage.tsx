@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileText, CheckCircle, User, Mail, Phone, MapPin, Shield, Award } from 'lucide-react';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
@@ -8,6 +9,8 @@ import type { Database } from '@/shared/lib/database.types';
 type Property = Database['public']['Tables']['properties']['Row'];
 
 export default function ApplicationForm() {
+  const { propertyId } = useParams<{ propertyId: string }>();
+  const navigate = useNavigate();
   const { user, profile } = useAuth();
   const [property, setProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(true);
@@ -18,15 +21,14 @@ export default function ApplicationForm() {
 
   useEffect(() => {
     if (!user) {
-      window.location.href = '/connexion';
+      navigate('/auth');
       return;
     }
 
-    const propertyId = window.location.pathname.split('/').pop();
     if (propertyId) {
       loadProperty(propertyId);
     }
-  }, [user]);
+  }, [user, propertyId]);
 
   const loadProperty = async (id: string) => {
     try {
@@ -38,7 +40,7 @@ export default function ApplicationForm() {
 
       if (error) throw error;
       if (!data) {
-        window.location.href = '/recherche';
+        navigate('/recherche');
         return;
       }
 

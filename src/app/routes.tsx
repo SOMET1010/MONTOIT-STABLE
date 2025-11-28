@@ -27,6 +27,7 @@ const ScheduleVisit = lazy(() => import('@/features/tenant/pages/ScheduleVisitPa
 const MyVisits = lazy(() => import('@/features/tenant/pages/MyVisitsPage'));
 
 const Messages = lazy(() => import('@/features/messaging/pages/MessagesPage'));
+const NewMessage = lazy(() => import('@/features/messaging/pages/NewMessagePage'));
 
 const CreateContract = lazy(() => import('@/features/owner/pages/CreateContractPage'));
 const MyContracts = lazy(() => import('@/features/tenant/pages/MyContractsPage'));
@@ -182,6 +183,30 @@ export const routes: RouteObject[] = [
         element: (
           <ProtectedRoute>
             <Messages />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'messages/nouveau',
+        element: (
+          <ProtectedRoute>
+            <NewMessage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'visites/planifier/:propertyId',
+        element: (
+          <ProtectedRoute>
+            <ScheduleVisit />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: 'postuler/:propertyId',
+        element: (
+          <ProtectedRoute>
+            <ApplicationForm />
           </ProtectedRoute>
         ),
       },
