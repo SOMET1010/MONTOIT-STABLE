@@ -17,6 +17,7 @@ const ResetPassword = lazy(() => import('@/features/auth/pages/ResetPasswordPage
 const VerifyOTP = lazy(() => import('@/features/auth/pages/VerifyOTPPage'));
 const VerifyEmail = lazy(() => import('@/features/auth/pages/VerifyEmailPage'));
 const TestEmailSimple = lazy(() => import('@/features/auth/pages/TestEmailSimplePage'));
+const TestSMS = lazy(() => import('@/features/admin/pages/TestSMSPage'));
 const ProfileSelection = lazy(() => import('@/features/auth/pages/ProfileSelectionPage'));
 const Profile = lazy(() => import('@/features/auth/pages/ProfilePage'));
 const AboutPage = lazy(() => import('@/features/auth/pages/AboutPage'));
@@ -110,6 +111,7 @@ const publicRoutes: RouteObject[] = [
   { path: 'verification-otp', element: <VerifyOTP /> },
   { path: 'verify-email', element: <VerifyEmail /> },
   { path: 'test-email', element: <TestEmailSimple /> },
+  { path: 'test-sms', element: <TestSMS /> },
   { path: 'a-propos', element: <AboutPage /> },
   { path: 'conditions-utilisation', element: <TermsOfServicePage /> },
   { path: 'politique-confidentialite', element: <PrivacyPolicyPage /> },

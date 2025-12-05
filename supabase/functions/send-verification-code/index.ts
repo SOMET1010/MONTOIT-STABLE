@@ -13,6 +13,13 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Skip JWT verification for local development
+  const isLocalDev = req.headers.get("host")?.includes("127.0.0.1") || req.headers.get("host")?.includes("localhost");
+  if (!isLocalDev) {
+    // In production, JWT verification is handled by Supabase automatically
+    // We don't need to manually verify it here
+  }
+
   try {
     const { email, phone, type, name } = await req.json();
 
@@ -109,19 +116,68 @@ serve(async (req) => {
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
 
-    } else if ((type === "sms" || type === "whatsapp") && phone) {
-      // For SMS/WhatsApp, you would integrate with a service like Twilio
-      // For now, we'll just return success and log the code
-      console.log(`Verification code for ${phone} (${type}): ${verificationCode}`);
+    } else if (type === "sms" && phone) {
+      // Send SMS via Brevo
+      try {
+        const brevoApiKey = Deno.env.get("BREVO_API_KEY");
+        if (!brevoApiKey) {
+          throw new Error("Brevo API key not configured");
+        }
 
+        const smsResponse = await fetch("https://api.brevo.com/v3/transactionalSMS/sms", {
+          method: "POST",
+          headers: {
+            "accept": "application/json",
+            "content-type": "application/json",
+            "api-key": brevoApiKey,
+          },
+          body: JSON.stringify({
+            sender: "MonToit",
+            recipient: phone,
+            content: `Votre code de verification Mon Toit est: ${verificationCode}. Valable 10 minutes.`,
+            type: "transactional",
+          }),
+        });
+
+        if (!smsResponse.ok) {
+          const errorData = await smsResponse.json().catch(() => ({}));
+          console.error("Brevo SMS error:", errorData);
+
+          // Gérer les erreurs spécifiques de Brevo
+          if (smsResponse.status === 401) {
+            throw new Error("API Brevo SMS non activée. Veuillez activer l'API SMS dans votre compte Brevo et configurer un nom d'expéditeur.");
+          } else if (smsResponse.status === 400) {
+            throw new Error(`Erreur de configuration Brevo: ${errorData.message || 'Paramètres invalides'}`);
+          } else if (smsResponse.status === 429) {
+            throw new Error("Limite d'envoi dépassée. Veuillez réessayer plus tard.");
+          } else {
+            throw new Error(`Erreur Brevo (${smsResponse.status}): ${errorData.message || 'Échec de l\'envoi du SMS'}`);
+          }
+        }
+
+        const smsData = await smsResponse.json();
+        console.log("SMS sent successfully:", smsData);
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: "Verification code sent via SMS",
+            messageId: smsData.messageId
+          }),
+          { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      } catch (smsError) {
+        console.error("Error sending SMS:", smsError);
+        return new Response(
+          JSON.stringify({ error: smsError.message || "Failed to send SMS" }),
+          { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+    } else if (type === "whatsapp" && phone) {
+      // WhatsApp not implemented yet
       return new Response(
-        JSON.stringify({
-          success: true,
-          message: `Verification code sent via ${type}`,
-          // For development only - remove in production
-          devCode: verificationCode
-        }),
-        { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        JSON.stringify({ error: "WhatsApp verification not implemented" }),
+        { status: 501, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     } else {
       return new Response(

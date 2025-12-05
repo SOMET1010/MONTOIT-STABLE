@@ -273,12 +273,12 @@ export default function Auth() {
             navigate('/verification-otp', { state });
           }, 1500);
 
-        // Envoyer l'email avec le code de vérification si c'est un email
+        // Envoyer le code de vérification par email ou SMS
           if (finalVerificationType === 'email' && email) {
             try {
               console.log("Envoi de l'email de vérification à:", email);
 
-              // Appeler l'Edge Function send-verification-code comme dans le test
+              // Appeler l'Edge Function send-verification-code
               const { data, error } = await supabase.functions.invoke('send-verification-code', {
                 body: {
                   email: email,
@@ -302,6 +302,37 @@ export default function Auth() {
               // Ne pas bloquer l'inscription si l'email échoue en développement
               if (!import.meta.env.DEV) {
                 setError('Inscription réussie mais erreur lors de l\'envoi de l\'email de vérification');
+                return;
+              }
+            }
+          } else if (finalVerificationType === 'sms' && phone) {
+            try {
+              console.log("Envoi du SMS de vérification au:", phone);
+
+              // Appeler l'Edge Function send-verification-code pour SMS
+              const { data, error } = await supabase.functions.invoke('send-verification-code', {
+                body: {
+                  phone: phone,
+                  type: 'sms',
+                  name: fullName
+                }
+              });
+
+              if (error) {
+                console.error('Erreur lors de l\'envoi du SMS:', error);
+                // En développement, continuer quand même
+                if (!import.meta.env.DEV) {
+                  setError('Inscription réussie mais erreur lors de l\'envoi du SMS de vérification');
+                  return;
+                }
+              } else {
+                console.log('SMS de vérification envoyé avec succès:', data);
+              }
+            } catch (smsError) {
+              console.error('Erreur lors de l\'envoi du SMS de vérification:', smsError);
+              // Ne pas bloquer l'inscription si le SMS échoue en développement
+              if (!import.meta.env.DEV) {
+                setError('Inscription réussie mais erreur lors de l\'envoi du SMS de vérification');
                 return;
               }
             }
