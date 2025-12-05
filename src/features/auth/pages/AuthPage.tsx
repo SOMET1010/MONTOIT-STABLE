@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/app/providers/AuthProvider';
 import { supabase } from '@/services/supabase/client';
+import { emailTemplateService } from '@/services/email/emailService';
 import {
   Building2,
   Mail,
@@ -272,13 +273,37 @@ export default function Auth() {
             navigate('/verification-otp', { state });
           }, 1500);
 
-          // Tenter d'envoyer l'email si Resend est configuré et si c'est un email
-          if (finalVerificationType === 'email' && email && import.meta.env.VITE_RESEND_API_KEY) {
+        // Envoyer l'email avec le code de vérification si c'est un email
+          if (finalVerificationType === 'email' && email) {
             try {
-              // Pour l'instant, juste logguer qu'on essaie d'envoyer
-              console.log("Tentative d'envoi d'email à:", email);
-            } catch (emailErr) {
-              console.warn('Email sending failed (non-critical):', emailErr);
+              console.log("Envoi de l'email de vérification à:", email);
+
+              // Appeler l'Edge Function send-verification-code comme dans le test
+              const { data, error } = await supabase.functions.invoke('send-verification-code', {
+                body: {
+                  email: email,
+                  type: 'email',
+                  name: fullName
+                }
+              });
+
+              if (error) {
+                console.error('Erreur lors de l\'envoi de l\'email:', error);
+                // En développement, continuer quand même
+                if (!import.meta.env.DEV) {
+                  setError('Inscription réussie mais erreur lors de l\'envoi de l\'email de vérification');
+                  return;
+                }
+              } else {
+                console.log('Email de vérification envoyé avec succès:', data);
+              }
+            } catch (emailError) {
+              console.error('Erreur lors de l\'envoi de l\'email de vérification:', emailError);
+              // Ne pas bloquer l'inscription si l'email échoue en développement
+              if (!import.meta.env.DEV) {
+                setError('Inscription réussie mais erreur lors de l\'envoi de l\'email de vérification');
+                return;
+              }
             }
           }
         } catch (otpErr: any) {

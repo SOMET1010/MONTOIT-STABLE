@@ -59,7 +59,7 @@ serve(async (req) => {
       const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
       const { data, error } = await resend.emails.send({
-        from: "MON TOIT <no-reply@notifications.ansut.ci>",
+        from: "no-reply@notifications.ansut.ci",
         to: [email],
         subject: "Votre code de vérification - MON TOIT",
         html: `

@@ -13,7 +13,7 @@ export default function VerifyOTP() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [resending, setResending] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(600);
+  const [timeLeft, setTimeLeft] = useState(60);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   useEffect(() => {
@@ -212,25 +212,6 @@ export default function VerifyOTP() {
             <p className="text-cyan-600 font-semibold mt-1">
               {type === 'email' ? email : phone}
             </p>
-
-            {/* Afficher le code de développement */}
-            {import.meta.env.DEV && (location.state as any)?.devCode && (
-              <div className="mt-4 p-3 bg-cyan-50 border-2 border-cyan-200 rounded-xl">
-                <div className="text-center">
-                  <p className="text-xs font-semibold text-cyan-700 mb-2">
-                    🔐 CODE DE DÉVELOPPEMENT
-                  </p>
-                  <div className="bg-white px-4 py-2 rounded-lg inline-block">
-                    <span className="text-2xl font-bold text-cyan-900 tracking-widest">
-                      {(location.state as any)?.devCode}
-                    </span>
-                  </div>
-                  <p className="text-xs text-cyan-600 mt-2">
-                    Utilisez ce code pour la vérification
-                  </p>
-                </div>
-              </div>
-            )}
           </div>
 
           {error && (
@@ -316,7 +297,7 @@ export default function VerifyOTP() {
                 <ul className="space-y-1 list-disc list-inside">
                   <li>Ne partagez jamais ce code</li>
                   <li>Mon Toit ne vous demandera jamais ce code par téléphone</li>
-                  <li>Le code expire après 10 minutes</li>
+                  <li>Le code expire après 1 minute</li>
                 </ul>
               </div>
             </div>

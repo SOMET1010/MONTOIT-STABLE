@@ -1,10 +1,11 @@
 /**
  * Service API pour l'authentification
- * 
+ *
  * Ce service centralise tous les appels API liés à l'authentification et à la gestion des utilisateurs.
  */
 
 import { supabase } from '@/services/supabase/client';
+import { emailTemplateService } from '@/services/email/emailService';
 import type { Database } from '@/shared/lib/database.types';
 
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -49,6 +50,32 @@ export const authApi = {
     });
 
     if (authError) throw authError;
+
+    // Si l'inscription a réussi, envoyer un email de bienvenue avec Resend
+    // Supabase envoie automatiquement un email de confirmation, mais nous envoyons
+    // un email de bienvenue personnalisé en plus
+    if (authData.user) {
+      try {
+        const verifyUrl = `${window.location.origin}/verify-email?email=${encodeURIComponent(data.email)}`;
+        console.log('Envoi de l\'email de bienvenue à:', data.email);
+        console.log('URL de vérification:', verifyUrl);
+
+        const emailResult = await emailTemplateService.sendWelcomeEmail({
+          userName: data.fullName,
+          userEmail: data.email,
+          verifyUrl,
+        });
+
+        if (emailResult.error) {
+          console.error('Erreur email:', emailResult.error);
+        } else {
+          console.log('Email de bienvenue envoyé avec succès, ID:', emailResult.data?.id);
+        }
+      } catch (emailError) {
+        console.error('Erreur lors de l\'envoi de l\'email de bienvenue:', emailError);
+        // Ne pas bloquer l'inscription si l'email échoue
+      }
+    }
 
     return { data: authData, error: null };
   },
@@ -102,6 +129,27 @@ export const authApi = {
     });
 
     if (error) throw error;
+
+    // Envoyer un email de réinitialisation personnalisé avec Resend
+    try {
+      // Récupérer le profil de l'utilisateur pour obtenir son nom
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('full_name')
+        .eq('email', email)
+        .single();
+
+      const resetUrl = `${window.location.origin}/reset-password?email=${encodeURIComponent(email)}`;
+      await emailTemplateService.sendPasswordResetEmail({
+        userName: profile?.full_name || 'Utilisateur',
+        userEmail: email,
+        resetUrl,
+      });
+    } catch (emailError) {
+      console.error('Erreur lors de l\'envoi de l\'email de réinitialisation:', emailError);
+      // L'email Supabase a déjà été envoyé, donc on ne bloque pas
+    }
+
     return { data: null, error: null };
   },
 
@@ -215,6 +263,23 @@ export const authApi = {
 
     if (error) throw error;
     return { data, error: null };
+  },
+
+  /**
+   * Envoyer un email de vérification
+   */
+  sendEmailVerification: async (email: string, userName?: string) => {
+    try {
+      const verifyUrl = `${window.location.origin}/auth/verify-email?email=${encodeURIComponent(email)}`;
+      await emailTemplateService.sendEmailVerificationEmail({
+        userName: userName || 'Utilisateur',
+        userEmail: email,
+        verifyUrl,
+      });
+      return { data: null, error: null };
+    } catch (error) {
+      throw error;
+    }
   },
 };
 

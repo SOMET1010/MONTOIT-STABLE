@@ -15,6 +15,8 @@ const AuthCallback = lazy(() => import('@/features/auth/pages/CallbackPage'));
 const ForgotPassword = lazy(() => import('@/features/auth/pages/ForgotPasswordPage'));
 const ResetPassword = lazy(() => import('@/features/auth/pages/ResetPasswordPage'));
 const VerifyOTP = lazy(() => import('@/features/auth/pages/VerifyOTPPage'));
+const VerifyEmail = lazy(() => import('@/features/auth/pages/VerifyEmailPage'));
+const TestEmailSimple = lazy(() => import('@/features/auth/pages/TestEmailSimplePage'));
 const ProfileSelection = lazy(() => import('@/features/auth/pages/ProfileSelectionPage'));
 const Profile = lazy(() => import('@/features/auth/pages/ProfilePage'));
 const AboutPage = lazy(() => import('@/features/auth/pages/AboutPage'));
@@ -66,6 +68,7 @@ const AdminServiceMonitoring = lazy(() => import('@/features/admin/pages/Service
 const AdminServiceConfiguration = lazy(() => import('@/features/admin/pages/ServiceConfigurationPage'));
 const AdminTestDataGenerator = lazy(() => import('@/features/admin/pages/TestDataGeneratorPage'));
 const AdminQuickDemo = lazy(() => import('@/features/admin/pages/QuickDemoPage'));
+const AdminTestEmail = lazy(() => import('@/features/admin/pages/TestEmailPage'));
 const AdminCEVManagement = lazy(() => import('@/features/admin/pages/CEVManagementPage'));
 const AdminTrustAgents = lazy(() => import('@/features/admin/pages/TrustAgentsPage'));
 
@@ -105,6 +108,8 @@ const publicRoutes: RouteObject[] = [
   { path: 'mot-de-passe-oublie', element: <ForgotPassword /> },
   { path: 'reinitialiser-mot-de-passe', element: <ResetPassword /> },
   { path: 'verification-otp', element: <VerifyOTP /> },
+  { path: 'verify-email', element: <VerifyEmail /> },
+  { path: 'test-email', element: <TestEmailSimple /> },
   { path: 'a-propos', element: <AboutPage /> },
   { path: 'conditions-utilisation', element: <TermsOfServicePage /> },
   { path: 'politique-confidentialite', element: <PrivacyPolicyPage /> },
@@ -571,6 +576,14 @@ const adminRoutes: RouteObject[] = [
     element: (
       <ProtectedRoute allowedRoles={['admin']}>
         <AdminQuickDemo />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'admin/test-email',
+    element: (
+      <ProtectedRoute allowedRoles={['admin']}>
+        <AdminTestEmail />
       </ProtectedRoute>
     ),
   },
