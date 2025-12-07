@@ -1,6 +1,16 @@
 import { useRef, useEffect, useState } from 'react';
-import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+
+// Import dynamique de mapbox-gl pour éviter les erreurs de module
+let mapboxgl: any = null;
+
+async function loadMapboxGL() {
+  if (!mapboxgl) {
+    const module = await import('mapbox-gl');
+    mapboxgl = module.default || module;
+  }
+  return mapboxgl;
+}
 
 interface Property {
   id: string;
@@ -20,7 +30,7 @@ interface MapboxMapProps {
   properties: Property[];
   highlightedPropertyId?: string;
   onMarkerClick?: (property: Property) => void;
-  onBoundsChange?: (bounds: mapboxgl.LngLatBounds) => void;
+  onBoundsChange?: (bounds: any) => void;
   clustering?: boolean;
   draggableMarker?: boolean;
   showRadius?: boolean;
@@ -51,9 +61,10 @@ export default function MapboxMap({
   singleMarker = false,
 }: MapboxMapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const markers = useRef<{ [key: string]: mapboxgl.Marker }>({});
+  const map = useRef<any>(null);
+  const markers = useRef<{ [key: string]: any }>({});
   const [mapLoaded, setMapLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_PUBLIC_TOKEN || 'pk.eyJ1IjoicHNvbWV0IiwiYSI6ImNtYTgwZ2xmMzEzdWcyaXM2ZG45d3A4NmEifQ.MYXzdc5CREmcvtBLvfV0Lg';
 
@@ -65,52 +76,68 @@ export default function MapboxMap({
   };
 
   useEffect(() => {
-    if (!mapContainer.current || map.current) return;
+    let mounted = true;
 
-    mapboxgl.accessToken = MAPBOX_TOKEN;
+    const initializeMap = async () => {
+      if (!mapContainer.current || map.current) return;
 
-    try {
-      map.current = new mapboxgl.Map({
-        container: mapContainer.current,
-        style: 'mapbox://styles/mapbox/streets-v12',
-        center: center,
-        zoom: zoom,
-        attributionControl: false,
-      });
+      try {
+        const mapboxModule = await loadMapboxGL();
+        if (!mounted) return;
 
-      map.current.addControl(
-        new mapboxgl.NavigationControl({
-          showCompass: true,
-          showZoom: true,
-        }),
-        'top-right'
-      );
+        mapboxModule.accessToken = MAPBOX_TOKEN;
 
-      map.current.addControl(new mapboxgl.FullscreenControl(), 'top-right');
+        map.current = new mapboxModule.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v12',
+          center: center,
+          zoom: zoom,
+          attributionControl: false,
+        });
 
-      if (onBoundsChange) {
-        map.current.on('moveend', () => {
-          if (map.current) {
-            const bounds = map.current.getBounds();
-            onBoundsChange(bounds);
+        map.current.addControl(
+          new mapboxModule.NavigationControl({
+            showCompass: true,
+            showZoom: true,
+          }),
+          'top-right'
+        );
+
+        map.current.addControl(new mapboxModule.FullscreenControl(), 'top-right');
+
+        if (onBoundsChange) {
+          map.current.on('moveend', () => {
+            if (map.current) {
+              const bounds = map.current.getBounds();
+              onBoundsChange(bounds);
+            }
+          });
+        }
+
+        if (onMapClick) {
+          map.current.on('click', (e: any) => {
+            onMapClick({ lng: e.lngLat.lng, lat: e.lngLat.lat });
+          });
+        }
+
+        map.current.on('load', () => {
+          if (mounted) {
+            setMapLoaded(true);
+            setLoading(false);
           }
         });
+      } catch (error) {
+        console.error('Error initializing map:', error);
+        if (mounted) {
+          setLoading(false);
+        }
       }
+    };
 
-      if (onMapClick) {
-        map.current.on('click', (e) => {
-          onMapClick({ lng: e.lngLat.lng, lat: e.lngLat.lat });
-        });
-      }
-
-      map.current.on('load', () => {
-        setMapLoaded(true);
-      });
-    } catch (error) {
-      console.error('Error initializing map:', error);
-    }
+    initializeMap();
 
     return () => {
+      mounted = false;
       if (map.current) {
         map.current.remove();
         map.current = null;
@@ -126,163 +153,121 @@ export default function MapboxMap({
 
     if (properties.length === 0) return;
 
-    if (singleMarker && properties.length > 0) {
-      const property = properties[0];
-      const color = getMarkerColor(property);
+    (async () => {
+      const mapboxModule = await loadMapboxGL();
 
-      const marker = new mapboxgl.Marker({
-        color: color,
-        draggable: draggableMarker,
-        anchor: 'bottom'
-      })
-        .setLngLat([property.longitude, property.latitude])
-        .addTo(map.current!);
-
-      if (onMarkerDrag) {
-        marker.on('dragend', () => {
-          const lngLat = marker.getLngLat();
-          onMarkerDrag({ lng: lngLat.lng, lat: lngLat.lat });
-        });
-      }
-
-      markers.current[property.id] = marker;
-      map.current?.setCenter([property.longitude, property.latitude]);
-    } else {
-      properties.forEach((property) => {
+      if (singleMarker && properties.length > 0) {
+        const property = properties[0];
         const color = getMarkerColor(property);
 
-        const el = document.createElement('div');
-        el.className = 'custom-marker';
-        el.style.width = '36px';
-        el.style.height = '36px';
-        el.style.borderRadius = '50%';
-        el.style.backgroundColor = color;
-        el.style.border = '3px solid white';
-        el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-        el.style.cursor = 'pointer';
-        el.style.transition = 'all 0.2s ease';
-        el.style.display = 'flex';
-        el.style.alignItems = 'center';
-        el.style.justifyContent = 'center';
-        el.style.color = 'white';
-        el.style.fontSize = '16px';
-        el.style.fontWeight = 'bold';
-        el.style.position = 'relative';
-        el.innerHTML = '🏠';
-
-        el.addEventListener('mouseenter', () => {
-          el.style.boxShadow = '0 6px 16px rgba(0,0,0,0.5)';
-          el.style.filter = 'brightness(1.1)';
-          el.style.zIndex = '1000';
-        });
-
-        el.addEventListener('mouseleave', () => {
-          el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
-          el.style.filter = 'brightness(1)';
-          el.style.zIndex = '1';
-        });
-
-        const popupContent = `
-          <div style="padding: 12px; min-width: 200px;">
-            ${Array.isArray(property.images) && property.images.length > 0 ?
-              `<img src="${property.images[0]}" alt="${property.title}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />`
-              : ''}
-            <h3 style="font-weight: bold; font-size: 16px; margin-bottom: 4px; color: #1f2937;">${property.title}</h3>
-            ${property.city || property.neighborhood ?
-              `<p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">${property.city || ''}${property.neighborhood ? ' • ' + property.neighborhood : ''}</p>`
-              : ''}
-            <p style="color: #ff6b35; font-weight: bold; font-size: 18px; margin-bottom: 8px;">${property.monthly_rent.toLocaleString()} FCFA/mois</p>
-            ${property.status ?
-              `<span style="background: ${property.status === 'disponible' ? '#10B981' : '#EF4444'}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">
-                ${property.status === 'disponible' ? 'Disponible' : property.status === 'loue' ? 'Loué' : 'En attente'}
-              </span>`
-              : ''}
-          </div>
-        `;
-
-        const popup = new mapboxgl.Popup({
-          offset: 25,
-          closeButton: true,
-          closeOnClick: false,
-          maxWidth: '300px',
-        }).setHTML(popupContent);
-
-        const marker = new mapboxgl.Marker({
-          element: el,
+        const marker = new mapboxModule.Marker({
+          color: color,
+          draggable: draggableMarker,
           anchor: 'bottom'
         })
           .setLngLat([property.longitude, property.latitude])
-          .setPopup(popup)
           .addTo(map.current!);
 
-        el.addEventListener('click', () => {
-          if (onMarkerClick) {
-            onMarkerClick(property);
-          }
-          marker.togglePopup();
-        });
+        if (onMarkerDrag) {
+          marker.on('dragend', () => {
+            const lngLat = marker.getLngLat();
+            onMarkerDrag({ lng: lngLat.lng, lat: lngLat.lat });
+          });
+        }
 
         markers.current[property.id] = marker;
-      });
-
-      if (fitBounds && properties.length > 0) {
-        const bounds = new mapboxgl.LngLatBounds();
+        map.current?.setCenter([property.longitude, property.latitude]);
+      } else {
         properties.forEach((property) => {
-          bounds.extend([property.longitude, property.latitude]);
+          const color = getMarkerColor(property);
+
+          const el = document.createElement('div');
+          el.className = 'custom-marker';
+          el.style.width = '36px';
+          el.style.height = '36px';
+          el.style.borderRadius = '50%';
+          el.style.backgroundColor = color;
+          el.style.border = '3px solid white';
+          el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+          el.style.cursor = 'pointer';
+          el.style.transition = 'all 0.2s ease';
+          el.style.display = 'flex';
+          el.style.alignItems = 'center';
+          el.style.justifyContent = 'center';
+          el.style.color = 'white';
+          el.style.fontSize = '16px';
+          el.style.fontWeight = 'bold';
+          el.style.position = 'relative';
+          el.innerHTML = '🏠';
+
+          el.addEventListener('mouseenter', () => {
+            el.style.boxShadow = '0 6px 16px rgba(0,0,0,0.5)';
+            el.style.filter = 'brightness(1.1)';
+            el.style.zIndex = '1000';
+          });
+
+          el.addEventListener('mouseleave', () => {
+            el.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+            el.style.filter = 'brightness(1)';
+            el.style.zIndex = '1';
+          });
+
+          const popupContent = `
+            <div style="padding: 12px; min-width: 200px;">
+              ${Array.isArray(property.images) && property.images.length > 0 ?
+                `<img src="${property.images[0]}" alt="${property.title}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 8px;" />`
+                : ''}
+              <h3 style="font-weight: bold; font-size: 16px; margin-bottom: 4px; color: #1f2937;">${property.title}</h3>
+              ${property.city || property.neighborhood ?
+                `<p style="color: #6b7280; font-size: 14px; margin-bottom: 8px;">${property.city || ''}${property.neighborhood ? ' • ' + property.neighborhood : ''}</p>`
+                : ''}
+              <p style="color: #ff6b35; font-weight: bold; font-size: 18px; margin-bottom: 8px;">${property.monthly_rent.toLocaleString()} FCFA/mois</p>
+              ${property.status ?
+                `<span style="background: ${property.status === 'disponible' ? '#10B981' : '#EF4444'}; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">
+                  ${property.status === 'disponible' ? 'Disponible' : property.status === 'loue' ? 'Loué' : 'En attente'}
+                </span>`
+                : ''}
+            </div>
+          `;
+
+          const popup = new mapboxModule.Popup({
+            offset: 25,
+            closeButton: true,
+            closeOnClick: false,
+            maxWidth: '300px',
+          }).setHTML(popupContent);
+
+          const marker = new mapboxModule.Marker({
+            element: el,
+            anchor: 'bottom'
+          })
+            .setLngLat([property.longitude, property.latitude])
+            .setPopup(popup)
+            .addTo(map.current!);
+
+          el.addEventListener('click', () => {
+            if (onMarkerClick) {
+              onMarkerClick(property);
+            }
+            marker.togglePopup();
+          });
+
+          markers.current[property.id] = marker;
         });
-        map.current?.fitBounds(bounds, {
-          padding: { top: 50, bottom: 50, left: 50, right: 50 },
-          maxZoom: 15,
-        });
+
+        if (fitBounds && properties.length > 0) {
+          const bounds = new mapboxModule.LngLatBounds();
+          properties.forEach((property) => {
+            bounds.extend([property.longitude, property.latitude]);
+          });
+          map.current?.fitBounds(bounds, {
+            padding: { top: 50, bottom: 50, left: 50, right: 50 },
+            maxZoom: 15,
+          });
+        }
       }
-    }
-
-    if (showRadius && properties.length > 0 && map.current) {
-      const property = properties[0];
-      const radiusInMeters = radiusKm * 1000;
-
-      const circle = {
-        type: 'Feature' as const,
-        geometry: {
-          type: 'Point' as const,
-          coordinates: [property.longitude, property.latitude],
-        },
-        properties: {
-          radius: radiusInMeters,
-        },
-      };
-
-      if (!map.current.getSource('radius')) {
-        map.current.addSource('radius', {
-          type: 'geojson',
-          data: {
-            type: 'FeatureCollection',
-            features: [circle],
-          },
-        });
-
-        map.current.addLayer({
-          id: 'radius-fill',
-          type: 'circle',
-          source: 'radius',
-          paint: {
-            'circle-radius': {
-              stops: [
-                [0, 0],
-                [20, radiusInMeters / 0.075],
-              ],
-              base: 2,
-            },
-            'circle-color': '#FF6B35',
-            'circle-opacity': 0.1,
-            'circle-stroke-width': 2,
-            'circle-stroke-color': '#FF6B35',
-            'circle-stroke-opacity': 0.5,
-          },
-        });
-      }
-    }
-  }, [properties, mapLoaded, singleMarker, draggableMarker, fitBounds, showRadius, radiusKm]);
+    })();
+  }, [properties, mapLoaded, singleMarker, draggableMarker, fitBounds]);
 
   useEffect(() => {
     if (!highlightedPropertyId) {
@@ -307,6 +292,20 @@ export default function MapboxMap({
       }
     });
   }, [highlightedPropertyId]);
+
+  if (loading) {
+    return (
+      <div
+        className="flex items-center justify-center bg-gray-100 rounded-lg"
+        style={{ width: '100%', height }}
+      >
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-600 mx-auto"></div>
+          <p className="mt-2 text-gray-600">Chargement de la carte...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

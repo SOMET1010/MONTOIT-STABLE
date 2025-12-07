@@ -24,6 +24,60 @@ import { useAuth } from '@/app/providers/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import ChatMessage from './ChatMessage';
 
+/**
+ * Interface pour les actions rapides du chatbot
+ * @interface QuickAction
+ */
+interface QuickAction {
+  icon: typeof Shield;
+  label: string;
+  message: string;
+  color: string;
+}
+
+/**
+ * Composant Chatbot - Assistant IA conversationnel pour la plateforme immobilière
+ *
+ * @component
+ * @description
+ * Chatbot intelligent offrant une assistance 24/7 pour :
+ * - Recherche de logements et filtrage
+ * - Prévention des arnaques et sécurité
+ * - Planification de visites
+ * - Processus de location et documents
+ * - Support client et FAQ
+ * - Navigation guidée dans l'application
+ *
+ * @features
+ * - Conversation naturelle avec historique
+ * - Actions rapides prédéfinies
+ * - Support multilingue (français principal)
+ * - Indicateurs de saisie en temps réel
+ * - Gestion des erreurs et timeouts
+ * - Mode compact/étendu
+ * - Export des conversations
+ *
+ * @stateManagement
+ * - Utilise useState pour l'UI locale
+ * - useEffect pour le cycle de vie
+ * - useRef pour la gestion du DOM
+ * - AuthProvider pour le contexte utilisateur
+ *
+ * @dependencies
+ * - chatbotService : API de communication avec l'IA
+ * - AuthProvider : Gestion de l'authentification
+ * - react-router-dom : Navigation
+ * - lucide-react : Icônes
+ *
+ * @example
+ * ```tsx
+ * <Chatbot />
+ * ```
+ *
+ * @author MonToit Team
+ * @since v2.1.0
+ */
+
 interface QuickAction {
   icon: typeof Shield;
   label: string;

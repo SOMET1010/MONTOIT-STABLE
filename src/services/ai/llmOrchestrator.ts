@@ -175,7 +175,18 @@ export class LLMOrchestrator {
 
       let query = supabase
         .from('llm_routing_logs')
-        .select('*')
+        .select(`
+          id,
+          user_id,
+          request_type,
+          provider_used,
+          model_used,
+          tokens_used,
+          response_time_ms,
+          success,
+          error_message,
+          created_at
+        `)
         .gte('created_at', startTime.toISOString());
 
       if (userId) {

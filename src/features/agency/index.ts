@@ -1,6 +1,6 @@
 /**
  * Feature: agency
- * 
+ *
  * Exports publics de la feature agency
  */
 
@@ -11,4 +11,14 @@ export { default as PropertiesPage } from './pages/PropertiesPage';
 export { default as RegistrationPage } from './pages/RegistrationPage';
 export { default as TeamPage } from './pages/TeamPage';
 
-// Components
+// Components (à créer)
+// export * from './components';
+
+// Types
+export * from './types';
+
+// Services (à créer)
+// export * from './services';
+
+// Hooks (à créer)
+// export * from './hooks';

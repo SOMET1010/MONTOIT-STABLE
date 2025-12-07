@@ -3,6 +3,8 @@
  */
 
 import * as Sentry from '@sentry/react';
+import { browserTracingIntegration } from '@sentry/browser';
+import { Replay } from '@sentry/replay';
 
 /**
  * Initialiser Sentry
@@ -29,22 +31,8 @@ export function initSentry() {
     
     // Intégrations
     integrations: [
-      new Sentry.BrowserTracing({
-        // Tracer les navigations
-        routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-          // @ts-ignore - React Router hooks
-          window.React?.useEffect,
-          // @ts-ignore
-          window.React?.useLocation,
-          // @ts-ignore
-          window.React?.useNavigationType,
-          // @ts-ignore
-          window.React?.createRoutesFromChildren,
-          // @ts-ignore
-          window.React?.matchRoutes
-        ),
-      }),
-      new Sentry.Replay({
+      browserTracingIntegration(),
+      new Replay({
         // Enregistrer les sessions avec erreurs
         maskAllText: true,
         blockAllMedia: true,

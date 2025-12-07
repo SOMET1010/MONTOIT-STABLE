@@ -48,12 +48,30 @@ export default function TrustAgentAnalytics() {
 
     const { data: validations } = await supabase
       .from('trust_validation_requests')
-      .select('*')
+      .select(`
+        id,
+        property_id,
+        requester_id,
+        status,
+        validation_type,
+        created_at,
+        updated_at
+      `)
       .gte('created_at', startDate.toISOString());
 
     const { data: disputes } = await supabase
       .from('disputes')
-      .select('*')
+      .select(`
+        id,
+        property_id,
+        tenant_id,
+        landlord_id,
+        status,
+        dispute_type,
+        opened_at,
+        created_at,
+        updated_at
+      `)
       .gte('created_at', startDate.toISOString());
 
     const { data: moderation } = await supabase
@@ -138,7 +156,17 @@ export default function TrustAgentAnalytics() {
 
       const { data: disputes } = await supabase
         .from('disputes')
-        .select('*')
+        .select(`
+          id,
+          property_id,
+          tenant_id,
+          landlord_id,
+          status,
+          dispute_type,
+          opened_at,
+          created_at,
+          updated_at
+        `)
         .gte('opened_at', date.toISOString())
         .lt('opened_at', nextDate.toISOString());
 

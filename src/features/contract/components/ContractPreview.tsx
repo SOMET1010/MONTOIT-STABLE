@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { FileText, Download, Eye, X } from 'lucide-react';
 import { generateLeasePDF } from '@/shared/lib/helpers/pdfGenerator';
 
+/**
+ * Interface pour les données du contrat de location
+ * @interface ContractPreviewProps
+ */
 interface ContractPreviewProps {
   contractData: {
     id: string;
@@ -38,6 +42,70 @@ interface ContractPreviewProps {
     custom_clauses?: string;
   };
 }
+
+/**
+ * Composant ContractPreview - Générateur et visualisateur de contrats de location
+ *
+ * @component
+ * @description
+ * Outil complet pour la gestion des contrats de bail :
+ * - Génération automatique de contrats PDF
+ * - Prévisualisation en temps réel
+ * - Personnalisation des clauses
+ * - Intégration avec CryptoNeo (signatures électroniques)
+ * - Téléchargement et archivage
+ * - Validité juridique conforme
+ *
+ * @features
+ * - Template de contrat personnalisable
+ * - Calcul automatique des montants
+ * - Gestion des clauses personnalisées
+ * - Signature électronique sécurisée
+ * - Horodatage certifié
+ * - Archivage à long terme
+ * - Mode édition/relecture
+ * - Export multiple formats
+ *
+ * @legalCompliance
+ * - Conforme au droit ivoirien
+ * - Clauses obligatoires incluses
+ * - Protection bailleur/locataire
+ * - Références légales intégrées
+ * - Modalités de résiliation
+ *
+ * @pdfGeneration
+ * - jsPDF pour la génération
+ * - Mise en page professionnelle
+ * - En-têtes et pieds de page
+ * - Numérotation automatique
+ * - Filigrane de sécurité
+ * - Compression optimisée
+ *
+ * @signatureIntegration
+ * - CryptoNeo API
+ * - Certificats numériques
+ * - OTP validation
+ * - Preuve d'intégrité
+ * - Archivage légal
+ *
+ * @example
+ * ```tsx
+ * <ContractPreview
+ *   contractData={{
+ *     id: 'lease-123',
+ *     contract_number: 'MT-2024-001',
+ *     property: { ... },
+ *     owner: { ... },
+ *     tenant: { ... },
+ *     monthly_rent: 150000,
+ *     // ...
+ *   }}
+ * />
+ * ```
+ *
+ * @author MonToit Team
+ * @since v2.3.0
+ */
 
 export default function ContractPreview({ contractData }: ContractPreviewProps) {
   const [showPreview, setShowPreview] = useState(false);

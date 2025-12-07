@@ -8,7 +8,7 @@
 do $$
 begin
     -- user type enum to define different user roles in the platform
-    create type user_type as enum ('locataire', 'proprietaire', 'agence', 'admin_ansut');
+    create type user_type as enum ('locataire', 'proprietaire', 'agence', 'admin_ansut', 'admin');
 exception
     when duplicate_object then null;
 end $$;

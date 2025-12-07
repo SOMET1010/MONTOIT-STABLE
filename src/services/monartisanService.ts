@@ -77,7 +77,18 @@ class MonArtisanService {
   async getJobRequestsByMaintenance(maintenanceRequestId: string): Promise<MonArtisanJobRequest[]> {
     const { data, error } = await supabase
       .from('monartisan_job_requests')
-      .select('*')
+      .select(`
+        id,
+        maintenance_request_id,
+        contractor_id,
+        status,
+        quote,
+        estimated_duration,
+        proposed_date,
+        client_response,
+        created_at,
+        updated_at
+      `)
       .eq('maintenance_request_id', maintenanceRequestId)
       .order('created_at', { ascending: false });
 
@@ -173,7 +184,29 @@ class MonArtisanService {
   ): Promise<MonArtisanContractor[]> {
     let query = supabase
       .from('monartisan_contractors')
-      .select('*')
+      .select(`
+        id,
+        full_name,
+        email,
+        phone,
+        whatsapp_phone,
+        specializations,
+        skills,
+        experience_years,
+        rating,
+        review_count,
+        is_verified,
+        is_available,
+        city,
+        address,
+        bio,
+        portfolio_urls,
+        certifications,
+        sync_status,
+        last_sync_at,
+        created_at,
+        updated_at
+      `)
       .eq('sync_status', 'active');
 
     if (specialty) {

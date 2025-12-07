@@ -1,6 +1,6 @@
 /**
  * Feature: tenant
- * 
+ *
  * Exports publics de la feature tenant
  */
 
@@ -27,3 +27,22 @@ export { default as SearchPropertiesPage } from './pages/SearchPropertiesPage';
 export { default as SignLeasePage } from './pages/SignLeasePage';
 
 // Components
+export { default as ApplicationWizard } from './components/ApplicationWizard';
+export { default as ApplicationWizardFixed } from './components/ApplicationWizardFixed';
+export { default as LeaseSigningFlow } from './components/LeaseSigningFlow';
+export { default as MaintenanceRequestForm } from './components/MaintenanceRequestForm';
+export { default as PaymentForm } from './components/PaymentForm';
+export { default as PropertyCard } from './components/PropertyCard';
+export { default as PropertyFilters } from './components/PropertyFilters';
+export { default as PropertySearch } from './components/PropertySearch';
+export { default as ScoringDetails } from './components/ScoringDetails';
+export { default as VisitScheduler } from './components/VisitScheduler';
+
+// Types
+export * from './types';
+
+// Services (à créer)
+// export * from './services';
+
+// Hooks (à créer)
+// export * from './hooks';

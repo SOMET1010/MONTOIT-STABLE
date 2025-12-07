@@ -38,7 +38,22 @@ export const notificationService = {
   async getNotifications(limit: number = 50): Promise<Notification[]> {
     const { data, error } = await supabase
       .from('notifications')
-      .select('*')
+      .select(`
+        id,
+        user_id,
+        type,
+        title,
+        message,
+        channels,
+        read,
+        read_at,
+        action_url,
+        action_label,
+        metadata,
+        priority,
+        created_at,
+        updated_at
+      `)
       .order('created_at', { ascending: false })
       .limit(limit);
 
@@ -101,7 +116,25 @@ export const notificationService = {
   },
 
   async getPreferences(): Promise<NotificationPreferences | null> {
-    const { data, error } = await supabase.from('notification_preferences').select('*').single();
+    const { data, error } = await supabase.from('notification_preferences').select(`
+      id,
+      user_id,
+      email_enabled,
+      sms_enabled,
+      whatsapp_enabled,
+      push_enabled,
+      in_app_enabled,
+      email_types,
+      sms_types,
+      whatsapp_types,
+      push_types,
+      quiet_hours_enabled,
+      quiet_hours_start,
+      quiet_hours_end,
+      whatsapp_phone,
+      created_at,
+      updated_at
+    `).single();
 
     if (error && error.code !== 'PGRST116') throw error;
     return data;

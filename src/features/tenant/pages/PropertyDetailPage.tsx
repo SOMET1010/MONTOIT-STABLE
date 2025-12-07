@@ -3,6 +3,8 @@ import { MapPin, Bed, Bath, Home, ParkingCircle, Wind, Sofa, Calendar, Eye, Arro
 import { supabasePublic, supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 import type { Database } from '@/shared/lib/database.types';
+import { usePageMetadata } from '@/hooks/usePageMetadata';
+import { createPropertyMetadata } from '@/hooks/usePageMetadata';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 type Profile = Database['public']['Tables']['profiles']['Row'];
@@ -239,8 +241,24 @@ export default function PropertyDetail() {
     ? property.images
     : [];
 
+  // Métadonnées pour le SEO et Schema.org
+  const propertyType = property.property_type === 'apartment' ? 'Appartement' :
+                     property.property_type === 'house' ? 'Maison' :
+                     property.property_type === 'villa' ? 'Villa' : 'Studio';
+
+  const { HelmetHead } = usePageMetadata(createPropertyMetadata(
+    property.title,
+    propertyType,
+    property.monthly_rent,
+    property.city,
+    property.description || '',
+    images[0]
+  ));
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-coral-50 custom-cursor">
+    <>
+      <HelmetHead />
+      <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-coral-50 custom-cursor">
       <div className="glass-card border-b border-white/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <button
@@ -789,5 +807,6 @@ export default function PropertyDetail() {
         </div>
       )}
     </div>
+    </>
   );
 }

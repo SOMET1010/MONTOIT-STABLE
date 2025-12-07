@@ -66,7 +66,20 @@ class ApiKeyService {
     try {
       const { data, error } = await supabase
         .from('api_keys')
-        .select('*')
+        .select(`
+          id,
+          service_name,
+          key_type,
+          environment,
+          status,
+          key_prefix,
+          permissions,
+          expires_at,
+          last_used_at,
+          usage_count,
+          created_at,
+          updated_at
+        `)
         .order('service_name');
 
       if (error) throw error;

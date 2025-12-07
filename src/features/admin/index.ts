@@ -1,6 +1,6 @@
 /**
  * Feature: admin
- * 
+ *
  * Exports publics de la feature admin
  */
 
@@ -20,3 +20,9 @@ export { default as UsersPage } from './pages/UsersPage';
 
 // Components
 export { default as DashboardExportButton } from './components/DashboardExportButton';
+
+// Types
+export * from './types';
+
+// Services (à créer)
+// export * from './services';

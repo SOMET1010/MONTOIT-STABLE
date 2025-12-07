@@ -4,6 +4,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Chatbot from '@/features/messaging/components/Chatbot';
 import { ErrorBoundary } from '@/shared/ui/ErrorBoundary';
+import SkipLinks from '@/shared/ui/SkipLinks';
 
 const noLayoutRoutes = ['/connexion', '/inscription', '/messages', '/auth/callback'];
 const noHeaderFooterRoutes = [
@@ -39,6 +40,17 @@ export default function Layout() {
   const shouldShowHeaderFooter =
     !noHeaderFooterRoutes.some((route) => path.startsWith(route)) && !noLayoutRoutes.includes(path);
 
+  // Liens de navigation pour l'accessibilité
+  const skipLinks = [
+    { id: 'main-content', label: 'Aller au contenu principal' },
+    { id: 'main-navigation', label: 'Aller à la navigation' },
+    { id: 'footer', label: 'Aller au pied de page' },
+  ].filter((link) => {
+    if (link.id === 'main-navigation' && !shouldShowHeaderFooter) return false;
+    if (link.id === 'footer' && !shouldShowHeaderFooter) return false;
+    return true;
+  });
+
   if (!shouldShowLayout) {
     return (
       <ErrorBoundary>
@@ -58,7 +70,12 @@ export default function Layout() {
 
   return (
     <ErrorBoundary>
-      {shouldShowHeaderFooter && <Header />}
+      <SkipLinks links={skipLinks} />
+      {shouldShowHeaderFooter && (
+        <header id="main-navigation">
+          <Header />
+        </header>
+      )}
       <Suspense
         fallback={
           <div className="min-h-screen flex items-center justify-center">
@@ -66,11 +83,20 @@ export default function Layout() {
           </div>
         }
       >
-        <main className={shouldShowHeaderFooter ? 'min-h-screen' : ''}>
+        <main
+          id="main-content"
+          className={shouldShowHeaderFooter ? 'min-h-screen' : ''}
+          role="main"
+          tabIndex={-1}
+        >
           <Outlet />
         </main>
       </Suspense>
-      {shouldShowHeaderFooter && <Footer />}
+      {shouldShowHeaderFooter && (
+        <footer id="footer">
+          <Footer />
+        </footer>
+      )}
       <Chatbot />
     </ErrorBoundary>
   );

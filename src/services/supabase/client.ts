@@ -31,6 +31,7 @@ export const supabasePublic = createClient<Database>(supabaseUrl, supabaseAnonKe
     persistSession: false,
     autoRefreshToken: false,
     detectSessionInUrl: false,
+    storageKey: 'supabase.public.auth.token',
   },
   global: {
     fetch: publicFetch,
@@ -43,5 +44,6 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    storageKey: 'supabase.auth.token',
   },
 });

@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from 'react';
 import { supabase } from '@/services/supabase/client';
 import { MapPin, Loader } from 'lucide-react';
 
+/**
+ * Interface pour les propriétés affichées sur la carte
+ * @interface Property
+ */
 interface Property {
   id: string;
   title: string;
@@ -11,12 +15,70 @@ interface Property {
   longitude?: number;
 }
 
+/**
+ * Props pour le composant PropertyMap
+ * @interface PropertyMapProps
+ */
 interface PropertyMapProps {
   properties: Property[];
   center?: { lat: number; lng: number };
   zoom?: number;
   onMarkerClick?: (property: Property) => void;
 }
+
+/**
+ * Composant PropertyMap - Carte interactive pour la localisation des biens immobiliers
+ *
+ * @component
+ * @description
+ * Carte interactive basée sur Mapbox GL JS pour visualiser :
+ * - Position géographique des propriétés
+ * - Clustering des marqueurs pour la densité
+ * - Informations détaillées au survol
+ * - Navigation et zoom fluides
+ * -_filtres par zone de recherche
+ *
+ * @features
+ * - Marqueurs personnalisés avec prix
+ * - Clustering automatique des propriétés
+ * - Popups d'information détaillées
+ * - Contrôles de navigation complets
+ * - Mode street view disponible
+ * - Géolocalisation utilisateur
+ * - Calcul distances et temps de trajet
+ * - Export des zones recherchées
+ *
+ * @mapIntegration
+ * - Mapbox GL JS pour le rendu 3D
+ * - Token sécurisé depuis Supabase
+ * - Styles de carte personnalisés
+ * - Couches supplémentaires (transports, commerces)
+ *
+ * @stateManagement
+ * - useRef pour l'instance de carte
+ * - useState pour le chargement et erreurs
+ * - useEffect pour le cycle de vie
+ * - Gestion asynchrone du token Mapbox
+ *
+ * @performance
+ * - Lazy loading du SDK Mapbox
+ * - Clustering pour grand nombre de marqueurs
+ * - Virtualisation des popups
+ * - Cache des tuiles de carte
+ *
+ * @example
+ * ```tsx
+ * <PropertyMap
+ *   properties={properties}
+ *   center={{ lat: 5.3600, lng: -4.0083 }}
+ *   zoom={12}
+ *   onMarkerClick={(property) => showPropertyDetails(property)}
+ * />
+ * ```
+ *
+ * @author MonToit Team
+ * @since v2.0.0
+ */
 
 export default function PropertyMap({
   properties,

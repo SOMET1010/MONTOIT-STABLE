@@ -58,7 +58,33 @@ export function useContract(leaseId: string | undefined, userId: string | undefi
     try {
       const { data: leaseData, error: leaseError } = await supabase
         .from('leases')
-        .select('*')
+        .select(`
+          id,
+          property_id,
+          landlord_id,
+          tenant_id,
+          lease_type,
+          start_date,
+          end_date,
+          monthly_rent,
+          deposit_amount,
+          charges_amount,
+          payment_day,
+          status,
+          contract_content,
+          custom_clauses,
+          landlord_signature,
+          tenant_signature,
+          landlord_signed_at,
+          tenant_signed_at,
+          pdf_document_url,
+          signed_pdf_url,
+          activation_date,
+          termination_date,
+          termination_reason,
+          created_at,
+          updated_at
+        `)
         .eq('id', leaseId)
         .single();
 

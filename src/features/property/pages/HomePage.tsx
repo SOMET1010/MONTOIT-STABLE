@@ -5,6 +5,7 @@ import type { Database } from '@/shared/lib/database.types';
 import QuickSearch from '@/features/property/components/QuickSearch';
 import { FormatService } from '@/services/format/formatService';
 import MapWrapper from '@/shared/ui/MapWrapper';
+import { usePageMetadata } from '@/hooks/usePageMetadata';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
@@ -93,8 +94,43 @@ export default function Home() {
     }
   };
 
+  const { HelmetHead } = usePageMetadata({
+    title: 'MON TOIT - Location Immobilière en Côte d\'Ivoire',
+    description: 'MON TOIT - Plateforme de location immobilière certifiée ANSUT en Côte d\'Ivoire. Trouvez votre logement idéal en toute sécurité avec des appartements, villas et maisons à Abidjan et dans tout le pays.',
+    keywords: 'location immobilière, Côte d\'Ivoire, Abidjan, appartement, villa, maison, ANSUT, logement, immobilier',
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'MON TOIT',
+        description: 'Plateforme de location immobilière certifiée ANSUT en Côte d\'Ivoire',
+        url: 'https://montoit.ci',
+        potentialAction: {
+          '@type': 'SearchAction',
+          target: 'https://montoit.ci/recherche?city={search_term_string}',
+          'query-input': 'required name=search_term_string'
+        }
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'MON TOIT',
+        description: 'Plateforme de location immobilière certifiée ANSUT',
+        url: 'https://montoit.ci',
+        logo: 'https://montoit.ci/logo-montoit.png',
+        address: {
+          '@type': 'PostalAddress',
+          addressCountry: 'CI'
+        },
+        sameAs: []
+      }
+    ]
+  });
+
   return (
-    <div className="min-h-screen custom-cursor">
+    <>
+      <HelmetHead />
+      <div className="min-h-screen custom-cursor">
       <section
         className="relative overflow-hidden bg-gradient-to-br from-terracotta-400 via-coral-400 to-amber-400 text-white py-32"
         onMouseEnter={() => setIsCarouselPaused(true)}
@@ -667,5 +703,6 @@ export default function Home() {
         </div>
       </section>
     </div>
+    </>
   );
 }

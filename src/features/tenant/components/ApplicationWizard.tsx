@@ -4,6 +4,10 @@ import { AccessibleButton } from '@/components/ui/AccessibleButton';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
 
+/**
+ * Interface pour les données de candidature locative
+ * @interface ApplicationData
+ */
 interface ApplicationData {
   personalInfo: {
     full_name: string;
@@ -24,12 +28,66 @@ interface ApplicationData {
   };
 }
 
+/**
+ * Interface pour les étapes du wizard
+ * @interface WizardStep
+ */
 interface WizardStep {
   id: string;
   title: string;
   component: React.ComponentType<any>;
   icon: React.ReactNode;
 }
+
+/**
+ * Composant ApplicationWizard - Assistant multi-étapes pour les candidatures locatives
+ *
+ * @component
+ * @description
+ * Formulaire guidé en plusieurs étapes pour les candidatures de logement :
+ * - Informations personnelles et contact
+ * - Vérification d'identité (ONeCI, faciale, CNAM)
+ * - Lettre de motivation personnalisée
+ * - Upload des documents requis
+ * - Validation et soumission finale
+ *
+ * @features
+ * - Navigation entre étapes avec validation
+ * - Sauvegarde automatique (auto-save)
+ * - Indicateurs de progression
+ * - Validation en temps réel
+ * - Upload de documents avec preview
+ * - Gestion des erreurs étendues
+ * - Mode brouillon et reprise
+ * - Accessibilité WCAG 2.1
+ *
+ * @stateManagement
+ * - useState pour les données du formulaire
+ * - useEffect pour l'auto-save
+ * - useCallback pour les optimisations
+ * - useAuth pour le contexte utilisateur
+ *
+ * @validation
+ * - Champs obligatoires par étape
+ * - Formats de téléphone et email
+ * - Taille et type de documents
+ * - Vérifications d'identité requises
+ *
+ * @dependencies
+ * - supabase : Persistance des données
+ * - AuthProvider : Session utilisateur
+ * - AccessibleButton : Accessibilité
+ *
+ * @example
+ * ```tsx
+ * <ApplicationWizard propertyId="uuid-property-123" />
+ * ```
+ *
+ * @param {string} propertyId - ID du bien concerné par la candidature
+ *
+ * @author MonToit Team
+ * @since v2.0.0
+ */
 
 const ApplicationWizard: React.FC<{ propertyId: string }> = ({ propertyId }) => {
   const { user } = useAuth();

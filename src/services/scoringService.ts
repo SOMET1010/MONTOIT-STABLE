@@ -33,7 +33,23 @@ export class ScoringService {
     try {
       const { data: profile } = await supabase
         .from('profiles')
-        .select('*')
+        .select(`
+          id,
+          user_type,
+          full_name,
+          phone,
+          avatar_url,
+          bio,
+          city,
+          address,
+          is_verified,
+          oneci_verified,
+          cnam_verified,
+          face_verified,
+          ansut_certified,
+          created_at,
+          updated_at
+        `)
         .eq('id', userId)
         .maybeSingle();
 

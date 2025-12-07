@@ -1,6 +1,6 @@
 /**
  * Feature: owner
- * 
+ *
  * Exports publics de la feature owner
  */
 
@@ -11,4 +11,14 @@ export { default as CreateContractPage } from './pages/CreateContractPage';
 export { default as DashboardPage } from './pages/DashboardPage';
 export { default as MaintenancePage } from './pages/MaintenancePage';
 
-// Components
+// Components (à créer)
+// export * from './components';
+
+// Types
+export * from './types';
+
+// Services (à créer)
+// export * from './services';
+
+// Hooks (à créer)
+// export * from './hooks';

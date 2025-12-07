@@ -29,7 +29,34 @@ export function useVerification(userId: string | undefined) {
     try {
       const { data, error: fetchError } = await supabase
         .from('user_verifications')
-        .select('*')
+        .select(`
+          id,
+          user_id,
+          oneci_status,
+          oneci_verified_at,
+          oneci_document_url,
+          oneci_number,
+          cnam_status,
+          cnam_verified_at,
+          cnam_document_url,
+          cnam_number,
+          face_verification_status,
+          face_verified_at,
+          face_verification_confidence,
+          face_verification_data,
+          selfie_image_url,
+          tenant_score,
+          profile_completeness_score,
+          rental_history_score,
+          payment_reliability_score,
+          last_score_update,
+          ansut_certified,
+          ansut_certified_at,
+          rejection_reason,
+          verification_notes,
+          created_at,
+          updated_at
+        `)
         .eq('user_id', userId)
         .maybeSingle();
 

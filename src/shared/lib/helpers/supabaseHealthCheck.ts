@@ -1,4 +1,5 @@
 import { supabase } from '../supabase';
+import type { PostgrestError, PostgrestSingleResponse } from '@supabase/supabase-js';
 
 export interface HealthCheckResult {
   status: 'healthy' | 'degraded' | 'unhealthy';
@@ -31,15 +32,16 @@ export async function performHealthCheck(): Promise<HealthCheckResult> {
     );
     const queryPromise = supabase.from('profiles').select('count').limit(1).maybeSingle();
 
-    const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+    const { data, error } = await Promise.race([queryPromise, timeoutPromise]) as PostgrestSingleResponse<{ count: number }>;
 
     if (error) {
       result.errors.push(`Database: ${error.message}`);
     } else {
       result.checks.database = true;
     }
-  } catch (err: any) {
-    result.errors.push(`Database: ${err.message}`);
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Database connection error';
+    result.errors.push(`Database: ${errorMessage}`);
   }
 
   try {
@@ -49,8 +51,9 @@ export async function performHealthCheck(): Promise<HealthCheckResult> {
     } else {
       result.checks.auth = true;
     }
-  } catch (err: any) {
-    result.errors.push(`Auth: ${err.message}`);
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Auth connection error';
+    result.errors.push(`Auth: ${errorMessage}`);
   }
 
   try {
@@ -60,8 +63,9 @@ export async function performHealthCheck(): Promise<HealthCheckResult> {
     } else {
       result.checks.storage = true;
     }
-  } catch (err: any) {
-    result.errors.push(`Storage: ${err.message}`);
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Storage connection error';
+    result.errors.push(`Storage: ${errorMessage}`);
   }
 
   result.checks.edgeFunctions = true;
@@ -88,7 +92,7 @@ export async function testDatabaseConnection(): Promise<{ success: boolean; mess
 
     const queryPromise = supabase.from('profiles').select('id').limit(1);
 
-    const { error } = await Promise.race([queryPromise, timeoutPromise]) as any;
+    const { error } = await Promise.race([queryPromise, timeoutPromise]) as PostgrestSingleResponse<{ id: string }>;
 
     if (error) {
       if (error.message.includes('schema cache') || error.message.includes('Could not find')) {
@@ -100,17 +104,18 @@ export async function testDatabaseConnection(): Promise<{ success: boolean; mess
       return { success: false, message: error.message };
     }
     return { success: true, message: 'Database connection successful' };
-  } catch (err: any) {
-    if (err.message.includes('timeout')) {
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Database connection error';
+    if (errorMessage.includes('timeout')) {
       return { success: false, message: 'La connexion a expiré. Vérifiez votre connexion Internet.' };
     }
-    if (err.message.includes('schema cache') || err.message.includes('Could not find')) {
+    if (errorMessage.includes('schema cache') || errorMessage.includes('Could not find')) {
       return {
         success: false,
         message: 'La table des profils n\'est pas accessible. Les migrations de base de données n\'ont peut-être pas été appliquées correctement.'
       };
     }
-    return { success: false, message: err.message };
+    return { success: false, message: errorMessage };
   }
 }
 
@@ -131,8 +136,9 @@ export async function testProfileAccess(userId: string): Promise<{ success: bool
     }
 
     return { success: true, message: 'Profile access successful', hasProfile: true };
-  } catch (err: any) {
-    return { success: false, message: err.message, hasProfile: false };
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Profile access error';
+    return { success: false, message: errorMessage, hasProfile: false };
   }
 }
 
@@ -143,8 +149,9 @@ export async function testAuthConnection(): Promise<{ success: boolean; message:
       return { success: false, message: error.message };
     }
     return { success: true, message: 'Auth connection successful' };
-  } catch (err: any) {
-    return { success: false, message: err.message };
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : 'Auth connection error';
+    return { success: false, message: errorMessage };
   }
 }
 

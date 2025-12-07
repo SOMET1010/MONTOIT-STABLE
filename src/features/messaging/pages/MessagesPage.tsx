@@ -167,7 +167,15 @@ export default function Messages() {
 
           const { data: attachments } = await supabase
             .from('message_attachments')
-            .select('*')
+            .select(`
+              id,
+              message_id,
+              file_name,
+              file_url,
+              file_type,
+              file_size,
+              created_at
+            `)
             .eq('message_id', msg.id);
 
           return {

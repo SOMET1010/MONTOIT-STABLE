@@ -65,7 +65,7 @@ language plpgsql
 as $$
 declare
     current_user_id uuid := auth.uid();
-    allowed text[] := array['locataire', 'proprietaire', 'agence', 'admin'];
+    allowed text[] := array['locataire', 'proprietaire', 'agence', 'admin', 'admin_ansut'];
     role_list text[];
 begin
     if current_user_id is null then

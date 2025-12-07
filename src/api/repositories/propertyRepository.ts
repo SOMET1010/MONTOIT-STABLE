@@ -73,7 +73,34 @@ export const propertyRepository = {
   async getByOwnerId(ownerId: string) {
     const query = supabase
       .from('properties')
-      .select('*')
+      .select(`
+        id,
+        owner_id,
+        title,
+        description,
+        address,
+        city,
+        neighborhood,
+        latitude,
+        longitude,
+        property_type,
+        status,
+        bedrooms,
+        bathrooms,
+        surface_area,
+        has_parking,
+        has_garden,
+        is_furnished,
+        has_ac,
+        monthly_rent,
+        deposit_amount,
+        charges_amount,
+        images,
+        main_image,
+        view_count,
+        created_at,
+        updated_at
+      `)
       .eq('owner_id', ownerId)
       .order('created_at', { ascending: false });
 
@@ -97,7 +124,34 @@ export const propertyRepository = {
       .from('properties')
       .update(updates)
       .eq('id', id)
-      .select()
+      .select(`
+        id,
+        owner_id,
+        title,
+        description,
+        address,
+        city,
+        neighborhood,
+        latitude,
+        longitude,
+        property_type,
+        status,
+        bedrooms,
+        bathrooms,
+        surface_area,
+        has_parking,
+        has_garden,
+        is_furnished,
+        has_ac,
+        monthly_rent,
+        deposit_amount,
+        charges_amount,
+        images,
+        main_image,
+        view_count,
+        created_at,
+        updated_at
+      `)
       .single();
 
     return handleQuery<Property>(query);

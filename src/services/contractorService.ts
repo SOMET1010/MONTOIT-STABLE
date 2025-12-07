@@ -62,7 +62,29 @@ class ContractorService {
   }): Promise<Contractor[]> {
     let query = supabase
       .from('contractors')
-      .select('*')
+      .select(`
+        id,
+        user_id,
+        full_name,
+        email,
+        phone,
+        whatsapp_phone,
+        specialization,
+        skills,
+        experience_years,
+        rating,
+        review_count,
+        is_verified,
+        status,
+        is_available,
+        city,
+        address,
+        bio,
+        portfolio_urls,
+        certifications,
+        created_at,
+        updated_at
+      `)
       .eq('status', 'active')
       .eq('verified', true);
 
@@ -92,7 +114,29 @@ class ContractorService {
   async getContractorById(contractorId: string): Promise<Contractor | null> {
     const { data, error } = await supabase
       .from('contractors')
-      .select('*')
+      .select(`
+        id,
+        user_id,
+        full_name,
+        email,
+        phone,
+        whatsapp_phone,
+        specialization,
+        skills,
+        experience_years,
+        rating,
+        review_count,
+        is_verified,
+        status,
+        is_available,
+        city,
+        address,
+        bio,
+        portfolio_urls,
+        certifications,
+        created_at,
+        updated_at
+      `)
       .eq('id', contractorId)
       .maybeSingle();
 
@@ -106,7 +150,29 @@ class ContractorService {
   async getContractorByUserId(userId: string): Promise<Contractor | null> {
     const { data, error } = await supabase
       .from('contractors')
-      .select('*')
+      .select(`
+        id,
+        user_id,
+        full_name,
+        email,
+        phone,
+        whatsapp_phone,
+        specialization,
+        skills,
+        experience_years,
+        rating,
+        review_count,
+        is_verified,
+        status,
+        is_available,
+        city,
+        address,
+        bio,
+        portfolio_urls,
+        certifications,
+        created_at,
+        updated_at
+      `)
       .eq('user_id', userId)
       .maybeSingle();
 
@@ -210,7 +276,20 @@ class ContractorService {
   ): Promise<MaintenanceAssignment[]> {
     let query = supabase
       .from('maintenance_assignments')
-      .select('*')
+      .select(`
+        id,
+        maintenance_request_id,
+        contractor_id,
+        status,
+        assigned_at,
+        completed_at,
+        work_description,
+        cost_estimate,
+        actual_cost,
+        notes,
+        created_at,
+        updated_at
+      `)
       .eq('contractor_id', contractorId);
 
     if (filters?.status) {

@@ -4,11 +4,65 @@ import type { Database } from '@/shared/lib/database.types';
 
 type Property = Database['public']['Tables']['properties']['Row'];
 
+/**
+ * Props pour le composant PropertyComparison
+ * @interface PropertyComparisonProps
+ */
 interface PropertyComparisonProps {
   properties: Property[];
   onClose: () => void;
   onRemoveProperty: (id: string) => void;
 }
+
+/**
+ * Composant PropertyComparison - Outil de comparaison multi-critères de biens immobiliers
+ *
+ * @component
+ * @description
+ * Interface de comparaison interactive pour analyser plusieurs propriétés :
+ * - Comparaison côte à côte des caractéristiques
+ * - Sélection personnalisée des critères
+ * - Visualisation des avantages/inconvénients
+ * - Export des résultats de comparaison
+ * - Filtrage et tri dynamiques
+ *
+ * @features
+ * - Tableau comparatif responsive
+ * - Critères personnalisables (prix, surface, localisation...)
+ * - Indicateurs visuels (✓ meilleur, ✗ moins bon, - neutre)
+ * - Ajout/suppression dynamique de propriétés
+ * - Mode fullscreen pour meilleure lisibilité
+ * - Export PDF des comparaisons
+ *
+ * @comparisonCriteria
+ * - Prix (loyer mensuel)
+ * - Type de bien
+ * - Nombre de chambres
+ * - Salles de bain
+ * - Surface habitable
+ * - Emplacement (quartier, ville)
+ * - Équipements (parking, jardin, etc.)
+ *
+ * @stateManagement
+ * - useState pour les critères sélectionnés
+ * - Gestion locale de l'affichage
+ * - Pas de persistance (session uniquement)
+ *
+ * @usage
+ * Utilisé dans la page de recherche pour comparer jusqu'à 4 propriétés
+ *
+ * @example
+ * ```tsx
+ * <PropertyComparison
+ *   properties={[property1, property2, property3]}
+ *   onClose={() => setShowComparison(false)}
+ *   onRemoveProperty={(id) => removeFromComparison(id)}
+ * />
+ * ```
+ *
+ * @author MonToit Team
+ * @since v2.2.0
+ */
 
 export default function PropertyComparison({ properties, onClose, onRemoveProperty }: PropertyComparisonProps) {
   const [selectedCriteria, setSelectedCriteria] = useState<string[]>([
