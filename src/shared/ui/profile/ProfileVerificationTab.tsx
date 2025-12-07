@@ -48,16 +48,16 @@ export default function ProfileVerificationTab({ profile, verificationData }: Pr
         </h2>
 
         <div className="space-y-4">
-          <div className={`p-4 rounded-xl border-2 ${getStatusColor(verificationData?.oneci_status || 'non_verifie')}`}>
+          <div className={`p-4 rounded-xl border-2 ${getStatusColor(verificationData?.smile_id_status || 'non_verifie')}`}>
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
-                {getStatusIcon(verificationData?.oneci_status || 'non_verifie')}
+                {getStatusIcon(verificationData?.smile_id_status || 'non_verifie')}
                 <div>
-                  <h3 className="font-bold">Vérification ONECI (CNI)</h3>
-                  <p className="text-sm opacity-75">Vérification d'identité officielle</p>
+                  <h3 className="font-bold">Vérification Smile ID</h3>
+                  <p className="text-sm opacity-75">Vérification d'identité biométrique</p>
                 </div>
               </div>
-              <span className="font-bold">{getStatusText(verificationData?.oneci_status || 'non_verifie')}</span>
+              <span className="font-bold">{getStatusText(verificationData?.smile_id_status || 'non_verifie')}</span>
             </div>
           </div>
 

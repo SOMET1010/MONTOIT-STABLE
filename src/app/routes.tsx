@@ -80,8 +80,7 @@ const TrustAgentMediation = lazy(() => import('@/features/trust-agent/pages/Medi
 const TrustAgentAnalytics = lazy(() => import('@/features/trust-agent/pages/AnalyticsPage'));
 
 // Pages Vérification
-const VerificationRequest = lazy(() => import('@/features/verification/pages/RequestPage'));
-const IdentityVerification = lazy(() => import('@/features/auth/pages/IdentityVerificationPage'));
+const IdentityVerification = lazy(() => import('@/features/verification/pages/IdentityVerificationPage'));
 const VerificationSettings = lazy(() => import('@/features/verification/pages/SettingsPage'));
 const MyCertificates = lazy(() => import('@/features/verification/pages/MyCertificatesPage'));
 const RequestCEV = lazy(() => import('@/features/verification/pages/RequestCEVPage'));
@@ -265,27 +264,11 @@ const protectedRoutes: RouteObject[] = [
     path: 'verification',
     element: (
       <ProtectedRoute>
-        <VerificationRequest />
-      </ProtectedRoute>
-    ),
-  },
-  {
-    path: 'certification-ansut',
-    element: (
-      <ProtectedRoute>
         <IdentityVerification />
       </ProtectedRoute>
     ),
   },
-  {
-    path: 'ansut-verification',
-    element: (
-      <ProtectedRoute>
-        <IdentityVerification />
-      </ProtectedRoute>
-    ),
-  },
-  {
+    {
     path: 'verification/parametres',
     element: (
       <ProtectedRoute>

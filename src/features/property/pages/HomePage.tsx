@@ -616,7 +616,7 @@ export default function Home() {
                   </div>
                   <h3 className="text-lg sm:text-xl lg:text-2xl font-bold text-gray-900 mb-2 sm:mb-3">Vérifiez votre identité</h3>
                   <p className="text-sm sm:text-base text-gray-600 leading-relaxed">
-                    Vérification d'identité officielle via ONECI + biométrie pour établir la confiance
+                    Vérification d'identité officielle via Smile ID + biométrie pour établir la confiance
                   </p>
                 </div>
               </div>

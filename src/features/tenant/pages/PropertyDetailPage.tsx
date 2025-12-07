@@ -521,8 +521,8 @@ export default function PropertyDetail() {
                   <div className="flex items-start space-x-3 bg-gradient-to-r from-blue-50 to-cyan-50 px-4 py-3 rounded-lg border-2 border-blue-200">
                     <CheckCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold text-gray-900 text-sm">Vérification d'identité ONECI</p>
-                      <p className="text-xs text-gray-600">Les propriétaires et locataires vérifient leur identité via l'Office National d'Identification (ONECI) - Document CNI authentifié</p>
+                      <p className="font-semibold text-gray-900 text-sm">Vérification d'identité Smile ID</p>
+                      <p className="text-xs text-gray-600">Les propriétaires et locataires vérifient leur identité via Smile ID - Vérification biométrique sécurisée</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3 bg-gradient-to-r from-olive-50 to-green-50 px-4 py-3 rounded-lg border-2 border-olive-200">
@@ -580,9 +580,9 @@ export default function PropertyDetail() {
                     <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border-2 border-blue-200 px-4 py-3 rounded-xl mb-4">
                       <div className="flex items-center space-x-2 mb-2">
                         <CheckCircle className="h-5 w-5 text-blue-600" />
-                        <span className="font-bold text-blue-900">Identité vérifiée ONECI</span>
+                        <span className="font-bold text-blue-900">Identité vérifiée Smile ID</span>
                       </div>
-                      <p className="text-xs text-gray-600 ml-7">Document CNI authentifié par l'Office National d'Identification (ONECI)</p>
+                      <p className="text-xs text-gray-600 ml-7">Vérification biométrique sécurisée via Smile ID</p>
                     </div>
                   )}
                 </div>

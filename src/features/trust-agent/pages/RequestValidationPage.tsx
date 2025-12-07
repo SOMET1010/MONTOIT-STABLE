@@ -157,7 +157,7 @@ export default function RequestTrustValidation() {
                       avant de pouvoir demander la validation manuelle par le Tiers de Confiance.
                     </p>
                     <a
-                      href="/ansut-verification"
+                      href="/verification"
                       className="inline-flex items-center gap-2 bg-yellow-600 text-white px-4 py-2 rounded-lg hover:bg-yellow-700 transition-colors"
                     >
                       Obtenir la vérification Mon Toit

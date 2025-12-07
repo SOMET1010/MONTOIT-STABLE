@@ -43,7 +43,7 @@ export class ScoringService {
           city,
           address,
           is_verified,
-          oneci_verified,
+          smile_id_verified,
           cnam_verified,
           face_verified,
           ansut_certified,
@@ -68,10 +68,10 @@ export class ScoringService {
         improvements.push('Complétez la vérification ANSUT pour +20 points');
       }
 
-      if (profile.oneci_verified) {
+      if (profile.smile_id_verified) {
         verificationBonus += 15;
       } else {
-        improvements.push('Vérifiez votre identité ONECI pour +15 points');
+        improvements.push('Vérifiez votre identité Smile ID pour +15 points');
       }
 
       if (profile.cnam_verified) {
@@ -201,7 +201,7 @@ export class ScoringService {
 
       if (
         profile.is_verified &&
-        profile.oneci_verified &&
+        profile.smile_id_verified &&
         profile.cnam_verified &&
         !await this.hasAchievement(userId, 'fully_verified')
       ) {

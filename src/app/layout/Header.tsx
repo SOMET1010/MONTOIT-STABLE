@@ -37,7 +37,7 @@ export default function Header() {
   const { user, profile, signOut } = useAuth();
   const { unreadCount } = useMessageNotifications();
   const [verificationStatus, setVerificationStatus] = useState({
-    oneciVerified: false,
+    smileIdVerified: false,
     faceVerified: false,
     identityVerified: false,
   });
@@ -69,16 +69,16 @@ export default function Header() {
     try {
       const { data } = await supabase
         .from('user_verifications')
-        .select('oneci_status, face_verification_status')
+        .select('smile_id_status, face_verification_status')
         .eq('user_id', user?.id)
         .maybeSingle();
 
       if (data) {
         setVerificationStatus({
-          oneciVerified: data.oneci_status === 'verifie',
+          smileIdVerified: data.smile_id_status === 'verifie',
           faceVerified: data.face_verification_status === 'verifie',
           identityVerified:
-            data.oneci_status === 'verifie' && data.face_verification_status === 'verifie',
+            data.smile_id_status === 'verifie' && data.face_verification_status === 'verifie',
         });
       }
     } catch (error) {
@@ -592,7 +592,7 @@ export default function Header() {
                     className="block py-2 px-4 rounded-lg hover:bg-gray-50 font-medium"
                   >
                     <FileCheck className="h-4 w-4 inline mr-2" />
-                    CEV/ONECI
+                    Certifications
                   </a>
                 </>
               )}

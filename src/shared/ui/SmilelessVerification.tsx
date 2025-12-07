@@ -27,7 +27,7 @@ const SmilelessVerification: React.FC<SmilelessVerificationProps> = ({
       // TODO: Implémenter l'intégration avec Smile ID ou autre service de vérification
       // Pour l'instant, simulation
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      
+
       // Simulation de succès
       onVerified();
     } catch (err) {
@@ -46,18 +46,12 @@ const SmilelessVerification: React.FC<SmilelessVerificationProps> = ({
           <Camera className="h-5 w-5" />
           Vérification faciale sans sourire
         </CardTitle>
-        <CardDescription>
-          Nous allons comparer votre photo avec celle de votre CNI
-        </CardDescription>
+        <CardDescription>Nous allons comparer votre photo avec celle de votre CNI</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         {cniPhotoUrl && (
           <div className="flex justify-center">
-            <img
-              src={cniPhotoUrl}
-              alt="Photo CNI"
-              className="max-w-xs rounded-lg border"
-            />
+            <img src={cniPhotoUrl} alt="Photo CNI" className="max-w-xs rounded-lg border" />
           </div>
         )}
 
@@ -71,11 +65,7 @@ const SmilelessVerification: React.FC<SmilelessVerificationProps> = ({
           </div>
         )}
 
-        <Button
-          onClick={handleVerification}
-          disabled={isVerifying}
-          className="w-full"
-        >
+        <Button onClick={handleVerification} disabled={isVerifying} className="w-full">
           {isVerifying ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -98,4 +88,3 @@ const SmilelessVerification: React.FC<SmilelessVerificationProps> = ({
 };
 
 export default SmilelessVerification;
-

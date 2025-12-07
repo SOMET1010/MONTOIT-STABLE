@@ -4,13 +4,15 @@ import { supabase } from '@/services/supabase/client';
 interface VerificationData {
   id: string;
   user_id: string;
-  oneci_status: 'en_attente' | 'verifie' | 'rejete';
+  smile_id_status: 'en_attente' | 'submitted' | 'processing' | 'verifie' | 'rejete';
   cnam_status: 'en_attente' | 'verifie' | 'rejete';
   face_verification_status: 'en_attente' | 'verifie' | 'rejete';
-  oneci_document_url: string | null;
+  smile_id_document_url: string | null;
   cnam_document_url: string | null;
   selfie_image_url: string | null;
-  oneci_number: string | null;
+  smile_id_job_id: string | null;
+  smile_id_partner_id: string | null;
+  smile_id_result_data: Record<string, any> | null;
   cnam_number: string | null;
   rejection_reason: string | null;
   identity_verified: boolean;
@@ -32,10 +34,12 @@ export function useVerification(userId: string | undefined) {
         .select(`
           id,
           user_id,
-          oneci_status,
-          oneci_verified_at,
-          oneci_document_url,
-          oneci_number,
+          smile_id_status,
+          smile_id_verified_at,
+          smile_id_document_url,
+          smile_id_job_id,
+          smile_id_partner_id,
+          smile_id_result_data,
           cnam_status,
           cnam_verified_at,
           cnam_document_url,

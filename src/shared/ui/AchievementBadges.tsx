@@ -10,7 +10,7 @@ interface Achievement {
 }
 
 interface AchievementBadgesProps {
-  oneciVerified: boolean;
+  smileIdVerified: boolean;
   cnamVerified: boolean;
   faceVerified: boolean;
   tenantScore: number;
@@ -19,7 +19,7 @@ interface AchievementBadgesProps {
 }
 
 export default function AchievementBadges({
-  oneciVerified,
+  smileIdVerified,
   cnamVerified,
   faceVerified,
   tenantScore,
@@ -30,9 +30,9 @@ export default function AchievementBadges({
     {
       id: 'identity_verified',
       title: 'Identité Vérifiée',
-      description: 'CNI validée par ONECI',
+      description: 'Identité vérifiée par Smile ID',
       icon: Shield,
-      earned: oneciVerified,
+      earned: smileIdVerified,
       color: 'from-green-400 to-emerald-500'
     },
     {

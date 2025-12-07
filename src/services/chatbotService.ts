@@ -168,7 +168,7 @@ class ChatbotService {
 4. 🚷 **BLOQUE** ce contact
 
 **Sur Mon Toit, tu es protégé** :
-• ✅ Vérification ANSUT obligatoire (ONECI + CNAM + Biométrie)
+• ✅ Vérification ANSUT obligatoire (Smile ID + CNAM + Biométrie)
 • 🔒 Paiements sécurisés via la plateforme
 • 📝 Signature électronique AVANT tout paiement
 • 💰 Dépôt de garantie bloqué en séquestre
@@ -179,7 +179,7 @@ class ChatbotService {
 - Détection d'arnaques et fraudes immobilières
 - Protection des locataires et propriétaires
 - Processus sécurisé de location sur Mon Toit
-- Vérification ANSUT (ONECI + CNAM + Biométrie faciale)
+- Vérification ANSUT (Smile ID + CNAM + Biométrie faciale)
 - Signature électronique CryptoNeo conforme loi ivoirienne
 - Paiements Mobile Money sécurisés (Orange, MTN, Moov, Wave)
 - Escrow/séquestre pour dépôts de garantie
@@ -287,7 +287,7 @@ Si tu ne connais pas une réponse, dis-le honnêtement et propose de contacter l
     }
 
     if (lowerMessage.includes('ansut') || lowerMessage.includes('certification') || lowerMessage.includes('vérification')) {
-      return "🛡️ **Vérification d'Identité - Votre Garantie de Sécurité** :\n\n✅ **Vérification Mon Toit**\nVérification multi-niveaux OBLIGATOIRE pour tous les propriétaires :\n• 🆔 Vérification ONECI (CNI officielle)\n• 🏥 Vérification CNAM (couverture médicale)\n• 👤 Biométrie faciale (anti-fraude)\n• 📄 Documents propriété\n\n📋 **Pour obtenir la vérification (propriétaires)** :\n1. Accédez à 'Vérification d'identité'\n2. Remplir le formulaire complet\n3. Télécharger CNI + justificatifs\n4. Photo biométrique\n5. Validation 24-48h\n\n🎯 **Badge Vérifié = Propriétaire de CONFIANCE**\n\n⚠️ Locataires : Ne louez JAMAIS sans badge de vérification !";
+      return "🛡️ **Vérification d'Identité - Votre Garantie de Sécurité** :\n\n✅ **Vérification Mon Toit**\nVérification multi-niveaux OBLIGATOIRE pour tous les propriétaires :\n• 🆔 Vérification Smile ID (vérification biométrique)\n• 🏥 Vérification CNAM (couverture médicale)\n• 👤 Biométrie faciale (anti-fraude)\n• 📄 Documents propriété\n\n📋 **Pour obtenir la vérification (propriétaires)** :\n1. Accédez à 'Vérification d'identité'\n2. Remplir le formulaire complet\n3. Télécharger CNI + justificatifs\n4. Photo biométrique\n5. Validation 24-48h\n\n🎯 **Badge Vérifié = Propriétaire de CONFIANCE**\n\n⚠️ Locataires : Ne louez JAMAIS sans badge de vérification !";
     }
 
     if (lowerMessage.includes('contrat') || lowerMessage.includes('bail')) {
@@ -398,7 +398,7 @@ Si tu ne connais pas une réponse, dis-le honnêtement et propose de contacter l
 5. 📸 **PRENDS** des captures d'écran comme preuve
 
 **Sur Mon Toit, tu es PROTÉGÉ** :
-• ✅ Tous les propriétaires sont vérifiés ANSUT (ONECI + CNAM + Biométrie)
+• ✅ Tous les propriétaires sont vérifiés ANSUT (Smile ID + CNAM + Biométrie)
 • 🔒 Les paiements passent par notre plateforme sécurisée
 • 📝 Le bail est signé électroniquement AVANT tout paiement
 • 💰 Le dépôt de garantie est bloqué en séquestre jusqu'à la fin du bail

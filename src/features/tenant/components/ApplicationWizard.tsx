@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight, CheckCircle, AlertCircle, Save } from 'lucid
 import { AccessibleButton } from '@/components/ui/AccessibleButton';
 import { supabase } from '@/services/supabase/client';
 import { useAuth } from '@/app/providers/AuthProvider';
+import SmileIdVerification from '@/components/verification/SmileIdVerification';
+import { type SmileIdResult } from '@/services/smileIdService';
 
 /**
  * Interface pour les données de candidature locative
@@ -16,9 +18,10 @@ interface ApplicationData {
     bio?: string;
   };
   verification: {
-    oneci_verified: boolean;
+    smile_id_verified: boolean;
     face_verified: boolean;
     cnam_verified: boolean;
+    smile_id_result?: SmileIdResult;
   };
   coverLetter: string;
   documents: {
@@ -46,7 +49,7 @@ interface WizardStep {
  * @description
  * Formulaire guidé en plusieurs étapes pour les candidatures de logement :
  * - Informations personnelles et contact
- * - Vérification d'identité (ONeCI, faciale, CNAM)
+ * - Vérification d'identité (Smile ID, faciale, CNAM)
  * - Lettre de motivation personnalisée
  * - Upload des documents requis
  * - Validation et soumission finale
@@ -100,7 +103,7 @@ const ApplicationWizard: React.FC<{ propertyId: string }> = ({ propertyId }) => 
       bio: ''
     },
     verification: {
-      oneci_verified: false,
+      smile_id_verified: false,
       face_verified: false,
       cnam_verified: false
     },
@@ -208,7 +211,7 @@ const ApplicationWizard: React.FC<{ propertyId: string }> = ({ propertyId }) => 
                formData.personalInfo.city;
       
       case 'verification':
-        return formData.verification.oneci_verified || 
+        return formData.verification.smile_id_verified ||
                formData.verification.face_verified;
       
       case 'cover-letter':
@@ -497,59 +500,53 @@ const VerificationStep: React.FC<{
   data: ApplicationData['verification'];
   onChange: (data: ApplicationData['verification']) => void;
 }> = ({ data, onChange }) => {
+  const handleSmileIdComplete = (result: SmileIdResult) => {
+    onChange({
+      ...data,
+      smile_id_verified: true,
+      smile_id_result: result,
+      face_verified: result.biometricData?.livenessCheck || false
+    });
+  };
+
+  const handleSmileIdError = (error: string) => {
+    console.error('Smile ID verification error:', error);
+  };
+
   return (
     <div className="space-y-6">
       <h2 className="text-xl font-semibold mb-4">Vérification d'identité</h2>
-      
-      <div className="bg-amber-50 border-2 border-amber-200 rounded-lg p-4 mb-4">
+
+      <div className="bg-blue-50 border-2 border-blue-200 rounded-lg p-4 mb-4">
         <div className="flex items-start space-x-3">
-          <AlertCircle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
+          <AlertCircle className="w-6 h-6 text-blue-600 flex-shrink-0 mt-1" />
           <div>
-            <p className="font-semibold text-amber-900">Vérification requise pour postuler</p>
-            <p className="text-sm text-amber-800">
-              Complétez au moins une vérification pour augmenter vos chances d'être sélectionné.
+            <p className="font-semibold text-blue-900">Vérification d'identité avec Smile ID</p>
+            <p className="text-sm text-blue-800">
+              Complétez la vérification biométrique avec Smile ID pour sécuriser votre candidature.
+              C'est rapide, sécurisé et augmente considérablement vos chances d'être sélectionné.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <label className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-terracotta-300">
-          <input
-            type="checkbox"
-            checked={data.oneci_verified}
-            onChange={(e) => onChange({ ...data, oneci_verified: e.target.checked })}
-            className="mr-3"
-          />
-          <div>
-            <p className="font-medium">Vérification ONECI</p>
-            <p className="text-sm text-gray-600">Document CNI authentifié</p>
-          </div>
-        </label>
+      <SmileIdVerification
+        onVerificationComplete={handleSmileIdComplete}
+        onVerificationError={handleSmileIdError}
+      />
 
-        <label className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-terracotta-300">
-          <input
-            type="checkbox"
-            checked={data.face_verified}
-            onChange={(e) => onChange({ ...data, face_verified: e.target.checked })}
-            className="mr-3"
-          />
-          <div>
-            <p className="font-medium">Vérification faciale</p>
-            <p className="text-sm text-gray-600">Reconnaissance biométrique</p>
-          </div>
-        </label>
-
-        <label className="flex items-center space-x-3 p-4 border-2 border-gray-200 rounded-lg cursor-pointer hover:border-terracotta-300">
+      {/* Optionnel : Vérification CNAM alternative */}
+      <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+        <label className="flex items-center space-x-3 cursor-pointer">
           <input
             type="checkbox"
             checked={data.cnam_verified}
             onChange={(e) => onChange({ ...data, cnam_verified: e.target.checked })}
-            className="mr-3"
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
           />
           <div>
-            <p className="font-medium">Vérification CNAM</p>
-            <p className="text-sm text-gray-600">Affiliation CNAM (optionnel)</p>
+            <p className="font-medium text-gray-900">Vérification CNAM (optionnel)</p>
+            <p className="text-sm text-gray-600">Affiliation CNAM pour vérification complémentaire</p>
           </div>
         </label>
       </div>
@@ -685,17 +682,22 @@ const SummaryStep: React.FC<{
         <div>
           <h3 className="font-semibold text-gray-900 mb-2">Vérifications</h3>
           <div className="space-y-2 text-sm">
-            <p><strong>ONECI :</strong> 
-              <span className={data.verification.oneci_verified ? 'text-green-600' : 'text-red-600'}>
-                {data.verification.oneci_verified ? '✅ Vérifié' : '❌ Non vérifié'}
+            <p><strong>Smile ID :</strong>
+              <span className={data.verification.smile_id_verified ? 'text-green-600' : 'text-red-600'}>
+                {data.verification.smile_id_verified ? '✅ Vérifié' : '❌ Non vérifié'}
               </span>
+              {data.verification.smile_id_result && (
+                <span className="text-xs text-gray-500 ml-2">
+                  (Score: {data.verification.smile_id_result.confidence}%)
+                </span>
+              )}
             </p>
-            <p><strong>Vérification faciale :</strong> 
+            <p><strong>Vérification faciale :</strong>
               <span className={data.verification.face_verified ? 'text-green-600' : 'text-red-600'}>
                 {data.verification.face_verified ? '✅ Vérifié' : '❌ Non vérifié'}
               </span>
             </p>
-            <p><strong>CNAM :</strong> 
+            <p><strong>CNAM :</strong>
               <span className={data.verification.cnam_verified ? 'text-green-600' : 'text-gray-600'}>
                 {data.verification.cnam_verified ? '✅ Vérifié' : 'Optionnel'}
               </span>

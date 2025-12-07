@@ -173,14 +173,14 @@ $$ language plpgsql security definer;
 
 -- create trigger to handle profile updates
 -- this trigger fires when a profile is updated
+-- Note: This trigger will be recreated in a later migration to avoid schema conflicts
 
-create trigger trigger_handle_profile_update
-    after update on profiles
-    for each row
-    when (
-        old.is_verified is distinct from new.is_verified or
-        old.oneci_verified is distinct from new.oneci_verified or
-        old.cnam_verified is distinct from new.cnam_verified or
-        old.face_verified is distinct from new.face_verified
-    )
-    execute function handle_profile_update();
+-- create trigger trigger_handle_profile_update
+--     after update on profiles
+--     for each row
+--     when (
+--         old.is_verified is distinct from new.is_verified or
+--         old.cnam_verified is distinct from new.cnam_verified or
+--         old.face_verified is distinct from new.face_verified
+--     )
+--     execute function handle_profile_update();

@@ -247,7 +247,7 @@ export default function Profile() {
                   </a>
                 )}
                 <a
-                  href="/ansut-verification"
+                  href="/verification"
                   className="block text-terracotta-600 hover:text-terracotta-700 font-medium py-2 px-3 rounded-lg hover:bg-terracotta-50 transition"
                 >
                   Vérifier mon identité →
@@ -390,7 +390,7 @@ export default function Profile() {
 
             {verificationData && (
               <AchievementBadges
-                oneciVerified={verificationData.oneci_status === 'verifie'}
+                smileIdVerified={verificationData.smile_id_status === 'verifie'}
                 cnamVerified={
                   FEATURES.CNAM_VERIFICATION && verificationData.cnam_status === 'verifie'
                 }

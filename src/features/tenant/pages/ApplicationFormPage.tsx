@@ -110,7 +110,7 @@ export default function ApplicationForm() {
     let score = 50;
 
     if (profile?.is_verified) score += 20;
-    if (profile?.oneci_verified) score += 15;
+    if (profile?.smile_id_verified) score += 15;
     if (profile?.cnam_verified) score += 15;
 
     if (profile?.full_name) score += 2;
@@ -200,21 +200,21 @@ export default function ApplicationForm() {
                 <div className="flex-1">
                   <p className="font-bold text-red-900 text-lg mb-2">🚫 Vérification d'identité OBLIGATOIRE</p>
                   <p className="text-red-800 mb-3 font-semibold">
-                    Vous devez compléter la vérification ONECI et la vérification faciale avant de postuler. Les candidatures non vérifiées ne sont pas acceptées par les propriétaires.
+                    Vous devez compléter la vérification Smile ID et la vérification faciale avant de postuler. Les candidatures non vérifiées ne sont pas acceptées par les propriétaires.
                   </p>
                   <p className="text-red-700 text-sm mb-4">
                     <strong>Étapes de vérification requises:</strong>
                   </p>
                   <ul className="text-red-700 text-sm space-y-1 mb-4 ml-4 list-disc">
-                    <li>✓ Vérification CNI via ONECI (obligatoire)</li>
+                    <li>✓ Vérification d'identité via Smile ID (obligatoire)</li>
                     <li>✓ Reconnaissance faciale biométrique (obligatoire)</li>
                     <li>• Vérification CNAM (optionnelle)</li>
                   </ul>
                   <a
-                    href="/ansut-verification"
+                    href="/verification"
                     className="inline-block px-6 py-3 bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all font-bold shadow-lg"
                   >
-                    Compléter ma vérification ONECI →
+                    Compléter ma vérification Smile ID →
                   </a>
                 </div>
               </div>

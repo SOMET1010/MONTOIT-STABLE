@@ -41,10 +41,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     // Exclure pour charger à la demande
-    exclude: [
-      'lucide-react',
-      'jspdf',
-    ],
+    exclude: ['lucide-react', 'jspdf'],
     // Pré-builder les dépendances critiques
     include: [
       'react',
@@ -56,7 +53,7 @@ export default defineConfig({
       '@sentry/tracing',
       '@sentry/replay',
       'hoist-non-react-statics',
-      'mapbox-gl'
+      'mapbox-gl',
     ],
     // Force la transformation des modules CJS
     force: true,

@@ -209,7 +209,7 @@ export default function ProfileQuickActions() {
                 Complétez votre vérification d'identité
               </h4>
               <p className="text-gray-600 text-xs mb-3">
-                Vérifiez votre identité via ONECI pour débloquer toutes les fonctionnalités et gagner la confiance des {profile?.user_type === 'locataire' ? 'propriétaires' : 'locataires'}.
+                Vérifiez votre identité via Smile ID pour débloquer toutes les fonctionnalités et gagner la confiance des {profile?.user_type === 'locataire' ? 'propriétaires' : 'locataires'}.
               </p>
               <a
                 href="/verification"
