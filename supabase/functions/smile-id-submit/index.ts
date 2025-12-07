@@ -14,12 +14,61 @@ serve(async (req) => {
   }
 
   try {
-    const { userId, fileType, imageBase64, idType = 'NATIONAL_ID', country = 'CI', jobType = 1 } = await req.json()
+    const {
+      userId,
+      jobType = 'biometric_kyc',
+      selfieBase64,
+      idCardFrontBase64,
+      idCardBackBase64,
+      idType = 'NATIONAL_ID',
+      country = 'CI',
+      idNumber,
+      firstName,
+      lastName,
+      dob,
+      phoneNumber,
+      email
+    } = await req.json()
 
-    // Validation des données
-    if (!userId || !imageBase64) {
+    // Validation des données de base
+    if (!userId) {
       return new Response(
-        JSON.stringify({ error: 'Données manquantes: userId et imageBase64 sont requis' }),
+        JSON.stringify({ error: 'Données manquantes: userId est requis' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    // Mapper les job types selon la documentation Smile ID
+    const jobTypeMap: Record<string, number> = {
+      biometric_kyc: 1, // Biometric KYC
+      document_verification: 5, // Document Verification
+      enhanced_document_verification: 12, // Enhanced Document Verification
+      smartselfie_authentication: 11, // SmartSelfie Authentication
+      enhanced_kyc: 14 // Enhanced KYC
+    }
+
+    const jobTypeCode = jobTypeMap[jobType] ?? 1
+
+    // Validation des assets obligatoires selon le produit
+    const needsSelfie = ['biometric_kyc', 'smartselfie_authentication'].includes(jobType)
+    const needsDoc = ['document_verification', 'enhanced_document_verification'].includes(jobType)
+
+    if (needsSelfie && !selfieBase64) {
+      return new Response(
+        JSON.stringify({ error: 'Une photo selfie est requise pour ce type de vérification' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      )
+    }
+
+    if (needsDoc && !idCardFrontBase64) {
+      return new Response(
+        JSON.stringify({ error: 'Une photo du document (face avant) est requise pour ce type de vérification' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -57,25 +106,40 @@ serve(async (req) => {
     const partnerParams = {
       job_id: jobId,
       user_id: userId,
-      job_type: jobType,
-      optional_info: `${fileType}_verification_initiated`
+      job_type: jobTypeCode,
+      optional_info: `${jobType}_initiated`
     }
 
-    const imageDetails = jobType === 1
-      ? { selfie: imageBase64 }
-      : { id_card_front: imageBase64 }
+    const imageDetails: Record<string, any> = {}
+    if (selfieBase64) imageDetails.selfie = selfieBase64
+    if (idCardFrontBase64) imageDetails.id_card_front = idCardFrontBase64
+    if (idCardBackBase64) imageDetails.id_card_back = idCardBackBase64
 
-    const params = {
+    const idInfo = {
+      id_type: idType,
+      country,
+      id_number: idNumber,
+      first_name: firstName,
+      last_name: lastName,
+      dob,
+      phone_number: phoneNumber,
+      email
+    }
+
+    const params: Record<string, any> = {
       partner_params: partnerParams,
       image_details: imageDetails,
-      id_info: {
-        id_type: idType,
-        country: country
-      },
       options: {
         return_job_status: true,
-        return_image_links: true
+        return_image_links: true,
+        return_history: true
       }
+    }
+
+    // id_info requis pour les produits KYC/documentaires
+    const shouldSendIdInfo = jobTypeCode === 14 || jobTypeCode === 12 || jobTypeCode === 5
+    if (shouldSendIdInfo) {
+      params.id_info = idInfo
     }
 
     // Initialiser le client Supabase
@@ -90,7 +154,7 @@ serve(async (req) => {
         user_id: userId,
         smile_id_job_id: jobId,
         smile_id_status: 'en_attente',
-        smile_id_job_type: jobType === 1 ? 'biometric_kyc' : 'document_verification',
+        smile_id_job_type: jobType,
         smile_id_id_type: idType,
         smile_id_country_code: country,
         smile_id_partner_params: partnerParams,
@@ -116,7 +180,7 @@ serve(async (req) => {
       const errorText = await response.text()
       console.error('Smile ID API Error:', errorText)
       return new Response(
-        JSON.stringify({ error: `Échec de l'appel API Smile ID: ${response.status}` }),
+        JSON.stringify({ error: `Échec de l'appel API Smile ID: ${response.status} - ${errorText}` }),
         {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }

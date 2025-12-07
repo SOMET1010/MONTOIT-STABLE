@@ -296,9 +296,13 @@ export class SmileIdService {
    * Get Smile ID verification URL for user redirection
    */
   getVerificationUrl(jobId: string): string {
-    const baseUrl = this.config.sandbox
-      ? 'https://test.usesmileid.com/verify'
-      : 'https://usesmileid.com/verify';
+    // Domaine configurable pour le flux web Smile ID (certains environnements utilisent web-test / web)
+    const envWebBaseUrl = import.meta.env.VITE_SMILE_ID_WEB_URL;
+    const baseUrl = envWebBaseUrl
+      ? envWebBaseUrl.replace(/\/$/, '')
+      : this.config.sandbox
+          ? 'https://web-test.smileid.com/verify'
+          : 'https://web.smileid.com/verify';
 
     return `${baseUrl}?job_id=${jobId}&partner_id=${this.config.partnerId}`;
   }
