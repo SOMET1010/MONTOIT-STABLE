@@ -1,93 +1,122 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/services/supabase/server';
-import { smileIdService } from '@/services/smileIdService';
+import { createClient } from '@/services/supabase/server';
+import crypto from 'crypto';
 
 /**
- * Callback endpoint for Smile ID verification
- * This endpoint receives callbacks from Smile ID when verification is completed
+ * Endpoint pour recevoir les callbacks de Smile ID
+ * Documentation: https://docs.usesmileid.com/integration-options/server-to-server/javascript/
  */
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { job_id, status, result, partner_params, timestamp } = body;
+    const supabase = createClient();
 
-    // Validate the callback
-    if (!job_id || !status) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      );
+    // Lire le corps de la requête
+    const body = await request.text();
+    const signature = request.headers.get('x-smile-signature');
+
+    // Pour la production, vérifier la signature
+    // if (!verifySignature(body, signature)) {
+    //   return NextResponse.json({ error: 'Signature invalide' }, { status: 401 });
+    // }
+
+    let data;
+    try {
+      data = JSON.parse(body);
+    } catch (error) {
+      console.error('Erreur de parsing JSON:', error);
+      return NextResponse.json({ error: 'JSON invalide' }, { status: 400 });
     }
 
-    // Log the callback for debugging
-    console.log('Smile ID callback received:', {
-      job_id,
-      status,
-      timestamp: new Date(timestamp).toISOString()
+    console.log('🔔 [SMILE ID] Callback reçu:', {
+      jobId: data.job_id,
+      userId: data.partner_params?.user_id,
+      resultCode: data.result_code,
+      timestamp: data.timestamp
     });
 
-    // Process the callback
-    await smileIdService.processCallback(body);
+    // Extraire les informations essentielles
+    const jobId = data.job_id;
+    const userId = data.partner_params?.user_id;
+    const resultCode = data.result_code;
+    const timestamp = data.timestamp;
 
-    // Update user verification status in database
-    if (partner_params?.user_id) {
-      const userId = partner_params.user_id;
-      const isVerified = status === 'VERIFIED';
+    if (!jobId || !userId) {
+      console.error('Données manquantes dans le callback:', { jobId, userId });
+      return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
+    }
 
-      // Update user_verifications table
-      await supabase
-        .from('user_verifications')
-        .update({
-          smile_id_status: status === 'VERIFIED' ? 'verifie' : 'rejete',
-          smile_id_verified_at: status === 'VERIFIED' ? new Date().toISOString() : null,
-          smile_id_result_data: result || {},
-          updated_at: new Date().toISOString()
-        })
-        .eq('smile_id_job_id', job_id);
+    // Mapper le code de résultat vers notre statut
+    let status: string;
+    switch (resultCode) {
+      case '1210': // Enroll User
+      case '1211': // Verify User
+      case '1212': // ID Card Validation
+      case '1213': // ID Number Validation
+      case '1214': // Business Verification
+      case '1215': // Enhanced Document Verification
+      case '1216': // Enhanced KYC
+        status = 'verifie';
+        break;
+      case '1201': // Job Submitted
+        status = 'submitted';
+        break;
+      case '1202': // Job Processing
+        status = 'en_cours';
+        break;
+      case '1203': // Job Failed
+        status = 'echoue';
+        break;
+      default:
+        status = 'inconnu';
+    }
 
-      // Update profiles table
-      if (isVerified) {
+    // Mettre à jour la base de données
+    const { error: updateError } = await supabase
+      .from('user_verifications')
+      .update({
+        smile_id_status: status,
+        smile_id_result_data: data,
+        updated_at: new Date().toISOString()
+      })
+      .eq('smile_id_job_id', jobId);
+
+    if (updateError) {
+      console.error('Erreur lors de la mise à jour:', updateError);
+      return NextResponse.json({ error: 'Erreur de mise à jour' }, { status: 500 });
+    }
+
+    console.log(`✅ [SMILE ID] Callback traité - Job: ${jobId}, Statut: ${status}`);
+
+    // Si la vérification est réussie, mettre à jour les informations du profil
+    if (status === 'verifie') {
+      const confidenceValue = data.confidence_value || 0;
+      if (confidenceValue >= 80) { // Seulement si la confiance est suffisante
         await supabase
           .from('profiles')
           .update({
+            is_verified: true,
             smile_id_verified: true,
             smile_id_verified_at: new Date().toISOString(),
-            is_verified: true,
             updated_at: new Date().toISOString()
           })
           .eq('id', userId);
 
-        // If verification includes full name, update profile
-        if (result?.full_name) {
-          await supabase
-            .from('profiles')
-            .update({
-              full_name: result.full_name,
-              updated_at: new Date().toISOString()
-            })
-            .eq('id', userId);
-        }
+        console.log(`✅ [SMILE ID] Profil ${userId} vérifié avec confiance ${confidenceValue}%`);
       }
     }
 
-    // Return success response
+    // Retourner une réponse à Smile ID
     return NextResponse.json({
       success: true,
-      message: 'Callback processed successfully',
-      job_id,
-      status,
+      job_id: jobId,
       timestamp: new Date().toISOString()
     });
 
   } catch (error) {
-    console.error('Error processing Smile ID callback:', error);
-
+    console.error('Erreur dans le callback Smile ID:', error);
     return NextResponse.json(
-      {
-        error: 'Internal server error',
-        message: 'Failed to process callback'
-      },
+      { error: 'Erreur interne du serveur' },
       { status: 500 }
     );
   }

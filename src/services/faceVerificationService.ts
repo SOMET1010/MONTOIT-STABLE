@@ -1,9 +1,6 @@
 import { supabase } from '@/services/supabase/client';
 import { UploadService } from '@/services/upload/uploadService';
 
-// Créer une instance du service d'upload
-const uploadService = new UploadService();
-
 export interface FaceVerificationOptions {
   userId: string;
   selfieImage: File;
@@ -44,33 +41,29 @@ export interface DocumentValidationResult {
 }
 
 class FaceVerificationService {
-  private readonly API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
-
   /**
    * Vérifie une photo selfie avec détection de vie et correspondance faciale
    */
   async verifySelfie(options: FaceVerificationOptions): Promise<FaceVerificationResult> {
     try {
       // 1. Téléverser la photo selfie
-      const uploadResult = await uploadService.uploadFile(
-        options.selfieImage,
-        'verifications',
-        `selfie-${options.userId}-${Date.now()}`,
-        {
-          maxSize: 5 * 1024 * 1024, // 5MB
-          allowedTypes: ['image/jpeg', 'image/png', 'image/webp'],
-          compress: true
-        }
-      );
+      const uploadResult = await UploadService.uploadFile({
+        file: options.selfieImage,
+        bucket: 'verifications',
+        folder: 'selfie',
+        fileName: `selfie-${options.userId}-${Date.now()}`,
+        maxSizeMB: 5,
+        allowedTypes: ['image/jpeg', 'image/png', 'image/webp']
+      });
 
-      if (!uploadResult.success || !uploadResult.url) {
-        throw new Error('Échec du téléversement de la photo');
+      if (!uploadResult.url || uploadResult.error) {
+        throw new Error(uploadResult.error || 'Échec du téléversement de la photo');
       }
 
       const imageUrl = uploadResult.url;
 
       // 2. Appeler l'API de vérification faciale
-      const response = await fetch(`${this.API_BASE}/api/verification/face`, {
+      const response = await fetch(`/api/verification/face`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,25 +125,23 @@ class FaceVerificationService {
   async validateDocument(options: DocumentValidationOptions): Promise<DocumentValidationResult> {
     try {
       // 1. Téléverser le document
-      const uploadResult = await uploadService.uploadFile(
-        options.documentImage,
-        'verifications',
-        `document-${options.userId}-${options.documentType}-${Date.now()}`,
-        {
-          maxSize: 10 * 1024 * 1024, // 10MB
-          allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'],
-          compress: true
-        }
-      );
+      const uploadResult = await UploadService.uploadFile({
+        file: options.documentImage,
+        bucket: 'verifications',
+        folder: 'documents',
+        fileName: `document-${options.userId}-${options.documentType}-${Date.now()}`,
+        maxSizeMB: 10,
+        allowedTypes: ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
+      });
 
-      if (!uploadResult.success || !uploadResult.url) {
-        throw new Error('Échec du téléversement du document');
+      if (!uploadResult.url || uploadResult.error) {
+        throw new Error(uploadResult.error || 'Échec du téléversement du document');
       }
 
       const imageUrl = uploadResult.url;
 
       // 2. Appeler l'API de validation de document
-      const response = await fetch(`${this.API_BASE}/api/verification/document`, {
+      const response = await fetch(`/api/verification/document`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -215,7 +206,7 @@ class FaceVerificationService {
     error?: string;
   }> {
     try {
-      const response = await fetch(`${this.API_BASE}/api/verification/compare-faces`, {
+      const response = await fetch(`/api/verification/compare-faces`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

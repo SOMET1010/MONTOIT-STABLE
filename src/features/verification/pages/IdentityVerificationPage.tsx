@@ -51,28 +51,13 @@ export default function IdentityVerificationPage() {
   const verificationSteps = [
     {
       id: 'smileId',
-      title: 'Vérification ONECI/Smile ID',
+      title: 'Vérification ONECI',
       description: 'Vérifiez votre identité avec ONECI via Smile ID',
       icon: User,
       status: verificationStatus.smileIdVerified ? 'completed' : verificationStatus.smileIdStatus === 'en_attente' ? 'pending' : 'not_started',
       color: 'blue'
     },
-    {
-      id: 'face',
-      title: 'Reconnaissance faciale',
-      description: 'Prenez une photo selfie avec détection de vie',
-      icon: Shield,
-      status: verificationStatus.faceVerified ? 'completed' : verificationStatus.faceVerification.status === 'en_attente' ? 'pending' : 'not_started',
-      color: 'green'
-    },
-    {
-      id: 'documents',
-      title: 'Vérification des documents',
-      description: 'Téléversez et validez vos pièces d\'identité',
-      icon: FileCheck,
-      status: verificationStatus.documentVerified ? 'completed' : verificationStatus.documentVerification.status === 'en_attente' ? 'pending' : 'not_started',
-      color: 'purple'
-    }
+    
   ];
 
   useEffect(() => {
@@ -237,16 +222,16 @@ export default function IdentityVerificationPage() {
               </div>
 
               {/* Contenu de l'étape courant */}
-              {currentStep === index && step.status !== 'completed' && (
-                <div className="mt-6 pt-6 border-t border-gray-200">
-                  {step.id === 'smileId' && (
-                    <SmileIdVerification
-                      onComplete={() => {
-                        handleVerificationComplete('smileId');
-                        setCurrentStep(1); // Passer à l'étape suivante
-                      }}
-                    />
-                  )}
+                  {currentStep === index && step.status !== 'completed' && (
+                    <div className="mt-6 pt-6 border-t border-gray-200">
+                      {step.id === 'smileId' && (
+                        <SmileIdVerification
+                          onVerificationComplete={() => {
+                            handleVerificationComplete('smileId');
+                            setCurrentStep(1); // Passer à l'étape suivante
+                          }}
+                        />
+                      )}
                   {step.id === 'face' && (
                     <FaceVerificationCapture
                       userId={user?.id || ''}
@@ -270,31 +255,6 @@ export default function IdentityVerificationPage() {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Actions rapides */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions rapides</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <a
-              href="/verification/parametres"
-              className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Paramètres de vérification
-            </a>
-            <a
-              href="/mes-certificats"
-              className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Mes certificats
-            </a>
-            <a
-              href="/profil"
-              className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
-            >
-              Retour au profil
-            </a>
-          </div>
         </div>
       </div>
     </div>

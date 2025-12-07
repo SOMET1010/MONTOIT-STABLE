@@ -68,9 +68,9 @@ export class SmileIdService {
 
   constructor() {
     this.config = {
-      sandbox: import.meta.env.VITE_SMILE_ID_SANDBOX === 'true',
-      apiKey: import.meta.env.VITE_SMILE_ID_API_KEY || '',
-      partnerId: import.meta.env.VITE_SMILE_ID_PARTNER_ID || '',
+      sandbox: import.meta.env.VITE_SMILE_ID_SANDBOX !== 'false', // true par défaut
+      apiKey: import.meta.env.VITE_SMILE_ID_API_KEY || 'demo_key',
+      partnerId: import.meta.env.VITE_SMILE_ID_PARTNER_ID || 'demo_partner',
       callbackUrl: import.meta.env.VITE_SMILE_ID_CALLBACK_URL ||
         `${window.location.origin}/api/smile-id/callback`
     };
@@ -105,6 +105,34 @@ export class SmileIdService {
     };
 
     try {
+      // Reuse an existing pending job to avoid API conflicts (409) and duplicate submissions
+      const { data: existingVerification } = await supabase
+        .from('user_verifications')
+        .select('smile_id_job_id, smile_id_status, smile_id_job_type, smile_id_id_type, smile_id_country_code, smile_id_partner_params, updated_at, smile_id_result_data')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      const pendingStatuses = ['en_attente', 'pending', 'submitted', 'processing', 'SUBMITTED', 'PROCESSING'];
+
+      if (existingVerification?.smile_id_job_id && pendingStatuses.includes(existingVerification.smile_id_status || '')) {
+        const normalizedStatus = this.mapSmileIdStatus(
+          (existingVerification.smile_id_status || 'PENDING').toString().toUpperCase()
+        );
+
+        return {
+          id: existingVerification.smile_id_job_id,
+          userId,
+          jobType: existingVerification.smile_id_job_type || jobType,
+          idType: existingVerification.smile_id_id_type || idType,
+          country: existingVerification.smile_id_country_code || country,
+          partnerParams: existingVerification.smile_id_partner_params || partnerParams,
+          callbackUrl: this.config.callbackUrl,
+          status: normalizedStatus,
+          createdAt: existingVerification.updated_at || new Date().toISOString(),
+          result: existingVerification.smile_id_result_data ? this.parseSmileIdResult(existingVerification.smile_id_result_data) : undefined
+        };
+      }
+
       // Create verification record in database
       const { data: verification, error: dbError } = await supabase
         .from('user_verifications')
@@ -117,11 +145,20 @@ export class SmileIdService {
           smile_id_partner_params: partnerParams,
           smile_id_callback_url: this.config.callbackUrl,
           updated_at: new Date().toISOString()
+        }, {
+          onConflict: 'user_id' // Spécifie la colonne de conflit
         })
         .select()
         .single();
 
-      if (dbError) throw dbError;
+      if (dbError) {
+        throw dbError;
+      }
+
+      // Check if we're in demo mode (no real API keys)
+      if (this.isDemoMode()) {
+        return await this.simulateSmileIdVerification(userId, jobType, idType, country, partnerParams);
+      }
 
       // Call Smile ID API to create job
       const response = await fetch(`${this.getBaseUrl()}/v1/jobs`, {
@@ -142,7 +179,9 @@ export class SmileIdService {
       });
 
       if (!response.ok) {
-        throw new Error(`Smile ID API Error: ${response.status} ${response.statusText}`);
+        const rawError = await response.text().catch(() => '');
+        const detailedMessage = rawError || response.statusText;
+        throw new Error(`Smile ID API Error (${response.status}): ${detailedMessage}`);
       }
 
       const smileIdResponse = await response.json();
@@ -171,6 +210,10 @@ export class SmileIdService {
 
     } catch (error) {
       console.error('Error initializing Smile ID verification:', error);
+      // Surface the actual error message to the UI to help debugging (e.g., 409 conflicts)
+      if (error instanceof Error) {
+        throw error;
+      }
       throw new Error('Failed to initialize identity verification');
     }
   }
@@ -180,6 +223,11 @@ export class SmileIdService {
    */
   async getVerificationStatus(jobId: string): Promise<SmileIdJob | null> {
     try {
+      // Check if we're in demo mode
+      if (this.isDemoMode()) {
+        return await this.simulateGetVerificationStatus(jobId);
+      }
+
       const response = await fetch(`${this.getBaseUrl()}/v1/jobs/${jobId}`, {
         method: 'GET',
         headers: {
@@ -398,6 +446,138 @@ export class SmileIdService {
     };
 
     return idTypes[country as keyof typeof idTypes] || idTypes.CI;
+  }
+
+  /**
+   * Check if we're in demo mode
+   */
+  private isDemoMode(): boolean {
+    return !import.meta.env.VITE_SMILE_ID_API_KEY ||
+           import.meta.env.VITE_SMILE_ID_API_KEY === 'demo_key' ||
+           !import.meta.env.VITE_SMILE_ID_PARTNER_ID ||
+           import.meta.env.VITE_SMILE_ID_PARTNER_ID === 'demo_partner';
+  }
+
+  /**
+   * Simulate Smile ID verification for demo purposes
+   */
+  private async simulateSmileIdVerification(
+    userId: string,
+    jobType: string,
+    idType: string,
+    country: string,
+    partnerParams: Record<string, any>
+  ): Promise<SmileIdJob> {
+    console.log('🔍 [DEMO] Simulating Smile ID verification...');
+
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    const jobId = `demo_job_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    // Update verification record with demo job ID
+    await supabase
+      .from('user_verifications')
+      .update({
+        smile_id_job_id: jobId,
+        smile_id_status: 'submitted',
+        updated_at: new Date().toISOString()
+      })
+      .eq('user_id', userId);
+
+    console.log('✅ [DEMO] Smile ID verification simulated successfully');
+
+    return {
+      id: jobId,
+      userId,
+      jobType,
+      idType,
+      country,
+      partnerParams,
+      callbackUrl: this.config.callbackUrl,
+      status: 'submitted',
+      createdAt: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Simulate getting verification status for demo purposes
+   */
+  private async simulateGetVerificationStatus(jobId: string): Promise<SmileIdJob | null> {
+    console.log('🔍 [DEMO] Simulating verification status check...');
+
+    // Check if this is a demo job
+    if (!jobId.startsWith('demo_job_')) {
+      console.log('⚠️ [DEMO] Not a demo job ID, returning null');
+      return null;
+    }
+
+    // Simulate processing delay
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    // Get verification data from database
+    const { data: verification } = await supabase
+      .from('user_verifications')
+      .select('*')
+      .eq('smile_id_job_id', jobId)
+      .single();
+
+    if (!verification) {
+      console.log('⚠️ [DEMO] Verification not found in database');
+      return null;
+    }
+
+    // Simulate completion after some time
+    const isCompleted = verification.smile_id_status === 'submitted' &&
+                       Math.random() > 0.3; // 70% chance of completion
+
+    if (isCompleted) {
+      // Update status to completed
+      await supabase
+        .from('user_verifications')
+        .update({
+          smile_id_status: 'verifie',
+          updated_at: new Date().toISOString()
+        })
+        .eq('smile_id_job_id', jobId);
+
+      console.log('✅ [DEMO] Verification completed successfully');
+
+      return {
+        id: jobId,
+        userId: verification.user_id,
+        jobType: verification.smile_id_job_type || 'biometric',
+        idType: verification.smile_id_id_type || 'NATIONAL_ID',
+        country: verification.smile_id_country_code || 'CI',
+        partnerParams: verification.smile_id_partner_params || {},
+        callbackUrl: verification.smile_id_callback_url || '',
+        status: 'completed',
+        createdAt: verification.created_at,
+        completedAt: new Date().toISOString(),
+        result: {
+          success: true,
+          confidence: 0.95,
+          full_name: 'Utilisateur Démo',
+          document_number: 'DEMO123456',
+          date_of_birth: '1990-01-01'
+        }
+      };
+    }
+
+    // Still processing
+    console.log('⏳ [DEMO] Verification still processing...');
+
+    return {
+      id: jobId,
+      userId: verification.user_id,
+      jobType: verification.smile_id_job_type || 'biometric',
+      idType: verification.smile_id_id_type || 'NATIONAL_ID',
+      country: verification.smile_id_country_code || 'CI',
+      partnerParams: verification.smile_id_partner_params || {},
+      callbackUrl: verification.smile_id_callback_url || '',
+      status: 'processing',
+      createdAt: verification.created_at
+    };
   }
 
   /**

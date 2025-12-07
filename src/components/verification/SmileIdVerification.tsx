@@ -6,6 +6,8 @@ import { useAuth } from '@/app/providers/AuthProvider';
 interface SmileIdVerificationProps {
   onVerificationComplete?: (result: SmileIdResult) => void;
   onVerificationError?: (error: string) => void;
+  // Alias pour compatibilité avec les appels existants
+  onComplete?: (result: SmileIdResult) => void;
   className?: string;
 }
 
@@ -19,6 +21,7 @@ interface SmileIdVerificationProps {
 export default function SmileIdVerification({
   onVerificationComplete,
   onVerificationError,
+  onComplete,
   className = ''
 }: SmileIdVerificationProps) {
   const { user } = useAuth();
@@ -33,8 +36,24 @@ export default function SmileIdVerification({
 
   const supportedIdTypes = smileIdService.getSupportedIdTypes();
 
+  // Check if we're in demo mode
+  const isDemoMode = !import.meta.env.VITE_SMILE_ID_API_KEY ||
+                     import.meta.env.VITE_SMILE_ID_API_KEY === 'demo_key' ||
+                     !import.meta.env.VITE_SMILE_ID_PARTNER_ID ||
+                     import.meta.env.VITE_SMILE_ID_PARTNER_ID === 'demo_partner';
+
+  const notifyComplete = (result: SmileIdResult) => {
+    onVerificationComplete?.(result);
+    onComplete?.(result);
+  };
+
   const handleStartVerification = async () => {
-    if (!user || !consentGiven) return;
+    if (!consentGiven) {
+      setError('Merci de cocher la case de consentement avant de continuer.');
+      return;
+    }
+
+    if (!user) return;
 
     setIsProcessing(true);
     setError(null);
@@ -52,16 +71,10 @@ export default function SmileIdVerification({
       );
 
       setCurrentJob(job);
+      setCurrentStep('verification');
 
-      if (verificationType === 'document') {
-        // For document verification, we might need to show additional UI
-        // For now, redirect to Smile ID
-        window.location.href = smileIdService.getVerificationUrl(job.id);
-      } else {
-        setCurrentStep('verification');
-        // Redirect to Smile ID verification page
-        window.location.href = smileIdService.getVerificationUrl(job.id);
-      }
+      // Redirect to Smile ID verification page
+      window.location.href = smileIdService.getVerificationUrl(job.id);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Erreur lors de l\'initialisation de la vérification';
       setError(errorMessage);
@@ -83,7 +96,7 @@ export default function SmileIdVerification({
         if (jobStatus.status === 'completed' && jobStatus.result) {
           setVerificationResult(jobStatus.result);
           setCurrentStep('complete');
-          onVerificationComplete?.(jobStatus.result);
+          notifyComplete(jobStatus.result);
         } else if (jobStatus.status === 'failed') {
           setError('La vérification a échoué. Veuillez réessayer.');
           onVerificationError?.('La vérification a échoué');
@@ -103,6 +116,23 @@ export default function SmileIdVerification({
       return () => clearInterval(interval);
     }
   }, [currentJob]);
+
+  const handleContinueFromMethod = () => {
+    if (!consentGiven) {
+      setError('Merci de cocher la case de consentement avant de continuer.');
+      return;
+    }
+
+    if (isProcessing) return;
+
+    if (verificationType === 'document' || verificationType === 'smart_card') {
+      setCurrentStep('document');
+      return;
+    }
+
+    // Pour la biométrie, on lance directement la vérification
+    handleStartVerification();
+  };
 
   const renderMethodSelection = () => (
     <div className="space-y-6">
@@ -266,6 +296,23 @@ export default function SmileIdVerification({
 
   return (
     <div className={`bg-white rounded-xl shadow-lg p-8 ${className}`}>
+      {/* Demo Mode Alert */}
+      {isDemoMode && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg flex items-start space-x-3">
+          <div className="flex-shrink-0">
+            <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs font-bold">D</span>
+            </div>
+          </div>
+          <div>
+            <h4 className="font-semibold text-blue-900 mb-1">Mode Démonstration</h4>
+            <p className="text-sm text-blue-700">
+              Cette instance utilise des données de démonstration. La vérification Smile ID est simulée et ne se connecte pas au service réel.
+            </p>
+          </div>
+        </div>
+      )}
+
       {error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-start space-x-3">
           <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
@@ -279,7 +326,10 @@ export default function SmileIdVerification({
           <input
             type="checkbox"
             checked={consentGiven}
-            onChange={(e) => setConsentGiven(e.target.checked)}
+            onChange={(e) => {
+              setConsentGiven(e.target.checked);
+              if (error) setError(null);
+            }}
             className="mt-1 w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
             required
           />
@@ -305,6 +355,7 @@ export default function SmileIdVerification({
         {currentStep === 'document' && (
           <button
             onClick={() => setCurrentStep('method')}
+            type="button"
             className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition"
           >
             Retour
@@ -313,8 +364,9 @@ export default function SmileIdVerification({
 
         {currentStep === 'method' && (
           <button
-            onClick={() => setCurrentStep('document')}
-            disabled={!consentGiven}
+            onClick={handleContinueFromMethod}
+            disabled={isProcessing}
+            type="button"
             className="ml-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Continuer
@@ -325,6 +377,7 @@ export default function SmileIdVerification({
           <button
             onClick={handleStartVerification}
             disabled={isProcessing || !consentGiven}
+            type="button"
             className="ml-auto px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
           >
             {isProcessing ? (
