@@ -79,6 +79,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         `[AuthContext] Loading profile for user ${userId} (attempt ${retryCount + 1}/${MAX_RETRIES + 1})`
       );
 
+      // Vérifier si la session est toujours valide avant de charger le profil
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session || session.user?.id !== userId) {
+        console.error('[AuthContext] Invalid session, signing out...');
+        await supabase.auth.signOut();
+        setUser(null);
+        setProfile(null);
+        setProfileError({
+          type: 'auth',
+          message: 'Session invalide',
+          details: 'Votre session est invalide. Veuillez vous reconnecter.',
+        });
+        setLoading(false);
+        return;
+      }
+
       if (retryCount === 0) {
         const healthCheck = await testDatabaseConnection();
         if (!healthCheck.success) {
@@ -203,9 +219,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      console.log('[AuthContext] Profile loaded successfully:', data.email);
-      setProfile(data);
-      setProfileError(null);
+      if (data) {
+        console.log('[AuthContext] Profile loaded successfully:', data.email || 'No email');
+        setProfile(data);
+        setProfileError(null);
+      } else {
+        console.log('[AuthContext] Profile data is null after successful query');
+      }
     } catch (error: any) {
       console.error('[AuthContext] Error loading profile:', error);
 

@@ -26,6 +26,12 @@ export function useMessageNotifications() {
 
     fetchUnreadCount();
 
+    // Désactiver les notifications en temps réel en développement pour éviter les erreurs WebSocket
+    if (import.meta.env.DEV) {
+      console.log('[Notifications] Real-time notifications disabled in development mode');
+      return () => {}; // No cleanup needed
+    }
+
     const subscription = supabase
       .channel('message_notifications')
       .on(

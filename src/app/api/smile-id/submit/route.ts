@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Configuration Smile ID
-    const partnerId = process.env.SMFLES_ID_PARTNER_ID || '7685';
+    const partnerId = process.env.SMILE_ID_PARTNER_ID || '7685';
     const apiKey = process.env.SMILE_ID_API_KEY || '965535ad-7ca6-45f4-a207-00f88e47c946';
     const isSandbox = process.env.VITE_SMILE_ID_SANDBOX !== 'false';
     const baseUrl = isSandbox ? 'https://testapi.usesmileid.com' : 'https://api.usesmileid.com';

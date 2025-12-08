@@ -1,8 +1,80 @@
--- minimal seed data for MONTOIT-STABLE platform
--- this script adds sample users for testing without verification data
+-- Final seed data for MONTOIT-STABLE platform with updated online photos
+-- This script adds sample users and properties for testing without verification data
 
--- create sample users in auth.users with metadata for automatic profile creation
+-- Create sample users in auth.users with metadata for automatic profile creation
 INSERT INTO auth.users (id, aud, role, email, raw_user_meta_data, created_at) VALUES
 ('11111111-1111-1111-1111-111111111111', 'authenticated', 'authenticated', 'owner1@exemple.ci', '{"full_name": "Konan Bi Bly", "user_type": "proprietaire"}'::jsonb, NOW()),
-('22222222-2222-2222-2222-222222222222', 'authenticated', 'authenticated', 'tenant1@exemple.ci', '{"full_name": "Awa Kouadio", "user_type": "locataire"}'::jsonb, NOW())
+('22222222-2222-2222-2222-222222222222', 'authenticated', 'authenticated', 'tenant1@exemple.ci', '{"full_name": "Awa Kouadio", "user_type": "locataire"}'::jsonb, NOW()),
+('33333333-3333-3333-3333-333333333333', 'authenticated', 'authenticated', 'owner2@exemple.ci', '{"full_name": "Yao Koffi", "user_type": "proprietaire"}'::jsonb, NOW()),
+('44444444-4444-4444-4444-444444444444', 'authenticated', 'authenticated', 'agency1@exemple.ci', '{"full_name": "Société Immobilière CI", "user_type": "agence"}'::jsonb, NOW()),
+('55555555-5555-5555-5555-555555555555', 'authenticated', 'authenticated', 'tenant2@exemple.ci', '{"full_name": "Sylla Aïcha", "user_type": "locataire"}'::jsonb, NOW())
+ON CONFLICT (id) DO NOTHING;
+
+-- Insert sample properties for testing
+INSERT INTO properties (
+  id,
+  owner_id,
+  title,
+  description,
+  property_type,
+  monthly_rent,
+  surface_area,
+  bedrooms,
+  bathrooms,
+  is_furnished,
+  city,
+  address,
+  latitude,
+  longitude,
+  created_at,
+  updated_at,
+  status,
+  images,
+  main_image,
+  has_parking,
+  has_garden,
+  has_ac
+) VALUES
+-- Properties for owner 1 (Konan Bi Bly)
+('00000001-0001-0001-0001-000000000001', '11111111-1111-1111-1111-111111111111', 'Appartement T3 Cocody', 'Bel appartement T3 dans le quartier résidentiel de Cocody, proche de tous les commerces et écoles. Très lumineux avec balcon donnant sur jardin.', 'appartement', 150000, 120, 3, 2, true, 'Abidjan', 'Boulevard Latrille, Cocody Plateau', 5.360933, -3.989757, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1642128/pexels-photo-1642128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1642128/pexels-photo-1642128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, true),
+
+('00000002-0002-0002-0002-000000000002', '11111111-1111-1111-1111-111111111111', 'Villa 5 pièces Riviera', 'Magnifique villa avec piscine et grand jardin dans un quartier calme et sécurisé de Riviera. Idéale pour famille.', 'villa', 400000, 280, 5, 3, true, 'Abidjan', 'Zone 4, Riviera Palmeraie', 5.376425, -3.953118, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/2119713/pexels-photo-2119713.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/259588/pexels-photo-259588.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, true, true),
+
+('00000003-0003-0003-0003-000000000003', '11111111-1111-1111-1111-111111111111', 'Studio Meublé Marcory', 'Studio moderne et meublé parfaitement équipé pour étudiant ou jeune professionnel. Très bien desservi par les transports en commun.', 'studio', 50000, 28, 1, 1, true, 'Abidjan', 'Rue Principale, Marcory', 5.319229, -4.007482, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/276724/pexels-photo-276724.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, false, true),
+
+-- Properties for owner 2 (Yao Koffi)
+('00000004-0004-0004-0004-000000000004', '33333333-3333-3333-3333-333333333333', 'Appartement F2 Yopougon', 'Appartement 2 pièces au 4ème étage avec vue dégagée. Situé près du marché et des écoles. Idéal pour premier achat.', 'appartement', 80000, 65, 2, 1, false, 'Abidjan', 'Avenue 13, Yopougon Sicogi', 5.344901, -4.017502, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/2079246/pexels-photo-2079246.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, false),
+
+('00000005-0005-0005-0005-000000000005', '33333333-3333-3333-3333-333333333333', 'Maison R+4 Treichville', 'Maison familiale avec 4 chambres et grand jardin. Quartier calme avec écoles et commerces à proximité.', 'villa', 250000, 200, 4, 2, false, 'Abidjan', 'Rue du Commerce, Treichville', 5.272444, -3.932765, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/185523/pexels-photo-185523.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, true, false),
+
+('00000006-0006-0006-0006-000000000006', '33333333-3333-3333-3333-333333333333', 'Bureau Attijan Plateau', 'Bureau de standing dans centre d''affaires prestigieux. Idéal pour profession libérale ou petite entreprise.', 'bureau', 120000, 45, 1, 1, false, 'Abidjan', 'Avenue Jean-Paul II, Plateau', 5.365248, -3.986234, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/3952025/pexels-photo-3952025.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/2452084/pexels-photo-2452084.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/3952025/pexels-photo-3952025.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, true),
+
+-- Properties for agency (Société Immobilière CI)
+('00000007-0007-0007-0007-000000000007', '44444444-4444-4444-4444-444444444444', 'Résidence Le Palmier', 'Ensemble résidentiel de luxe avec espaces verts, piscine et gardiennage. Appartements du T1 au T4.', 'appartement', 180000, 95, 3, 2, true, 'Abidjan', 'Boulevard France Abidjan, Riviera', 5.371112, -3.962443, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/261101/pexels-photo-261101.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/1642128/pexels-photo-1642128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/261101/pexels-photo-261101.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, true, true),
+
+('00000008-0008-0008-0008-000000000008', '44444444-4444-4444-4444-444444444444', 'Immeuble Commercial Zone 4', 'Immeuble commercial avec bureaux et espaces de stockage. Forte visibilité sur axe principal.', 'commerce', 350000, 150, 1, 2, false, 'Abidjan', 'Avenue 4, Zone 4', 5.3789445, -4.023456, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/106344/pexels-photo-106344.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/106344/pexels-photo-106344.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, true),
+
+('00000009-0009-0009-0009-000000000009', '44444444-4444-4444-4444-444444444444', 'Villas de Prestige', 'Collection de villas de luxe dans quartier résidentiel exclusif. Chaque villa avec piscine privée.', 'villa', 600000, 350, 6, 4, true, 'Abidjan', 'Route d''Abidjan, Bingerville', 5.312987, -3.894567, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/1438834/pexels-photo-1438834.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, true, true),
+
+('00000010-0010-0010-0010-000000000010', '44444444-4444-4444-4444-444444444444', 'Résidences Universitaires', 'Résidences étudiantes près des grandes universités. Chambres individuelles et studios meublés.', 'appartement', 45000, 22, 1, 1, true, 'Abidjan', 'Campus Universitaire, Cocody', 5.363445, -4.003456, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/3586298/pexels-photo-3586298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/276680/pexels-photo-276680.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/3586298/pexels-photo-3586298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, false, true),
+
+('00000011-0011-0011-0011-000000000011', '11111111-1111-1111-1111-111111111111', 'Duplex Angré', 'Duplex moderne avec 4 chambres et terrasses. Grand jardin sécurisé, idéal pour famille nombreuse.', 'villa', 350000, 180, 4, 3, false, 'Abidjan', 'Quartier Angré, Abidjan', 5.289876, -4.012345, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/136434/pexels-photo-136434.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1743231/pexels-photo-1743231.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, true, false),
+
+('00000012-0012-0012-0012-000000000012', '11111111-1111-1111-1111-111111111111', 'Loft Industriel Plateau', 'Loft artistique avec plafonds hauts et grandes ouvertures. Quartier branché et dynamique.', 'appartement', 220000, 85, 2, 2, false, 'Abidjan', 'Rue du Commerce, Plateau', 5.367890, -3.998765, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1571458/pexels-photo-1571458.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/2079233/pexels-photo-2079233.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1571458/pexels-photo-1571458.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, false, true),
+
+('00000013-0013-0013-0013-000000000013', '33333333-3333-3333-3333-333333333333', 'Penthouse View Skyline', 'Penthouse luxueux avec vue panoramique sur la ville. 200m² de terrasse privée.', 'appartement', 750000, 200, 5, 3, true, 'Abidjan', 'Rue des Princes, Plateau', 5.369123, -3.987654, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/2111486/pexels-photo-2111486.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/2111486/pexels-photo-2111486.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, true),
+
+('00000014-0014-0014-0014-000000000014', '11111111-1111-1111-1111-111111111111', 'Chambre bon marché Deux Plateaux', 'Petite chambre idéale pour étudiant avec budget limité. Proche des transports et commerces.', 'chambre', 25000, 15, 1, 1, true, 'Abidjan', 'Avenue 7, Deux Plateaux', 5.345678, -4.023456, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/3586298/pexels-photo-3586298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/3586298/pexels-photo-3586298.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, false, true),
+
+('00000015-0015-0015-0015-000000000015', '22222222-2222-2222-2222-222222222222', 'Maison Famille Grand-Bassam', 'Maison familiale avec grand jardin dans ville calme. Idéale pour familles avec enfants.', 'villa', 120000, 150, 3, 2, false, 'Grand-Bassam', 'Centre-Ville, Grand-Bassam', 5.213456, -3.774321, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/185523/pexels-photo-185523.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1029599/pexels-photo-1029599.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, true, false),
+
+('00000016-0016-0016-0016-000000000016', '22222222-2222-2222-2222-222222222222', 'Appartement Étudiant Bouaké', 'Appartement meublé pour étudiants à budget maîtrisé. Quartier calme et sécurisé.', 'appartement', 35000, 35, 1, 1, true, 'Bouaké', 'Centre Urbain, Bouaké', 7.654321, -5.342198, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1642128/pexels-photo-1642128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/271624/pexels-photo-271624.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1642128/pexels-photo-1642128.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, false, true),
+
+('00000017-0017-0017-0017-000000000017', '11111111-1111-1111-1111-111111111111', 'Ferme écologique Yamoussoukro', 'Belle ferme avec 2 hectares de terre et étang. Produits bio et élevage de volailles.', 'villa', 200000, 180, 5, 3, false, 'Yamoussoukro', 'Route de Toumodi, Yamoussoukro', 6.823456, -5.034567, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1112048/pexels-photo-1112048.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/1112047/pexels-photo-1112047.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1112048/pexels-photo-1112048.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, true, false),
+
+('00000018-0018-0018-0018-000000000018', '44444444-4444-4444-4444-444444444444', 'Boutiques Commerciales Cocody', 'Emplacements commerciaux sur rue très passante. Idéal pour commerces et services.', 'commerce', 80000, 40, 1, 1, false, 'Abidjan', 'Rue Princesse, Cocody', 5.367890, -3.998765, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/1080729/pexels-photo-1080729.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/1444442/pexels-photo-1444442.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/1080729/pexels-photo-1080729.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, true),
+
+('00000019-0019-0019-0019-000000000019', '33333333-3333-3333-3333-333333333333', 'Complexe Appartements San Pedro', 'Ensemble de 12 appartements avec services partagés. Piscine et parkings inclus.', 'appartement', 90000, 70, 2, 1, true, 'San Pedro', 'Avenue des Nations, San Pedro', 4.934567, -6.432198, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/261101/pexels-photo-261101.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/261102/pexels-photo-261102.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', true, false, true),
+
+('00000020-0020-0020-0020-000000000020', '11111111-1111-1111-1111-111111111111', 'Terrasses Attijan', 'Terrasses de standing avec vue sur le golf et lagune. Perfect aménagement extérieur.', 'villa', 500000, 80, 1, 1, false, 'Abidjan', 'Boulevard de la Marina, Riviera', 5.365123, -3.990123, NOW(), NOW(), 'disponible', '{"https://images.pexels.com/photos/2111471/pexels-photo-2111471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1", "https://images.pexels.com/photos/209315/pexels-photo-209315.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"}', 'https://images.pexels.com/photos/2111471/pexels-photo-2111471.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', false, true, false)
 ON CONFLICT (id) DO NOTHING;
